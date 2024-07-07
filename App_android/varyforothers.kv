@@ -1,0 +1,573 @@
+#:kivy 1.1.1
+
+<varylayout>:
+    name:'varylayout'
+    BoxLayout:
+        id: main_layout
+        orientation: 'vertical'
+
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            background_color: 0.2, 0.3, 0.6, 10
+            ScrollView:
+                BoxLayout:
+                    id: devicesdiversify
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    GridLayout:
+                        size_hint_y: None
+                        height: 190
+                        cols:1
+                        Label:
+                            underline: True
+                            text:"Diversify WIP\nstable release?, enjoy\nDiversify Scanner, scroll to bottom"
+                            id:diversifytext
+                            bold: True
+
+                            color: (0.7, 0.1, 0.1, 0.7)
+
+
+#                                ScrollView:
+#                                    BoxLayout:
+#                                        padding: 30
+#                                        height: 240
+#                                        orientation: 'vertical'
+#                                        size_hint_y: None
+#                                        height: self.minimum_height
+
+                    # 'webhandler': True
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Open website"
+                            on_release:app.diversifywebhandler()
+                        TextInput:
+                            hint_text: "Enter the url of the website you wish"
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            id:diversifywebhandler
+                            multinline:True
+
+
+                    # 'typestringwithhumandelay': True
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Type a String like a human"
+                            on_release:app.diversifytypestringwithhumandelay()
+                        TextInput:
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            id:diversifytypestringwithhumandelay
+                            multinline:True
+
+
+
+
+
+
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Turn the Screen black"
+                            on_release:app.diversifyblackenscreen()
+                        TextInput:
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            hint_text: "For how long, Duration in seconds"
+                            id:diversifyblackenscreen
+                            multinline:True
+
+                    # 'inviscurr': True
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Send to background highlight"
+                            on_release:app.diversifyinviscurr()
+                        TextInput:
+                            hint_text: "Explanation: The app that you select, will be hidden. Duration in seconds for how long it'll run."
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            id:diversifyinviscurr
+                            multinline:True
+
+
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Make the screen rotate"
+                            on_release:app.diversifymakethescreendorotations()
+                        TextInput:
+                            hint_text: "For how long to do the rotations? (seconds)"
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            id:diversifymakethescreendorotations
+                            multinline:True
+
+
+                    # 'texttospeech': True
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Text to speech"
+                            on_release:app.diversifytexttospeech()
+                        TextInput:
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            id:diversifytexttospeech
+                            multinline:True
+
+
+
+                    # 'speakxlanguage': True
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Speak in a language"
+                            on_release:app.diversifyspeakxlanguage()
+                        TextInput:
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            hint_text: "Hear any language (except Hebrew) by writing in it"
+                            id:diversifyspeakxlanguage
+                            multinline:True
+
+
+
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Flip screen: upsidedown"
+                            on_release:app.diversifyscreenflipped()
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Flip screen: normal"
+                            on_release:app.diversifyscreenlandscape()
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Flip screen: right"
+                            on_release:app.diversifyscreenportraitflipped()
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Flip screen: left"
+                            on_release:app.diversifyscreenportrait()
+
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Per click,\nlag windows(Enable)"
+                            on_release:app.diversifywindowslagclicksoundenable()
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Per click,\nlag windows(Disable)"
+                            on_release:app.diversifywindowslagclicksounddisable()
+
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Swap RMB and LMB"
+                            on_release:app.diversifyswappedswaprmbandlmb()
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Unswap RMB and LMB"
+                            on_release:app.diversifyunswappedswaprmbandlmb()
+
+
+
+                    # 'meandtheboys': False
+
+                    # ... continue in this manner for the rest of the strings ...
+                    # 'meandtheboys': False
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:1
+                        Button:
+                            text: "Me and the boys!"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold:True
+                            on_press: app.diversifymeandtheboys()
+
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:1
+                        Button:
+                            text: "Download And Install Chrome"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold:True
+                            on_press: app.diversifyinstallchrome()
+                    # 'terminateunknownprocesses': False
+                
+
+                    # 'restartexplorer': False
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:1
+                        Button:
+                            text: "Restart Explorer"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold:True
+                            on_press: app.diversifyrestartexplorer()
+
+                                                # ... continue this pattern for all strings ...
+                    # 'windowslagclicksound': True
+
+
+
+                    # ... continue in this manner for the rest of the strings ...
+
+
+
+                    # 'playtone': True
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:3
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Play tone"
+                            on_release:app.diversifyplaytone()
+                        TextInput:
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            hint_text: "What is the frequency?(hz)"
+                            id:diversifyplaytonehz
+                            multinline:True
+                        TextInput:
+                            hint_text: "For how long, in milliseconds"
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            id:diversifyplaytoneduration
+                            multinline:True
+
+                    # 'playshepardtone': True
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:3
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Initialize Shepard Tone"
+                            on_release:app.diversifyplayshepardtone()
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:3
+                        TextInput:
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            hint_text: "Start frequency(hz)"
+                            id:diversifyplayshepardtonestarthz
+                            multinline:True
+                        TextInput:
+                            hint_text: "End frequency(hz)"
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            id:diversifyplayshepardtoneendhz
+                            multinline:True
+                        TextInput:
+                            hint_text: "For how long(in seconds)"
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            id:diversifyplayshepardtoneduration
+                            multinline:True
+
+
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:3
+                        Button:
+                            text:"Payload 1"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            on_release:app.diversifypayload_1()
+                        Button:
+                            text:"Payload 2"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            on_release:app.diversifypayload_2()
+                        Button:
+                            text:"Payload 3"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            on_release:app.diversifypayload_3()
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:3
+                        Button:
+                            text:"Payload 4"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            on_release:app.diversifypayload_4()
+                        Button:
+                            text:"Payload 5"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            on_release:app.diversifypayload_5()
+                        Button:
+                            text:"Payload 6"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            on_release:app.diversifypayload_6()
+                    # 'enablemouse': False
+
+                    # ... continue in this manner for the rest of the strings ...
+                    # 'enablemouse': False
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            text: "Enable mouse"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold:True
+                            on_press: app.diversifyenablemouse()
+                        Button:
+                            text: "Disable mouse"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold:True
+                            on_press: app.diversifydisablemouse()
+
+                    # 'enablekeyboard': False
+
+                    # ... continue in this manner for the rest of the strings ...
+                    # 'enablekeyboard': False
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            text: "Enable keyboard"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold:True
+                            on_press: app.diversifyenablekeyboard()
+
+                        Button:
+                            text: "Disable Keyboard"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold:True
+                            on_press: app.diversifydisablekeyboard()
+
+                    # 'presskeys': True
+
+                    # ... continue in this manner for the rest of the strings ...
+                    # 'presskeys': True
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Press keys"
+                            on_release:app.diversifypresskeys()
+                        TextInput:
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            id:diversifypresskeys
+                            multinline:True
+
+                    # 'writetext': True
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        Button:
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold: True
+                            text:"Write text"
+                            on_release:app.diversifywritetext()
+                        TextInput:
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            id:diversifywritetext
+                            multinline:True
+
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:2
+                        TextInput:
+                            background_color: 0.2, 0.3, 0.6, 10
+                            bold: True
+                            hint_text:"Override the subnet, e.g. '192.168.1.'"
+                            id:overridensubnetdiversify
+                            multinline:True
+                        Button:
+                            text: "Toggle school subnets\n(Status: Disabled)" 
+                            background_color: (0.8, 0.2, 0.7, 1)
+                            color: (0.2, 0.6, 1, 1)
+                            bold:True
+                            on_press: app.diverisfy_subnet_ofschlang(self)
+
+
+                    GridLayout:
+                        size_hint_y: None
+                        height: 120
+                        cols:1
+                        Button:
+                            text: "Scan for diversified hosts"
+                            background_color: 0.1, 0.4, 0.7, 0.6
+                            on_press: self.color = (0.5, 0.8, 1, 0.8)
+                            on_release: self.color = (0.5, 0.8, 0.7, 1)
+                            color: 0.5, 0.8, 0.7, 1
+                            bold:True
+                            on_press: app.scan_for_hosts()
+
+
+
+

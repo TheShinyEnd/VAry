@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>diversify</title>
+</head>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box !important;
+}
+
+html, body {
+  height: 240vw;
+}
+
+body {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ background-color: #171717;
+ color: #000;
+ line-height: 1.6;
+ position: relative;
+ font-family: 'Quicksand', sans-serif;
+ font-weight: 500;
+ overflow-x: hidden;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+
+}
+
+/* Custom scrollbar styles */
+body::-webkit-scrollbar {
+ width: 4px;
+ overflow: hidden;
+}
+
+body::-webkit-scrollbar-track {
+ background: rgba(25, 48, 48, 0.2);
+ border-radius: 4px;
+ opacity: 0.3;
+ overflow: hidden;
+}
+
+body::-webkit-scrollbar-thumb {
+ background: rgba(65, 150, 130, 0.4);
+ border-radius: 4px;
+}
+
+.lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  margin: auto;
+  width: 90vw;
+}
+
+.line {
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  top: 0;
+  left: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.line::after {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 15vh;
+  width: 100%;
+  top: -50%;
+  left: 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 75%, #ffffff 100%);
+  -webkit-animation: drop 7s 0s infinite;
+          animation: drop 7s 0s infinite;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+  -webkit-animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+          animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+}
+.line:nth-child(1) {
+  margin-left: -25%;
+}
+.line:nth-child(1)::after {
+  -webkit-animation-delay: 2s;
+          animation-delay: 2s;
+}
+.line:nth-child(3) {
+  margin-left: 25%;
+}
+.line:nth-child(3)::after {
+  -webkit-animation-delay: 2.5s;
+          animation-delay: 2.5s;
+}
+
+@-webkit-keyframes drop {
+  0% {
+    top: -50%;
+  }
+  100% {
+    top: 110%;
+  }
+}
+
+@keyframes drop {
+  0% {
+    top: -50%;
+  }
+  100% {
+    top: 110%;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+/* Custom scrollbar styles */
+.chatbox .history::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatbox .history::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.chatbox .history::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+}
+
+
+.dropdown-buttons button:nth-child(1) {
+  animation-delay: 0.3s; /* Adjust the delay time */
+}
+
+.dropdown-buttons button:nth-child(2) {
+  animation-delay: 0.5s; /* Adjust the delay time */
+}
+.dropdown-buttons button:nth-child(3) {
+  animation-delay: 0.7s; /* Adjust the delay time */
+}
+
+.dropdown-buttons button:nth-child(4) {
+  animation-delay: 0.9s; /* Adjust the delay time */
+}
+
+
+
+
+
+/* 
+.location::-webkit-scrollbar {
+ height: 2px;
+ overflow: hidden;
+}
+
+.location::-webkit-scrollbar-track {
+ background: rgba(37, 75, 75, 0.2);
+ border-radius: 4px;
+ opacity: 0.3;
+}
+
+.location::-webkit-scrollbar-thumb {
+ background: rgba(65, 150, 130, 0.4);
+ border-radius: 4px;
+} */
+
+
+.welcometext {
+  cursor:default;
+  position: fixed;
+  /* top: 0; */
+  left: 0%;
+  top: 0%;
+  font-size: large;
+  color: #5bd9ff;
+  text-align: left;
+
+  margin-top: 10px;
+  /* text-decoration: underline; */
+}
+
+
+.alert-box {
+  display: none;
+  position: fixed;
+  top: 2%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ff0000;
+  color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  z-index: 1000000000;
+  -webkit-animation: fadeOutandslideout 1s 3.5s forwards;
+    /* animation: fadeOutandslideout 1s 3.5s forwards; */
+  animation: slideIn 1s forwards, fadeOutandslideout 1s 3.5s forwards;
+}
+
+@keyframes slideIn {
+    0% { transform: translate(-50%, -120%); }
+    100% { transform: translate(-50%, 0%); }
+}
+
+@keyframes fadeOutandslideout {
+    0% { opacity: 0.8; }
+    100% { opacity: 0;  transform: translate(-50%, -100%); filter: blur(20px);}
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+
+.containersearch {
+ position: absolute;
+ width: 100%;
+ /* top: 50%; */
+ /* max-width: 800px; */
+ background-color: #F5F5F5;
+ border-radius: 10px;
+ box-shadow: 0px 0px 20px rgba(8, 45, 94, 0.5);
+ padding: 30px;
+ /* margin-bottom: 400px; Set bottom margin to 400px */
+ overflow-y: auto;
+ z-index: 100000000;
+ /* margin-top: 800px; */
+}
+
+
+.category {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 15px; /* Increased padding for better spacing */
+ cursor: pointer;
+ background-color: #F5F5F5; /* Using RGBA for lower opacity */
+ position: relative;
+ border-radius: 8px; /* Slightly reduced border radius for a modern look */
+ margin-bottom: 15px; /* Adjusted margin for better spacing */
+ z-index: 100000000;
+ transition: background-color 0.5s ease;
+}
+
+/* Styling for input fields */
+input[type="text"] {
+ width: calc(70% - 40px); /* Adjusted width for better fit */
+ padding: 12px; /* Increased padding for better spacing */
+ border: none;
+ /* max-width: 100%; */
+ border-radius: 5px;
+ background-color: #F5F5F5; /* Using RGBA for lower opacity */
+ box-shadow: 0px 0px 10px rgba(8, 45, 94, 0.3); /* Adjusted opacity for 
+shadow */
+ margin-bottom: 10px; /* Adjusted margin for better spacing */
+ margin-right: 10px; /* Added margin for spacing between input and button */
+ display: flex;
+ width: 100%;
+ flex-wrap: wrap;
+
+}
+
+/* Styling for submit buttons */
+input[type="submit"] {
+ padding: 12px 20px; /* Increased padding for better visual appeal */
+ border: none;
+ height: 50px;
+ /* max-width: 100%; */
+ border-radius: 5px;
+ width: 100%;
+ display: flex;
+ flex-wrap: wrap;
+
+ background-color: #F5F5F5; /* Using RGBA for lower opacity */
+ /* color: #fff; */
+ cursor: pointer;
+ color:#5bd9ff;
+ transition: background-color 0.3s ease; /* Smooth transition for hover 
+effect */
+}
+
+/* Full width button if no input */
+input[type="submit"].full-width {
+ width: 100%;
+ /* max-width: 70%; */
+
+ display: flex;
+ flex-wrap: wrap;
+
+}
+
+/* Container for input and button on the same line */
+.button-container {
+ display: flex;
+ align-items: center;
+}
+
+/* Adjusted height for button container */
+.button-container input[type="text"],
+.button-container input[type="submit"] {
+ height: 50px; /* Increased height for both input and button */
+}
+
+
+.category:hover {
+ background-color: #F5F5F5; /* Darker color on hover for contrast */
+}
+
+.category-content {
+ padding-left: 30px; /* Increased padding for better alignment */
+ /* padding-left: 30px; */
+ max-height: 600px;
+ overflow: auto;
+ padding-left: 30px;
+ max-height: 600px;
+ overflow: auto;
+ text-align: center;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ scroll-margin-top: 600px;
+ left:-30px;
+ /* position: absolute; */
+}
+
+li {
+ list-style-type: none;
+ margin-bottom: 35px;  
+ text-align: center;
+
+}
+
+
+@media screen and (min-width: 600px) {
+ .containersearch {
+  width: 80%;
+  margin: 0 auto;
+ }
+}
+
+@keyframes anim1 {
+ 0% {
+  filter: blur(15px);
+  transform: scale(0.96);
+  opacity: 0;
+ }
+ 40% {
+  filter: blur(0px);
+  transform: scale(1);
+  opacity: 0.8;
+ }
+ 100% {
+  filter: blur(0);
+  opacity: 1;
+ }
+}
+
+@keyframes fadeIn {
+ from {
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(20px);
+ }
+ to {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+ }
+}
+
+.parent-div {
+ position: relative;
+ z-index: 99999999;
+}
+
+.containersearch {
+ position: relative;
+ z-index: 99999999;
+}
+
+li {
+      background-color: rgba(255, 255, 255, 0.1); /* Apply subtle background to elements */
+      border-radius: 5px;
+      margin: 10px; /* Reduce margin for cleaner spacing */
+      padding: 10px; /* Minimal padding for text */
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for definition */
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    li:hover {
+      background-color: rgba(255, 255, 255, 0.2); /* Slightly higher opacity on hover */
+    }
+
+
+
+/* Styling for input fields */
+input[type="text"] {
+  width: calc(70% - 40px); /* Adjusted width for better fit */
+  padding: 12px; /* Increased padding for better spacing */
+  border: none;
+  /* max-width: 100%; */
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.8); /* Using RGBA for lower opacity */
+  box-shadow: 0px 0px 10px rgba(8, 45, 94, 0.3); /* Adjusted opacity for shadow */
+  margin-bottom: 10px; /* Adjusted margin for better spacing */
+  margin-right: 10px; /* Added margin for spacing between input and button */
+  display: flex;
+  width: 100%;
+ flex-wrap: wrap;
+
+}
+
+/* Styling for submit buttons */
+input[type="submit"] {
+  padding: 12px 20px; /* Increased padding for better visual appeal */
+  border: none;
+  height: 50px;
+  /* max-width: 100%; */
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+ flex-wrap: wrap;
+
+  background-color: rgba(18, 53, 85, 0.8); /* Using RGBA for lower opacity */
+  /* color: #fff; */
+  cursor: pointer;
+  color:#5bd9ff;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Full width button if no input */
+input[type="submit"].full-width {
+  width: 100%;
+  /* max-width: 70%; */
+
+  display: flex;
+ flex-wrap: wrap;
+
+}
+
+/* Container for input and button on the same line */
+.button-container {
+  display: flex;
+  align-items: center;
+}
+
+    input[type="text"]:hover,
+    input[type="submit"]:hover {
+      transform: scale(1.05); /* Subtle scale on hover */
+    }
+
+
+    
+p {
+ text-align: center;
+}
+.parent-div {
+ position: relative;
+ width: 100%;
+ max-width: 800px;
+ margin: 0 auto;
+}
+
+
+li {
+      background-color: rgba(255, 255, 255, 0.1); /* Apply subtle background to elements */
+      border-radius: 5px;
+      margin: 10px; /* Reduce margin for cleaner spacing */
+      padding: 10px; /* Minimal padding for text */
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for definition */
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    li:hover {
+      background-color: rgba(255, 255, 255, 0.2); /* Slightly higher opacity on hover */
+    }
+
+
+
+</style>
+
+</head>
+<body>
+    <div class="lines">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+    <!-- <div class="parent-div"> -->
+
+    <p class="welcometext">{{ welcome|safe }}</p>
+
+    <div class="containersearch">
+        {% for category in categories %}
+        <div class="category" onclick="toggleCategoryVisibility(this)" data-index="{{ loop.index }}">
+            <span class="category-title">{{ category.name }}</span>
+            <span class="expand-icon">+</span>
+        </div>
+        <ul class="category-content" style="display: none;">
+            {% for button in category.buttons %}
+            <li>
+                {% if button.placeholder %}
+                <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                <input class='searchtools' type="submit" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}" value="{{ button.name }}">
+                {% else %}
+                <input class='searchtools full-width' type="submit" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}" value="{{ button.name }}">
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </div>
+    <!-- </div> -->
+    
+    
+    
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+
+
+function toggleCategoryVisibility(element) {
+    var content = element.nextElementSibling;
+    if (content.style.display === "none") {
+        content.style.display = "block";
+        element.querySelector('.expand-icon').innerText = '-';
+        
+        // Get the index of the clicked category
+        var index = element.getAttribute('data-index');
+        
+        // Calculate the delay for the animation
+        var delay = parseFloat(index * 0.5);
+        
+        // Apply the delay to the animation
+        content.style.animationDelay = delay + 's';
+    } else {
+        content.style.display = "none";
+        element.querySelector('.expand-icon').innerText = '+';
+    }
+}
+
+$('input[type="submit"]').click(function(event) {
+   event.preventDefault();
+   var buttonId = this.id;
+   $.ajax({
+      type: 'POST',
+      url: '/submit',
+      data: { button: buttonId },
+   });
+});
+
+
+socket.on('get_value', (data) => {
+   const element = document.getElementById(data.element_id);
+   const value = element.value;
+
+   // Send the value back to the server
+   socket.emit('value_response', { element_id: data.element_id, value: value });
+});
+
+
+
+//   document.addEventListener('contextmenu', function(event) {
+//     console.log('Context menu access has been disabled to avoid unintentional activation, enhancing the overall minimalist and streamlined user experience.');
+//     event.preventDefault();
+// });
+socket.on('show_alert', function(data) {
+    showAlert(data.message);
+});
+function showAlert(message) {
+    // Create a new alert box
+    var alertBox = document.createElement('div');
+    alertBox.className = 'alert-box';
+    var alertMessage = document.createElement('span');
+    alertMessage.textContent = message;
+    alertBox.appendChild(alertMessage);
+
+    // Check for existing alert boxes
+    var existingAlertBoxes = document.querySelectorAll('.alert-box');
+    existingAlertBoxes.forEach(function(alertBox) {
+        alertBox.style.animation = 'fadeOutandslideout 1s forwards';
+        setTimeout(function() {
+            document.body.removeChild(alertBox);
+        }, 3000); // wait until the animation finishes
+    });
+
+    // Add the new alert box to the body
+    document.body.appendChild(alertBox);
+
+    // Display the new alert box
+    alertBox.style.display = 'block';
+
+    // Hide the alert box after 4.6 seconds
+    setTimeout(function() {
+        alertBox.style.display = 'none';
+        setTimeout(function() {
+            document.body.removeChild(alertBox);
+        }, 1000); // wait until the animation finishes
+    }, 4600); // it's in milliseconds, divide by 1000, so like 1000 = 1 second
+}
+
+$(document).ready(function(){
+    $('.category').click(function(){
+        var bodyHeight = $('body').height(); // Get current body height
+        var containerSearchHeight = $('.containersearch').outerHeight(); // Get containersearch height
+        
+        // Check if containersearch is larger than body
+        if(containerSearchHeight > bodyHeight){
+            $('body').height(containerSearchHeight + 400); // Add 400px to ensure margin
+        }
+    });
+});
+
+</script>
+</html>

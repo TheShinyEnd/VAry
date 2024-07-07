@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyInstaller UI</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: rgba(30, 30, 30, 0.8);
+            --text-color: #ffffff;
+            --accent-color: #3498db;
+            --hover-color: #2980b9;
+            --disabled-color: #7f8c8d;
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --console-bg: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .script-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .script-item {
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: none;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .script-item:hover, .script-item.selected {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="text"], input[type="file"] {
+            flex-grow: 1;
+            padding: 12px;
+            background-color: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-sizing: border-box;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        input[type="text"]:focus, input[type="file"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background-color: var(--disabled-color);
+            cursor: not-allowed;
+        }
+
+        #console {
+            background-color: var(--console-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 15px;
+            height: 100%;
+            overflow-y: auto;
+            font-family: 'Quicksand', monospace;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            flex-grow: 1;
+        }
+
+        #console:not(:empty) {
+            animation: glow 2s infinite alternate;
+        }
+
+        #console::-webkit-scrollbar {
+            width: 4px;
+            overflow: hidden;
+        }
+
+        #console::-webkit-scrollbar-track {
+            background: rgba(30, 70, 94, 0.062);
+            border-radius: 8px;
+            opacity: 0.3;
+            overflow: hidden;
+        }
+
+        #console::-webkit-scrollbar-thumb {
+            background: rgba(11, 85, 90, 0.479);
+            border-radius: 8px;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); }
+            to { box-shadow: 0 0 20px rgba(52, 152, 219, 0.8); }
+        }
+
+        .hidden { display: none; }
+
+        .alert-box {
+            display: none;
+            position: fixed;
+            top: 2%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ff0000;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 20px;
+            z-index: 1000000000;
+            animation: slideIn 1s forwards, fadeOutandslideout 1s 3.5s forwards;
+        }
+
+        @keyframes slideIn {
+            0% { transform: translate(-50%, -120%); }
+            100% { transform: translate(-50%, 0%); }
+        }
+
+        @keyframes fadeOutandslideout {
+            0% { opacity: 0.8; transform: translate(-50%, 0%); filter: blur(0px); }
+            100% { 
+                opacity: 0;  
+                transform: translate(-50%, -100%); 
+                filter: blur(20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PyInstaller UI</h1>
+        <div class="script-list">
+            <button class="script-item" data-script="dvrfy">dvrfy</button>
+            <button class="script-item" data-script="UTXTool">UTXTool</button>
+        </div>
+        <div class="form-group">
+            <button id="custom_script_btn">Select Custom Script</button>
+            <input type="file" id="custom_script" name="custom_script" accept=".py" style="display: none;">
+            <input type="text" id="custom_script_path" readonly placeholder="No file selected">
+            <input type="text" id="dependencies" name="dependencies" placeholder="Additional Dependencies">
+        </div>
+        <div class="form-group">
+            <input type="text" id="output_dir" name="output_dir" value="C:\Users\thesh\Documents\Main\Development\VAry\dist" required>
+            <button id="build_button">Build</button>
+        </div>
+        <div id="console" class="hidden"></div>
+    </div>
+
+    <script>
+        const socket = io();
+        let selectedScript = null;
+
+        document.querySelectorAll('.script-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.script-item').forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedScript = this.dataset.script;
+                document.getElementById('custom_script_path').value = '';
+                buildSelectedScript();
+            });
+        });
+
+        document.getElementById('custom_script_btn').addEventListener('click', function() {
+            document.getElementById('custom_script').click();
+        });
+
+        document.getElementById('custom_script').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                document.getElementById('custom_script_path').value = e.target.files[0].path;
+            }
+        });
+
+        document.getElementById('build_button').addEventListener('click', function() {
+            const customScript = document.getElementById('custom_script_path').value;
+            if (customScript) {
+                buildCustomScript();
+            } else {
+                showAlert('Please select a custom script.');
+            }
+        });
+
+        function buildSelectedScript() {
+            if (!selectedScript) return;
+
+            const outputDir = document.getElementById('output_dir').value;
+            const dependencies = document.getElementById('dependencies').value;
+
+            const consoleOutput = document.getElementById('console');
+            consoleOutput.classList.remove('hidden');
+            consoleOutput.innerHTML = '';
+
+            fetch('/build', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `script=${selectedScript}&output_dir=${outputDir}&dependencies=${dependencies}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('Build completed successfully!');
+                } else {
+                    showAlert(`Build failed: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('An error occurred during the build process.');
+            });
+        }
+
+        function buildCustomScript() {
+            const customScript = document.getElementById('custom_script_path').value;
+            const outputDir = document.getElementById('output_dir').value;
+            const dependencies = document.getElementById('dependencies').value;
+
+            if (!customScript || !outputDir) {
+                showAlert('Please select a custom script and provide an output directory.');
+                return;
+            }
+
+            const consoleOutput = document.getElementById('console');
+            consoleOutput.classList.remove('hidden');
+            consoleOutput.innerHTML = '';
+
+            fetch('/build_custom', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `script=${customScript}&output_dir=${outputDir}&dependencies=${dependencies}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('Custom build completed successfully!');
+                } else {
+                    showAlert(`Custom build failed: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('An error occurred during the custom build process.');
+            });
+        }
+
+        socket.on('console_output', function(msg) {
+            const consoleOutput = document.getElementById('console');
+            consoleOutput.innerHTML += msg.data + '<br>';
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        });
+
+        function showAlert(message) {
+            var alertBox = document.createElement('div');
+            alertBox.className = 'alert-box';
+            var alertMessage = document.createElement('span');
+            alertMessage.textContent = message;
+            alertBox.appendChild(alertMessage);
+
+            var existingAlertBoxes = document.querySelectorAll('.alert-box');
+            existingAlertBoxes.forEach(function(alertBox) {
+                alertBox.style.animation = 'fadeOutandslideout 1s forwards';
+                setTimeout(function() {
+                    document.body.removeChild(alertBox);
+                }, 1000);
+            });
+
+            document.body.appendChild(alertBox);
+            alertBox.style.display = 'block';
+
+            setTimeout(function() {
+                alertBox.style.animation = 'fadeOutandslideout 1s forwards';
+                setTimeout(function() {
+                    document.body.removeChild(alertBox);
+                }, 1000);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
