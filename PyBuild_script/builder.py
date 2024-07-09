@@ -3,18 +3,44 @@ import subprocess
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 import socket
+import sys
+
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='threading')
 
+
+def get_script_directory():
+    if getattr(sys, 'frozen', False):
+        # If the script is running as a bundled executable (e.g., PyInstaller)
+        # print('Running as a bundled executable(pyinstaller)')
+        return os.path.dirname(sys.executable)
+    else:
+        # If the script is running as a regular Python script
+        return os.path.dirname(os.path.abspath(__file__))
+
+def get_script_filename():
+    if getattr(sys, 'frozen', False):
+        # If the script is running as a bundled executable (e.g., PyInstaller)
+        # print('Running as a bundled executable(pyinstaller)')
+        return os.path.basename(sys.executable)
+    else:
+        # If the script is running as a regular Python script
+        return os.path.basename(__file__)
+
+
+f_align = '/'.join(get_script_directory().split(os.sep)[0:-1:])
+
+
+
 SCRIPTS = {
     "dvrfy": {
         "path": r"C:\Users\thesh\Documents\Main\Development\VAry\Host\dvrfy.py",
-        "command": 'pyinstaller --onefile --console --noconfirm --icon "C:/Users/thesh/Documents/Main/Development/VAry/Items/application icon.ico" --add-data "C:\\Users\\thesh\\Documents\\Main\\Development\\VAry\\Host\\templates\\index.html;templates" --hidden-import gevent --hidden-import geventwebsocket --hidden-import engineio.async_gevent '
+        "command": f'pyinstaller --onefile --console --noconfirm --icon "{f_align}/Items/application icon.ico" --add-data "{f_align}\\Host\\templates\\index.html;templates" --hidden-import gevent --hidden-import geventwebsocket --hidden-import engineio.async_gevent '
     },
     "UTXTool": {
         "path": r"C:\Users\thesh\Documents\Main\Development\VAry\ToolInUX\UTXTool.py",
-        "command": 'pyinstaller --onefile --console --noconfirm --icon "C:/Users/thesh/Documents/Main/Development/VAry/Items/application icon.ico"  --add-data "C:/Users//thesh/Documents/Main/Development/VAry/ToolInUX/templates/webpageDesign.html;templates" --add-data "C:/Users//thesh/Documents/Main/Development/VAry/ToolInUX/templates/webpageDesign.html;webpageDesign.html" --add-data "C:\\Users\\thesh\\Documents\\Main\\Development\\VAry\\dist\\dvrfy.exe;dvrfy.exe" --hidden-import gevent --hidden-import geventwebsocket --hidden-import engineio.async_gevent '
+        "command": f'pyinstaller --onefile --console --noconfirm --icon "{f_align}/Items/application icon.ico"  --add-data "{f_align}/ToolInUX/templates/webpageDesign.html;templates" --add-data "{f_align}/ToolInUX/templates/webpageDesign.html;webpageDesign.html" --add-data "{f_align}\\dist\\dvrfy.exe;dvrfy.exe" --hidden-import gevent --hidden-import geventwebsocket --hidden-import engineio.async_gevent '
     }
 }
 
