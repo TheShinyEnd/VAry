@@ -4,6 +4,7 @@
 
 enjoy.
 
+*Note that this is a project I made for myself and my friends in Highschool, for the fun of trolling. nothing serious / to cause actual harm.
 
 ## diversify
 
