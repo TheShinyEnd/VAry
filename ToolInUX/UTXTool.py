@@ -1239,7 +1239,7 @@ def scan_network():
 
     def scan_ip(ip):
         # ports = [[443, 8009, 8008, 445], [5900, 80, 139, 9000, 8015, 23], [8080, 8443, 111, 21]]
-        ports = [[12345]]
+        ports = [[45433]]
 
         global snetwork_listexeaura_list
 
@@ -1325,17 +1325,24 @@ def get_weather_description(weather_description):
 def generate_weather_greeting(location):
     # Fetch weather data
     
-    OPENWEATHERMAP_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
-    response = requests.get(f'http://api.openweathermap.org/data/2.5/weather?lat={location[0]}&lon={location[1]}&units=metric&appid={OPENWEATHERMAP_API_KEY}')
-    data = response.json()
-    print(data)
+    try:
+        OPENWEATHERMAP_API_KEY = os.getenv('OPENWEATHERMAP_API_KEY')
+        response = requests.get(f'http://api.openweathermap.org/data/2.5/weather?lat={location[0]}&lon={location[1]}&units=metric&appid={OPENWEATHERMAP_API_KEY}')
+        data = response.json()
+        print(data)
 
-    print(f'OPENWEATHER API KEY {OPENWEATHERMAP_API_KEY}')    # Extract weather details
-    temperature = round(data['main']['temp'])
-    humidity = data['main']['humidity']
-    wind_speed = data['wind']['speed']
-    precipitation = data['clouds']['all'] / 100
-    weather_description = data['weather'][0]['description'].lower()
+        # print(f'OPENWEATHER API KEY {OPENWEATHERMAP_API_KEY}')    # Extract weather details
+        temperature = round(data['main']['temp'])
+        humidity = data['main']['humidity']
+        wind_speed = data['wind']['speed']
+        precipitation = data['clouds']['all'] / 100
+        weather_description = data['weather'][0]['description'].lower()
+    except:
+        temperature = 0
+        humidity = 0
+        wind_speed = 0
+        precipitation = 0
+        weather_description = 'none'
 
     # Determine the greeting
     now = datetime.now()

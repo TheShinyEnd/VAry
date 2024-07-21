@@ -31,16 +31,17 @@ def get_script_filename():
 
 f_align = '/'.join(get_script_directory().split(os.sep)[0:-1:])
 
+temp_dir = os.path.expandvars("%TEMP%")
 
 
 SCRIPTS = {
     "dvrfy": {
         "path": r"C:\Users\thesh\Documents\Main\Development\VAry\Host\dvrfy.py",
-        "command": f'pyinstaller --onefile --console --noconfirm --icon "{f_align}/Items/application icon.ico" --add-data "{f_align}\\Host\\templates\\index.html;templates" --hidden-import gevent --hidden-import geventwebsocket --hidden-import engineio.async_gevent '
+        "command": f'pyinstaller --onefile --console --noconfirm --icon "{f_align}/Items/application icon.ico" --add-data "{f_align}\\Host\\templates\\index.html;templates" --hidden-import gevent --hidden-import geventwebsocket --hidden-import engineio.async_gevent --runtime-tmpdir "{temp_dir}"'
     },
     "UTXTool": {
         "path": r"C:\Users\thesh\Documents\Main\Development\VAry\ToolInUX\UTXTool.py",
-        "command": f'pyinstaller --onefile --console --noconfirm --icon "{f_align}/Items/application icon.ico"  --add-data "{f_align}/ToolInUX/templates/webpageDesign.html;templates" --add-data "{f_align}/ToolInUX/templates/webpageDesign.html;webpageDesign.html" --add-data "{f_align}\\dist\\dvrfy.exe;dvrfy.exe" --hidden-import gevent --hidden-import geventwebsocket --hidden-import engineio.async_gevent '
+        "command": f'pyinstaller --onefile --console --noconfirm --icon "{f_align}/Items/application icon.ico"  --add-data "{f_align}/ToolInUX/templates/webpageDesign.html;templates" --add-data "{f_align}/ToolInUX/templates/webpageDesign.html;webpageDesign.html" --add-data "{f_align}\\dist\\dvrfy.exe;dvrfy.exe" --hidden-import gevent --hidden-import geventwebsocket --hidden-import engineio.async_gevent --runtime-tmpdir "{temp_dir}"'
     }
 }
 

@@ -2,22 +2,29 @@
 
 <varylayout>:
     name:'varylayout'
+    background_color: 0.4, 0.6, 0.8, 1
+    color: 0, 0, 0, 1
     BoxLayout:
         id: main_layout
         orientation: 'vertical'
-
-
+        background_color: 0.4, 0.6, 0.8, 1
+        color: 0, 0, 0, 1
         TabbedPanel:
+            tab_width: self.size[0]/len(self.tab_list)
+            tab_height: 130
             do_default_tab: False
-            background_color: 0.3, 0.6, 1, 0.5 # to change the background of the whole thing
+            background_color: 0.4, 0.6, 0.8, 1
 
             TabbedPanelItem:
+
                 text: 'Diversify'
-                color: (0.2, 0.2, 10, 10)
-                background_color: 0.2, 0.3, 0.6, 0.6
+                font_name: 'Quicksand'
+                color: (0.5, 0.6, 1, 1.0)   
+                background_color: 0.4, 0.6, 0.8, 1  
+
                 BoxLayout:
                     orientation: 'vertical'
-                    background_color: 0.2, 0.3, 0.6, 10
+                    background_color: 0.1, 0.3, 0.3, 10
                     ScrollView:
                         BoxLayout:
                             id: devicesdiversify
@@ -29,12 +36,13 @@
                                 height: 190
                                 cols:1
                                 Label:
+                                    font_name: 'Quicksand'
                                     underline: True
                                     text:"Diversify WIP\nstable release?, enjoy\nDiversify Scanner, scroll to bottom"
                                     id:diversifytext
                                     bold: True
 
-                                    color: (0.7, 0.1, 0.1, 0.7)
+                                    color: (0.7, 0.3, 0.5, 0.7)
 
 
 #                                ScrollView:
@@ -48,19 +56,20 @@
                             # 'webhandler': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Open website"
                                     on_release:app.diversifywebhandler()
                                 TextInput:
                                     hint_text: "Enter the url of the website you wish"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifywebhandler
                                     multinline:True
@@ -68,97 +77,92 @@
                             # 'runcmd': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
-                                cols:2
+                                height: 160
+                                cols:3
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text:"Run with UAC"
+                                    on_release:app.diversifyprogramvl2()
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Run without UAC"
                                     on_release:app.diversifyruncmd()
                                 TextInput:
-                                    hint_text: "Without a UAC/Admin permission, run a command"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    hint_text: "Enter the command"
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifyruncmd
                                     multinline:True
 
-
-                            # 'programvl2': True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Run with UAC"
-                                    on_release:app.diversifyprogramvl2()
-                                TextInput:
-                                    hint_text: "With UAC/Admin permission request run a command"
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:diversifyprogramvl2
-                                    multinline:True
+ 
                             # 'typestringwithhumandelay': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Type a String like a human"
                                     on_release:app.diversifytypestringwithhumandelay()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
+                                    hint_text: "Enter the text to enter with a delay between each keystroke"
                                     id:diversifytypestringwithhumandelay
                                     multinline:True
 
                             # 'setvolume': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Set the volume"
                                     on_release:app.diversifysetvolume()
                                 TextInput:
                                     hint_text: "In percentage, 0 - 100"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifysetvolume
                                     multinline:True
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Make the screen rotate"
                                     on_release:app.diversifymakethescreendorotations()
                                 TextInput:
                                     hint_text: "For how long to do the rotations? (seconds)"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifymakethescreendorotations
                                     multinline:True
@@ -168,98 +172,153 @@
                             # 'inviscurr': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Send to background highlight"
                                     on_release:app.diversifyinviscurr()
                                 TextInput:
-                                    hint_text: "Explanation: The app that you select, will be hidden. Duration in seconds for how long it'll run."
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    hint_text: "The app that is focused(windows), will be sent to the background; in seconds"
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifyinviscurr
                                     multinline:True
 
+ 
+
+                            # maximizeprocessvianame
+                            GridLayout:
+                                size_hint_y: None
+                                height: 160
+                                cols: 3
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text: "Maximize Process"
+                                    on_release: app.diversifymaximizeprocessvianame()
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text: "Minimize Process"
+                                    on_release: app.diversifyminimizeprocessvianame()
+                                TextInput:
+                                    hint_text: "Enter exe name"
+                                    background_color: 0.1, 0.3, 0.3, 10
+                                    bold: True
+                                    id: diversifychangeapperanjceprocessvianame
+                                    multiline: True
+
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
+                                cols:3
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text:"Always on top"
+                                    on_release:app.diversifyalwaysontop()
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text:"Unset Always on top"
+                                    on_release:app.diversifyunsetalwaysontop()
+                                TextInput:
+                                    background_color: 0.1, 0.3, 0.3, 10
+                                    bold: True
+                                    hint_text: "Enter exe name"
+                                    id:diversifyalwaysontop
+                                    multinline:True
+
+                            GridLayout:
+                                size_hint_y: None
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Turn the Screen black"
                                     on_release:app.diversifyblackenscreen()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
-                                    hint_text: "For how long, Duration in seconds"
+                                    hint_text: "For how will it be black? Duration in seconds"
                                     id:diversifyblackenscreen
                                     multinline:True
    # 'prockill': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Kill a process"
                                     on_release:app.diversifyprockill()
                                 TextInput:
-                                    hint_text: "Process name"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    hint_text: "Enter exe name"
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifyprockill
                                     multinline:True
 
-                       
+ 
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
-                                cols:2
+                                height: 160
+                                cols:3
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Hide a process"
                                     on_release:app.diversifyhideprocessvianame()
-                                TextInput:
-                                    hint_text: "Process name with extension, sends the process to the background"
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:diversifyhideprocessvianame
-                                    multinline:True
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Foreground a process\nfrom the background"
                                     on_release:app.diversifyshowprocessvianame()
                                 TextInput:
-                                    hint_text: "Process name, enter the extension as well"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    hint_text: "Enter exe name"
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifyshowprocessvianame
                                     multinline:True
@@ -268,121 +327,231 @@
                             # 'texttospeech': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
-                                cols:2
+                                height: 160
+                                cols:3
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
-                                    text:"Text to speech"
+                                    text:"Speak in\nany language"
+                                    on_release:app.diversifyspeakxlanguage()
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text:"Windows TTS"
                                     on_release:app.diversifytexttospeech()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifytexttospeech
                                     multinline:True
 
-                            # 'speakxlanguage': True
+ 
+
+                            # dvdtimeout
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
-                                cols:2
+                                height: 160
+                                cols: 2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
-                                    text:"Speak in a language"
-                                    on_release:app.diversifyspeakxlanguage()
+                                    text: "Set DVD Timeout\n(0 to disable)" 
+                                    on_release: app.diversifydvdtimeout()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    hint_text: "Enter timeout in seconds"
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
-                                    hint_text: "Hear any language (except Hebrew) by writing in it"
-                                    id:diversifyspeakxlanguage
-                                    multinline:True
+                                    id: diversifydvdtimeout
+                                    multiline: True
+
+                            # playytvidbetweentime
+                            GridLayout:
+                                size_hint_y: None
+                                height: 180 
+                                cols: 2
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text: "Play YouTube Video\nBackground"
+                                    on_release: app.diversifyplayytvidbetweentime()
+                                TextInput:
+                                    hint_text: "Enter the YouTube video URL"
+                                    background_color: 0.1, 0.3, 0.3, 10
+                                    bold: True
+                                    id: diversifyplayytvidbetweentimeurl
+                                    multiline: True
+                            GridLayout: 
+                                size_hint_y: None
+                                height: 100
+                                cols: 2
+                                TextInput:
+                                    hint_text: "Vid Start Time, in seconds (optional)"
+                                    background_color: 0.1, 0.3, 0.3, 10
+                                    bold: True
+                                    id: diversifyplayytvidbetweentimestarttime
+                                    multiline: True 
+                                TextInput:
+                                    hint_text: "Vid End Time, in seconds (optional)"
+                                    background_color: 0.1, 0.3, 0.3, 10
+                                    bold: True
+                                    id: diversifyplayytvidbetweentimeendtime
+                                    multiline: True
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 10
+                                background_color: 0.1, 0.3, 0.3, 10
+                                cols:1
+                                Label:
+                                    underline: True
+                                    font_name: 'Quicksand'
+                                    text:""
+                                    bold: True
+                                    color: (0.7, 0.1, 0.1, 0.7)
+                            
+                            # playytvidbetweentimefullscreen
+                            GridLayout:
+                                size_hint_y: None
+                                height: 180
+                                cols: 2
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text: "Play YouTube Video\nFullscreen"
+                                    on_release: app.diversifyplayytvidbetweentimefullscreen()
+                                TextInput:
+                                    hint_text: "Enter the YouTube video URL"
+                                    background_color: 0.1, 0.3, 0.3, 10
+                                    bold: True
+                                    id: diversifyplayytvidbetweentimeurlfullscreen
+                                    multiline: True
+                            GridLayout:
+                                size_hint_y: None
+                                height: 100
+                                cols: 2
+                                TextInput:
+                                    hint_text: "Vid Start Time, in seconds (optional)"
+                                    background_color: 0.1, 0.3, 0.3, 10
+                                    bold: True
+                                    id: diversifyplayytvidbetweentimestarttimefullscreen
+                                    multiline: True
+                                TextInput:
+                                    hint_text: "Vid End Time, in seconds (optional)"
+                                    background_color: 0.1, 0.3, 0.3, 10
+                                    bold: True
+                                    id: diversifyplayytvidbetweentimeendtimefullscreen
+                                    multiline: True
+                                
+
+
+                            GridLayout:
+                                size_hint_y: None
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Flip screen: upsidedown"
-                                    on_release:app.diversifyscreenflipped()
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Flip screen: normal"
                                     on_release:app.diversifyscreenlandscape()
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text:"Flip screen: upsidedown"
+                                    on_release:app.diversifyscreenflipped()
+
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Flip screen: right"
                                     on_release:app.diversifyscreenportraitflipped()
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Flip screen: left"
                                     on_release:app.diversifyscreenportrait()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Per click,\nlag windows(Enable)"
                                     on_release:app.diversifywindowslagclicksoundenable()
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Per click,\nlag windows(Disable)"
                                     on_release:app.diversifywindowslagclicksounddisable()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Swap RMB and LMB"
                                     on_release:app.diversifyswappedswaprmbandlmb()
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Unswap RMB and LMB"
                                     on_release:app.diversifyunswappedswaprmbandlmb()
@@ -395,75 +564,81 @@
                             # 'meandtheboys': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Me and the boys!"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifymeandtheboys()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Download And Install Chrome"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyinstallchrome()
                             # 'terminateunknownprocesses': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Terminate unknown processes"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyterminateunknownprocesses()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Freeze unknown processes"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.freeze_unknown_processes()
 
                             # 'terminateunknownprocesses': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Enable auto termination"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyenableterminateunknownprocesses()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Disable auto termination"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifydisableterminateunknownprocesses()
 
@@ -472,22 +647,24 @@
                             # 'freezeallprocesses': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Freeze all processes"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyfreezeallprocesses()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Unfreeze all the processes"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyunfreezeallprocesses()
 
@@ -495,85 +672,93 @@
      
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:3
                                 Button:
+                                    font_name: 'Quicksand'
                                     text:"Payload 1"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     on_release:app.diversifypayload_1()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text:"Payload 2"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     on_release:app.diversifypayload_2()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text:"Payload 3"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     on_release:app.diversifypayload_3()
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:3
                                 Button:
+                                    font_name: 'Quicksand'
                                     text:"Payload 4"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     on_release:app.diversifypayload_4()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text:"Payload 5"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     on_release:app.diversifypayload_5()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text:"Payload 6"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     on_release:app.diversifypayload_6()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Hide self"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyhideselfexecutable()
 
                             # 'restartexplorer': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Restart Explorer"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyrestartexplorer()
 
@@ -602,25 +787,26 @@
                             # 'playtone': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:3
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Play tone"
                                     on_release:app.diversifyplaytone()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     hint_text: "What is the frequency?(hz)"
                                     id:diversifyplaytonehz
                                     multinline:True
                                 TextInput:
                                     hint_text: "For how long, in milliseconds"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifyplaytoneduration
                                     multinline:True
@@ -628,35 +814,36 @@
                             # 'playshepardtone': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:3
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Initialize Shepard Tone"
                                     on_release:app.diversifyplayshepardtone()
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:3
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     hint_text: "Start frequency(hz)"
                                     id:diversifyplayshepardtonestarthz
                                     multinline:True
                                 TextInput:
                                     hint_text: "End frequency(hz)"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifyplayshepardtoneendhz
                                     multinline:True
                                 TextInput:
                                     hint_text: "For how long(in seconds)"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifyplayshepardtoneduration
                                     multinline:True
@@ -672,22 +859,24 @@
                             # 'enablemouse': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Enable mouse"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyenablemouse()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Disable mouse"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifydisablemouse()
 
@@ -697,23 +886,25 @@
                             # 'enablekeyboard': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Enable keyboard"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyenablekeyboard()
 
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Disable Keyboard"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifydisablekeyboard()
 
@@ -723,18 +914,19 @@
                             # 'presskeys': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Press keys"
                                     on_release:app.diversifypresskeys()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifypresskeys
                                     multinline:True
@@ -742,33 +934,35 @@
                             # 'writetext': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Write text"
                                     on_release:app.diversifywritetext()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifywritetext
                                     multinline:True
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     hint_text:"Override the subnet, e.g. '192.168.1.'"
                                     id:overridensubnetdiversify
                                     multinline:True
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Toggle school subnets\n(Status: Disabled)" 
                                     background_color: (0.8, 0.2, 0.7, 1)
                                     color: (0.2, 0.6, 1, 1)
@@ -778,42 +972,60 @@
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Scan for diversified hosts"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.scan_for_hosts()
 
 
 
 
-
-
-
+ 
 
             TabbedPanelItem:
                 text: 'Diversify Tools'
-                color: (0.2, 0.2, 10, 10)
-                background_color: 0.2, 0.3, 0.6, 0.6
+                font_name: 'Quicksand'
+                color: (0.5, 0.6, 1, 1.0)   
+                background_color: 0.4, 0.6, 0.8, 1  
+                on_release: app.show_password_prompt() if not app.is_tools_unlocked else None
+
                 BoxLayout:
                     orientation: 'vertical'
-                    background_color: 0.2, 0.3, 0.6, 10
+                    background_color: 0.1, 0.3, 0.3, 10
                     ScrollView:
                         BoxLayout:
                             orientation: 'vertical'
                             size_hint_y: None
                             height: self.minimum_height
+                            # self_destruct
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 60
+                                cols: 1
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.8, 0.2, 0.2, 0.6  # Reddish background
+                                    on_press: self.color = (1, 0.5, 0.5, 0.8)  # Lighter red on press
+                                    on_release: self.color = (1, 0.5, 0.5, 1)
+                                    color: 1, 0.5, 0.5, 1
+                                    bold: True
+                                    text: "Self Destruct"
+                                    on_release: app.diversifyself_destruct()
+                                    
+                            GridLayout:
+                                size_hint_y: None
+                                height: 160
                                 cols:1
                                 Label:
                                     underline: True
+                                    font_name: 'Quicksand'
                                     text:"Diversify Tools WIP"
                                     bold: True
                                     color: (0.7, 0.1, 0.1, 0.7)
@@ -823,16 +1035,17 @@
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     background_color: 0.87, 0.4, 0.6, 1
                                     color: 0.5, 0.8, 1, 0.8
                                     bold: True
                                     text:"Send priority ipv4\nto selected host"
                                     on_release:app.ipv4prioritize()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     hint_text: "Default: send this device’s IPv4; else: overwrite it."
                                     id:ipv4prioritize
@@ -840,9 +1053,10 @@
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     background_color: 0.87, 0.4, 0.6, 1
                                     color: 0.5, 0.8, 1, 0.8
                                     bold: True
@@ -851,37 +1065,40 @@
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Send all hosts a Todo"
                                     on_release:app.diversifysendallhostsatodo()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifysendallhostsatodo
                                     multinline:True
                             # 'runpythonscript': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
-                                    text:"Run python code, remote host"
+                                    text:"Remote run python code"
                                     on_release:app.diversifyrunpythonscript()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
+                                    hint_text: "Plain text python - as a script"
                                     id:diversifyrunpythonscript
                                     multinline:True
 
@@ -894,19 +1111,20 @@
                             # 'updateselfvialink': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Update self via a link"
                                     on_release:app.diversifyupdateselfvialink()
                                 TextInput:
                                     hint_text: "Make sure that the link is a direct download, use dropbox, at the end, dl=1"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifyupdateselfvialink
                                     multinline:True
@@ -914,19 +1132,20 @@
                             # 'renameself': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Make the app rename itself"
                                     on_release:app.diversifyrenameself()
                                 TextInput:
                                     hint_text: "Set a new name!, you don't have to enter the .exe at the end(preferably don't)" 
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifyrenameself
                                     multinline:True
@@ -936,18 +1155,19 @@
                             # 'movetofolder': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Change the app directory"
                                     on_release:app.diversifymovetofolder()
                                 TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifymovetofolder
                                     multinline:True
@@ -957,19 +1177,29 @@
                             # 'dosipport': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
-                                cols:2
+                                height: 160
+                                cols:3
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
-                                    text:"Send a DOS to an IP"
+                                    text:"Disable remotes DOS\nIPv4 isn't accounted"
+                                    on_release:app.diversifyclosedosipport()
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text:"Send a DOS\n to an IP"
                                     on_release:app.diversifydosipport()
                                 TextInput:
-                                    hint_text:"Goes as follows, 'IP:PORT'"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    hint_text:"Enter the ip and the port, formatted as IP:PORT"
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:diversifydosipport
                                     multinline:True
@@ -977,58 +1207,59 @@
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
-                                cols:2
+                                height: 160
+                                cols:3
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
-                                    text:"Unblock application by name"
+                                    text:"Block application\nby name"
+                                    on_release:app.block_application_by_name()
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text:"Unblock application\nby name"
                                     on_release:app.unblock_application_by_name()
                                 TextInput:
-                                    hint_text:"e.g. Chrome.exe, note it must be running"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    hint_text:"Enter exe name"
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:unblock_application_by_name
                                     multinline:True
+ 
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
-                                cols:2
+                                height: 160
+                                cols:3
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
-                                    text:"Block application by name"
-                                    on_release:app.block_application_by_name()
-                                TextInput:
-                                    hint_text:"e.g. Chrome.exe, note it must be running"
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:block_application_by_name
-                                    multinline:True
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
+                                    text:"Block ports\nfor application"
+                                    on_release:app.block_ports_for_application()
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
-                                    text:"Unblock ports for application"
+                                    text:"Unblock ports\nfor application"
                                     on_release:app.unblock_ports_for_application()
                                 TextInput:
-                                    hint_text:"e.g. Chrome.exe, note it must be running"
-                                    background_color: 0.2, 0.3, 0.6, 10
+                                    hint_text:"Enter exe name"
+                                    background_color: 0.1, 0.3, 0.3, 10
                                     bold: True
                                     id:unblock_ports_for_application
                                     multinline:True
@@ -1036,66 +1267,33 @@
 
 
 
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Block ports for application"
-                                    on_release:app.block_ports_for_application()
-                                TextInput:
-                                    hint_text:"e.g. Chrome.exe, note it must be running"
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:block_ports_for_application
-                                    multinline:True
-
-
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Close all DOS IP threads"
-                                    on_release:app.diversifyclosedosipport()
-
 
                             # 'killself': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
-                                    text:"Kill self"
+                                    text:"Kill diversify's process"
                                     on_release:app.diversifykillself()
    
                             # 'killself': True
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Bypass Firewall"
                                     on_release:app.bypassfirewall()
@@ -1103,65 +1301,70 @@
                             # 'handletostartsequences': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
-                                    text: "Trigger tostart sequences to run"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    text: "Run startup sequence(manual or args 'initialize')"
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyhandletostartsequences()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
-                                    text: "Restart the system, Windows"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    text: "Reboot Windows"
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyrestartsystem()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
-                                    text: "Restart the app"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    text: "Restart diversify"
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyrestartself()
                             # 'resetnetwork': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Reset network"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyresetnetwork()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold: True
                                     text:"Reset Firewall"
                                     on_release:app.reset_firewall
@@ -1170,252 +1373,290 @@
                             # 'restarttoadvancedoptions': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Restart to advanced options"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyrestarttoadvancedoptions()
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
-                                    text: "Restart to use UAC perms"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    font_name: 'Quicksand'
+                                    text: "Restart and request UAC permission\nif declined process needs to be reopened manually"
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyrestarttouac()
+
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Add self to Safemode"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyaddselftosafemode()
 
                             # 'protectfileself': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Protect own file, permission-wise"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyprotectfileself()
 
+                            # unprotectselffile
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
+                                cols: 1
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.6, 0.8, 1, 1
+                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
+                                    bold: True
+                                    text: "Unprotect Self File"
+                                    on_release: app.diversifyunprotectselffile()
+
+
+                            GridLayout:
+                                size_hint_y: None
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Corrupt Task manager"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifycorrupttaskmgr()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Corrupt Task Scheduler"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.corrupt_taskscheduler()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Corrupt MMC"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifycorruptmmc()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Corrupt Regedit"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifycorruptregedit()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Corrupt dllhost"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifycorruptdllhost()
                             
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Corrupt sfc"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifycorruptsfc()
 
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:1
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Corrupt systemreset"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifycorruptsystemreset()
 
                             # 'disablewindowsdefender': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Enable Defender"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyenablewindowsdefender()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Disable Defender"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifydisablewindowsdefender()
 
                             # 'enableuwf': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Enable UWF"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyenableuwf()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Disable UWF"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifydisableuwf()
-        # ... continue in this manner for the rest of the strings ...
+        
                             # 'disableresetoptions': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Enable Reset Options"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyenableresetoptions()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Disable Reset Options"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifydisableresetoptions()
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Enable UAC"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyenableuseraccountcontrol()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Disable UAC"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifydisableuseraccountcontrol()
 
                             # 'disablefirewall': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Enabel Firewall"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyenablefirewall()
 
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Disable Firewall"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifydisablefirewall()
                             # 'offsmartassnointernet': False
@@ -1423,43 +1664,47 @@
                             # 'getscriptdirectory': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Get the script directory"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifygetscriptdirectory()
 
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Get the script filename"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifygetscriptfilename()
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Enable Internet handling"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyonsmartassnointernet()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Disable Internet handling"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyoffsmartassnointernet()
 
@@ -1470,906 +1715,24 @@
                             # 'disabletaskmgr': False
                             GridLayout:
                                 size_hint_y: None
-                                height: 120
+                                height: 160
                                 cols:2
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Enable taskmgr"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifyenabletaskmgr()
                                 Button:
+                                    font_name: 'Quicksand'
                                     text: "Disable taskmgr"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
+                                    background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
+                                    on_release: self.color = ((0.9, 0.9, 0.94, 1))
+                                    color: (0.9, 0.9, 0.94, 1)
                                     bold:True
                                     on_press: app.diversifydisabletaskmgr()
-
-
-            TabbedPanelItem:
-                id: vary_item
-                text: 'VAry'
-                color: (0.2, 0.2, 10, 10)
-                background_color: 0.2, 0.3, 0.6, 0.6
-                BoxLayout:
-                    orientation: 'vertical'
-                    ScrollView:
-                        #on_scroll_y: root.ids.main_layout.remove_widget(root.ids.top_layout) if self.scroll_y < 1 else (root.ids.main_layout.add_widget(root.ids.top_layout) if root.ids.top_layout not in root.ids.main_layout.children else None)
-                        BoxLayout:
-                            orientation: 'vertical'
-                            size_hint_y: None
-                            height: self.minimum_height
-                            #GridLayout:
-                            #    size_hint_y: None
-                            #    height: 120
-                            #    cols:1
-                            #    Label:
-                            #        id: vary_label
-                            #        text:"Diversify subclass @VAry"
-                            #        bold: True
-                            #        color: (0.5, 0.8, 1, 0.8)
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text: "Scan for VAry hosts(Clickable, then scroll down)"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold:True
-                                    on_press: app.scan_for_vary_hosts()
-
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    underline: True
-                                    text:"Initiations"
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Run input"
-                                    on_release:app.runcmd()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:runcmd
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Open web address"
-                                    on_release:app.webhandler()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:webhandler
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    text:'Entertainment'
-                                    underline: True
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"The Boys"
-                                    on_release:app.meandtheboys()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Intro"
-                                    on_release:app.startphintro()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Launch Alpha Minecraft"
-                                    on_release:app.classicminecraft()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Label:
-                                    text:'Other'
-                                    underline: True
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Send a message"
-                                    on_release:app.msgtosystem()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:msgtosystem
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    text:"Send to background, apps"
-                                    on_release:app.inviscurr()
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:inviscurr
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Black screen"
-                                    on_release:app.blackenscreen()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:blackenscreen
-                                    multinline:True
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text:"Log off the user"
-                                    on_release:app.logoffuser()
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text:"Crash."
-                                    on_release:app.crashoops()
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    text:"Control"
-                                    underline: True
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    text:"Write text"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.writetext()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:writetext
-                                    multinline:True
-
-
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    text:"<-Keyboard      -Input-      Mouse->" 
-                                    underline: True
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:3
-                                Button:
-                                    text:"Enable"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.keyboardenable()
-                                Button:
-                                    text:"Press keys"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.presskeys()
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Enable"
-                                    on_release:app.mouseenable()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:3
-                                Button:
-                                    text:"Disable"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.keyboarddisable()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:presskeys
-                                    multinline:True
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Disable"
-                                    on_release:app.mousedisable()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    text:"Audio"
-                                    underline: True
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Play a Tone(hz\dur) Type below"
-                                    on_release:app.play_tone()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:hzofplaytone
-                                    multinline:True
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:durationofplaytone
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Play Shepard Tone(startHz\endHz\dur) Type below"
-                                    on_release:app.play_shepard_tone()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:3
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:starthzofplayshepardtone
-                                    multinline:True
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:endhzofplayshepardtone
-                                    multinline:True
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:durationofplayshepardtone
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    text:"Volume lowest"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.set_volume_zero()
-                                Button:
-                                    text:"Volume highest"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.set_volume_max()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text:"Permanent mute"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.togglemute()
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    text:"Text to speech"
-                                    underline: True
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Speak in the language you write"
-                                    on_release:app.speakxlanguage()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:speakxlanguage
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Speak Russian"
-                                    on_release:app.speakrussian()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:speakrussian
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Speak French"
-                                    on_release:app.speakfrench()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:speakfrench
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Speak Arabic"
-                                    on_release:app.speakarabic()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:speakarabic
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Speak English"
-                                    on_release:app.speakenglish()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:speakenglish
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Text to speech"
-                                    on_release:app.texttospeech()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:texttospeech
-                                    multinline:True
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    underline: True
-                                    text:"Devices"
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120 # to make it practicually hidden
-                                cols:1
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    text: ''
-                                    hint_font_size: 16
-                                    hint_text: 'To add or remove the selected computers to connect, I strongly suggest using the scanner, scroll up. '
-                                    hint_text_color: (0.7,0.6,0.45, 0.5)
-                                    hint_text_bold:True
-                                    id: conntext
-                                    multinline:False
-                                    bold: True # bold text
-                            GridLayout:
-                                size_hint_y: None
-                                height: 0
-                                cols:1
-                                BoxLayout:
-                                    id: result_layout_vary_scan
-                                    orientation: 'vertical'
-
-
-            TabbedPanelItem:
-                text: 'VAry Tools'
-                color: (0.2, 0.2, 10, 10)
-                background_color: 0.2, 0.3, 0.6, 0.6
-                BoxLayout:
-                    orientation: 'vertical'
-                    background_color: 0.2, 0.3, 0.6, 10
-                    ScrollView:
-                        BoxLayout:
-                            orientation: 'vertical'
-                            size_hint_y: None
-                            height: self.minimum_height
-
- 
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    text:"Payload"
-                                    underline: True
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:3
-                                Button:
-                                    text:"Payload 1"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.payload_1()
-                                Button:
-                                    text:"Payload 2"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.payload_2()
-                                Button:
-                                    text:"Payload 3"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.payload_3()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:3
-                                Button:
-                                    text:"Payload 4"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.payload_4()
-                                Button:
-                                    text:"Payload 5"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.payload_5()
-                                Button:
-                                    text:"Payload 6"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.payload_6()
-
-
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    text:"Python"
-                                    underline: True
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    text:"Execute python code lan"
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    color: 0.5, 0.8, 1, 0.8
-                                    bold: True
-                                    on_release:app.runpythonscript()
-                                TextInput:
-                                    background_color: 0.3, 0.4, 0.6, 1
-                                    bold: True
-                                    id:runpythonscript
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    text:"Execute python code phone"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.runpythoncode()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:runpythoncode
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    text:"Application"
-                                    underline: True
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text:"Update VAry using USB"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.updatevaryusingusb()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text:"Install Chrome"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.installchrome()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text:"Reset Windows"
-                                    on_release:app.resetwindows()
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Restart to advanced menu"
-                                    on_release:app.restarttoadvancedoptions()
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text:"Check network delay"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.checkdelay()
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text:"Overload the computer"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.killcomputerslowly()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    text:"Kill all unrecognized proccesses"
-                                    on_release:app.killallunknownprocess()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text:"Kill everything that is running, period."
-                                    on_release:app.killallprocess()
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-
-                            
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Label:
-                                    text:"VAry"
-                                    bold: True
-                                    color: (0.8, 0.3, 0.9, 0.7)
-
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Label:
-                                    underline: True
-                                    text:"ipv4, 192.168.1.~"
-                                    bold: True
-                                    color: 0.1, 0.6, 1, 0.7
-
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:ipv4subnet
-                                    multinline:True
-
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text: "Scan network for DOS"
-                                    background_color: (0, 0, 0, 0.7)
-                                    color: (0.5, 0.3, 0.9, 1)
-                                    on_press: app.scan_network_and_display_results()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                Button:
-                                    text: "Close all threads of DOS - Phone"
-                                    size_hint_y: None
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_press: app.stopeveryrunningdos_phone()
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    text:"DOS Using remote computer"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.dosip()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:dosip
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:2
-                                Button:
-                                    text:"DOS, Phone(IP:PORT):"
-                                    background_color: 0.1, 0.4, 0.7, 0.6
-                                    on_press: self.color = (0.5, 0.8, 1, 0.8)
-                                    on_release: self.color = (0.5, 0.8, 0.7, 1)
-                                    color: 0.5, 0.8, 0.7, 1
-                                    bold: True
-                                    on_release:app.dosperspecifiedip()
-                                TextInput:
-                                    background_color: 0.2, 0.3, 0.6, 10
-                                    bold: True
-                                    id:dosperspecifiedip
-                                    multinline:True
-                            GridLayout:
-                                size_hint_y: None
-                                height: 120
-                                cols:1
-                                BoxLayout:
-                                    size_hint_y: 0.4
-                                    id: result_layout_dos
-                                    orientation: 'vertical'
 

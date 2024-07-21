@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = diversify
+title = dvrfy
 
 # (str) Package name
-package.name = diversify
+package.name = dvrfy
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = VAry.Alon.Developer
+package.domain = VAry.Alon.Developer.diversify.dvrfy
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -37,8 +37,10 @@ version = 10.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,pycryptodome
-#,pillow,scapy,multiprocess,netifaces,kivymd,materialyoucolor,numpy,kivy==master,https://github.com/kivymd/KivyMD/archive/master.zip # i removed pyjnius as a requirement 
+requirements = python3==3.10.12,kivy==2.3.0,hostpython3==3.10.12,pyjnius==1.5.0,pycryptodome,pillow,scapy,multiprocess,netifaces,kivymd,materialyoucolor,numpy#,speechrecognition,gtts,plyer
+
+#kivy==master,https://github.com/kivymd/KivyMD/archive/master.zip 
+
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
@@ -64,11 +66,10 @@ orientation = landscape, portrait, portrait-reverse, landscape-reverse
 # author = © Copyright Info
 
 # change the major version of python used by the app
-osx.python_version = 3
-
+ 
 # Kivy version to use
-osx.kivy_version = 1.9.1
-
+osx.python_version = 3.10.12
+osx.kivy_version = 2.3.0  
 #
 # Android specific
 #
@@ -87,14 +88,14 @@ android.presplash_color = black
 # see https://lottiefiles.com/ for examples and https://airbnb.design/lottie/
 # for general documentation.
 # Lottie files can be created using various tools, like Adobe After Effect or Synfig.
-#android.presplash_lottie = "path/to/lottie/file.json"
+android.presplash_lottie = loading_anim.json
 
 # (str) Adaptive icon of the application (used if Android API level is 26+ at runtime)
 #icon.adaptive_foreground.filename = %(source.dir)s/data/icon_fg.png
 #icon.adaptive_background.filename = %(source.dir)s/data/icon_bg.png
 
 # (list) Permissions
-android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, ACCESS_FINE_LOCATION, WRITE_SECURE_SETTINGS, ACCESS_WIFI_STATE, ACCESS_NETWORK_STATE, CAMERA, BLUETOOTH_SCAN
+android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, ACCESS_FINE_LOCATION, WRITE_SECURE_SETTINGS, ACCESS_WIFI_STATE, ACCESS_NETWORK_STATE, CAMERA, BLUETOOTH_SCAN, RECORD_AUDIO
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
@@ -189,7 +190,7 @@ android.accept_sdk_license = True
 
 # (list) Gradle dependencies to add
 #android.gradle_dependencies =
-
+android.gradle_dependencies = com.android.support:support-compat:28.0.0
 # (bool) Enable AndroidX support. Enable when 'android.gradle_dependencies'
 # contains an 'androidx' package, or any package from Kotlin source.
 # android.enable_androidx requires android.api >= 28

