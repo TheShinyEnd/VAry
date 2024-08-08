@@ -878,7 +878,7 @@ class vary(MDApp):
         entered_password = self.password_input.text
         # print(f'Entered password: {entered_password}')
         
-        if entered_password == "dvrfytls":  # Replace "your_password" with the actual password
+        if entered_password == "your_password":  # Replace "your_password" with the actual password
             self.is_tools_unlocked = True
             self.password_modal.dismiss()
         else:
@@ -1215,7 +1215,7 @@ for i in range(threads_count_to):
         #     self.root.ids.devicesdiversify.add_widget(host_button)
             
     def addbuttonfordiversify(self, ip):
-        host_button = Button(text=f"{ip} Click to connect (Status: Disconnected)",size_hint_y=None, height=120, background_color=(0.74, 0.2, 0.6, 1), color=(0.4, 1, 0.7, 1))
+        host_button = Button(text=f"{ip} Click to connect (Status: Disconnected)",size_hint_y=None, height=160, background_color=(0.74, 0.2, 0.6, 1), color=(0.4, 1, 0.7, 1))
         host_button.bind(on_press=self.connect_or_disconnect)
         self.root.ids.devicesdiversify.add_widget(host_button)
 

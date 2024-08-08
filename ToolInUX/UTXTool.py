@@ -714,7 +714,7 @@ trace."""
 
 SelfUserUsername = os.environ['username']
 SelfComputerName= os.environ['COMPUTERNAME'] # --uac-admin ; Py installer to get UAC admin rights on exe
-
+ 
 # Get the screen width and height
 screen_width = win32api.GetSystemMetrics(0)
 screen_height = win32api.GetSystemMetrics(1)

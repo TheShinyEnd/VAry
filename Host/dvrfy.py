@@ -318,10 +318,10 @@ def presskeys(inputGiven):
         inputGiven (str): The keys to press, e.g., "ctrl+c".
     """
     try:
-        keyboard.press_and_release(inputGiven)
+        
+        pyautogui.hotkey(inputGiven.split('+'))
     except Exception as e:
         print(f'Error pressing keys: {e}')
-
 
 def writetext(text):
     """Types the specified text using the keyboard.
@@ -1737,7 +1737,7 @@ def playYTvidfullscreen(video_url, starttime=None, endingtime=None):
 
     setytvolume(0.5)
 
-    chrome_window_control_maximize()
+    maximize_process_via_name('chrome.exe')
     unmute() 
     simulate_user_interaction()  # Enter full-screen
     while detectifpause():
