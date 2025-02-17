@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>2FA Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <style>
+    
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #1b2735;
+  overflow: hidden;
+}
+
+
+main {
+  width: 100%;
+  height: 100%;
+background-color: #10071665;
+}
+
+main div {
+background-color: #878787;
+width: 2px;
+height: 2px;
+}
+
+
+    * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .alert-box {
+            display: none;
+            position: fixed;
+            top: 2%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ff0000;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 1000000000;
+            animation: slideIn 1s forwards, fadeOutandslideout 1s 3.5s forwards;
+        }
+
+        @keyframes slideIn {
+            0% { transform: translate(-50%, -120%); }
+            100% { transform: translate(-50%, 0%); }
+        }
+
+        @keyframes fadeOutandslideout {
+            0% { opacity: 0.8; }
+            100% { opacity: 0;  transform: translate(-50%, -100%); filter: blur(20px);}
+        }
+
+       .box {
+            width: 90%;
+            max-width: 400px;
+            height: auto;
+            padding: 30px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(28, 66, 130, 0.1);  
+            backdrop-filter: blur(3px);   
+            border: 2px solid #8e44ad;
+            text-align: center;
+            min-width: 280px;
+            border-radius: 15px;
+        }
+
+
+        .box h1 {
+            font-family: sans-serif;
+            color: #9b59b6; 
+            font-weight: 500;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+             text-shadow: 0 0 8px rgba(142, 68, 173, 0.5);  
+        }
+        .box input[type="text"] {
+             border: 2px solid #8e44ad;
+             background: rgba(28, 66, 130, 0.1);
+             display: block;
+             margin: 15px auto;
+             text-align: center;
+             padding: 15px 12px;
+             width: 70%;
+             outline: none;
+             color: white;
+             border-radius: 20px;
+             transition: 0.25s;
+             font-size: 1em;
+         }
+
+        .box input[type="text"]:focus {
+             transition: 0.25s;
+             width: 70%;
+             border-color: #9b59b6;
+             color: #fff;
+             text-shadow: 0 0 10px rgba(255, 255, 255, 0.7),
+                    0 0 20px rgba(255, 255, 255, 0.5),
+                    0 0 30px rgba(155, 89, 182, 0.5); 
+         }
+
+        .box input[type="submit"], .paste-button{
+            background-color: rgba(28, 66, 130, 0.15);
+            border: 2px solid #8e44ad;
+            color: #e0e0e0;
+            padding: 12px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 15px auto;
+            display: block;
+            width: 70%;
+            max-width: 250px;
+            font-weight: bold;
+            outline: none;
+        }
+         .box input[type="submit"]:hover, .paste-button:hover {
+            background-color: rgba(155, 89, 182, 0.1);  
+            border-color: #b374c7; 
+             transform: scale(1.02);  
+             box-shadow: 0 2px 5px rgba(155, 89, 182, 0.2); 
+        }
+
+          .box input[type="submit"]:focus, .paste-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(142, 68, 173, 0.4), 0 0 8px rgba(155, 89, 182, 0.4);  
+            background-color: rgba(155, 89, 182, 0.1); 
+        }
+
+          .box input[type="submit"]:active, .paste-button:active {
+           transform: scale(0.98); 
+           box-shadow: 0 1px 3px rgba(155, 89, 182, 0.1);  
+       }
+
+    
+    </style>
+</head>
+<body>
+
+    <main></main>
+
+    <form class="box" action="/" method="post">
+        <h1>2FA</h1>
+        <input type="text" name="code" id="code" placeholder="2FA Code" autofocus>
+        <input type="submit" value="Verify">
+        <button type="button" id="pasteButton" class="paste-button">Paste from Clipboard</button>
+
+
+    </form>
+
+    {% if error %}
+        <div class="alert-box" id="alert-box">
+            <span>{{ error }}</span>
+        </div>
+        <script>
+             document.getElementById('alert-box').style.display = 'block';
+             showAlert('');  
+        </script>
+    {% endif %}
+
+    <script>
+        function showAlert(message) {
+            // Create a new alert box
+            var alertBox = document.createElement('div');
+            alertBox.className = 'alert-box';
+            var alertMessage = document.createElement('span');
+            alertMessage.textContent = message;
+            alertBox.appendChild(alertMessage);
+ 
+            var existingAlertBoxes = document.querySelectorAll('.alert-box');
+            existingAlertBoxes.forEach(function(alertBox) {
+                alertBox.style.animation = 'fadeOutandslideout 1s forwards';
+                setTimeout(function() {
+                    document.body.removeChild(alertBox);
+                }, 3000); // wait until the animation finishes
+            });
+         
+            document.body.appendChild(alertBox);
+         
+            alertBox.style.display = 'block';
+ 
+            setTimeout(function() {
+                alertBox.style.display = 'none';
+                setTimeout(function() {
+                    document.body.removeChild(alertBox);
+                }, 1000); // wait until the animation finishes
+            }, 4600); // it's in milliseconds, divide by 1000, so like 1000 = 1 second
+        }
+    
+        window.oncontextmenu = function () {
+            return false;
+        }
+        document.getElementById('pasteButton').addEventListener('click', async function() {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    const codeInput = document.getElementById('code');
+                    codeInput.value = text;
+                    // Automatically submit the form after pasting
+                    codeInput.form.submit();
+                } catch (err) {
+                   console.error('Failed to read clipboard contents: ', err);
+                    showAlert('Failed to read clipboard. Please try again or enter the code manually.');
+                }
+        });
+
+
+        const starsWrapper = document.querySelector("main");
+const stars = new Array(200).fill(0).map(() => {
+  const star = document.createElement("div");
+  starsWrapper.append(star);
+
+  return {
+    star,
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 2
+  };
+});
+
+function update() {
+  stars.forEach((star) => {
+    star.x += star.r;
+    if (star.x > window.innerWidth) {
+      star.x = 0;
+    }
+
+
+    star.star.style.width = `${star.r}px`;
+    star.star.style.transform = `translate(${star.x}px, ${star.y}px) scale(${star.r})`;
+    star.star.style.opacity = `${star.r / 2}`;
+  });
+  requestAnimationFrame(update);
+}
+
+requestAnimationFrame(update);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Glow Button Test v2</title>
+<style>
+/* --- Glow Button Styles (YOUR ORIGINAL STYLES) --- */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #000000; /* body background black now to match your example */
+}
+
+.glow-on-hover {
+  padding: 10px 20px;
+  width: auto; /* Changed from fixed width */
+  height: auto; /* Changed from fixed height */
+  border: none;
+  outline: none;
+  color: #fff;
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 8px; /* Changed to match the reference */
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+}
+
+
+
+
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #00fff2, #00d9ff, #00a6ff, #0066ff, #00fff2, #00ffb3, #ff69b4, #ff1493, #00fff2);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+.glow-on-hover:active {
+    color: #000; /* active color now #000 to match your example */
+    transform: scale(0.98);
+ 
+}
+
+.glow-on-hover:active:after {
+    background: transparent;
+}
+.glow-on-hover:hover {
+  transform: scale(1.01);
+}
+ 
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+.glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111; /* after background now #111 to match your example */
+    left: 0;
+    top: 0;
+    
+    border-radius: 10px;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
+
+/* --- Loading state styles (NEW - based on your glow-on-hover) --- */
+.glow-on-hover.loading-button {
+    color: transparent !important; /* hide text during loading */
+    cursor: wait;               /* change cursor to 'wait' */
+    pointer-events: none;       /* disable interactions */
+}
+
+.glow-on-hover.loading-button::after {
+    opacity: 0.8; /* make the solid background a bit more visible when loading */
+    background:rgb(0, 0, 0);
+
+}
+
+
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<button class="glow-on-hover" type="button" id="testButton">HOVER ME, THEN CLICK ME!</button>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("#testButton").click(function() {
+        var button = $(this);
+        button.addClass('loading-button'); // Add class on click
+        setTimeout(function() { // Simulate AJAX delay
+            button.removeClass('loading-button'); // Remove class after delay
+        }, 3000); // 3 seconds delay
+    });
+});
+</script>
+
+</body>
+</html>

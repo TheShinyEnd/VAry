@@ -2588,7 +2588,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .containernetwork ul li .ssh-button {
-  position: absolute;
+  position: fixed;
   right: 5%;
   transform: translateY(-50%);
   top: 50%;
@@ -2599,14 +2599,16 @@ body::-webkit-scrollbar-thumb {
   transition: background-color 0.3s;
   word-wrap: break-word;
   z-index: 1;
+  display: flex;
   border-radius: 7px;
   animation: networkaddanimation 2s forwards;
   transition: 0.45s;
 
 } 
 .containernetwork ul li .select-button {
-  position: absolute; /* Change position to absolute */
-  right: 20%; 
+  position: fixed; /* Change position to absolute */
+  /* right: 20%;  */
+  display: flex;
   transform: translateY(-50%); /* Vertically center the button */
   top: 50%; /* Set top to 50% */
 
@@ -2621,6 +2623,7 @@ body::-webkit-scrollbar-thumb {
   border-radius: 7px;
   padding: 5px;
   transition: 0.45s;
+  margin-right: 45px; /* Add spacing between buttons */
 
 }
 
@@ -2748,15 +2751,15 @@ body::-webkit-scrollbar-thumb {
 
 .containersearch {
       position: fixed;
-      bottom: 29%; /* Adjusted position to be above the scanner container */
-      left: 0;
-      width: 20%; /* Set to 100% horizontal width */
+      bottom: 18%; /* Adjusted position to be above the scanner container */
+      right: 0;
+      width: 15.6%; /* Set to 100% horizontal width */
       height: 29%;
       background-color: #00030a23;
       color: black;
       justify-content: center;
       opacity: 1;
-      border-radius: 0px 10px 0px 0px;
+      border-radius: 10px 0px 0px 0px;
       display: flex;
       flex-direction: column;
       margin-top: 10px;
@@ -2798,7 +2801,7 @@ body::-webkit-scrollbar-thumb {
       color: rgb(16, 185, 177);
       background-color: #2c2c2e33;
       text-align: left;
-      border-radius: 0px 10px 0px 0px;
+      border-radius: 10px 0px 0px 0px;
       border: none;
       border-color: none;
       outline: none;
@@ -2902,6 +2905,110 @@ body::-webkit-scrollbar-thumb {
     100% { opacity: 0;  transform: translate(-50%, -100%); filter: blur(20px);}
 }
 
+.network-button { /* Common styles for all network buttons */
+    position: fixed;
+    transform: translateY(-50%);
+    top: 50%;
+    padding: 5px;
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.05);
+    color: rgb(0, 180, 224);
+    cursor: pointer;
+    transition: background-color 0.3s;
+    word-wrap: break-word;
+    z-index: 1;
+    border-radius: 7px;
+    padding: 5px;
+    transition: 0.45s;
+    margin-left: 5px; /* Add spacing between buttons */
+
+}
+
+.test-button {
+    right: 5%; 
+}
+
+.ssh-button {
+    right: 20%;
+}
+
+.select-button {
+    right: 35%;
+}
+
+.transfer-button {
+    right: 5%;
+}
+
+
+.network-button:hover {
+    background-color: #05707e36;
+}
+
+
+.scan-mode-buttons {
+    position: fixed;
+    bottom: 29%;  /* Adjusted position to be above containernetwork */
+    left: 0;
+    width: 19%;
+    background-color: #00030a23;
+    opacity: 1;
+    border-radius: 0px 10px 0px 0px;
+    display: flex;
+    flex-direction: row; /* Buttons arranged horizontally */
+    align-items: center; /* Vertically center buttons */
+    padding: 5px; /* Add some padding */
+    /* border-bottom: 2px solid rgba(16, 133, 123, 0.404); */
+}
+
+.scan-mode-buttons button {
+    color: #e2f7ff;  /* Light text color */
+    background-color: rgba(18, 56, 69, 0.7);  /* Semi-transparent dark background */
+    border: none;
+    padding: 8px 12px;  /* Button padding */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth background transition */
+    font-family: 'Quicksand', sans-serif; /* Use the same font */
+    flex-grow: 1; /* Allow buttons to take equal width */
+    margin: 0; /* Remove default button margin */
+    box-shadow: none; /* remove default shadow */
+}
+
+
+.scan-mode-buttons button:hover {
+    background-color: rgba(30, 80, 95, 0.9); /* Darker background on hover */
+}
+
+.scan-mode-buttons button:not(:last-child) {  /* Add separator */
+    border-right: 1px solid #123845; /* Separator color */
+}
+
+.scan-mode-buttons button:focus {
+    outline: none; /* Remove focus outline */
+    box-shadow: 0 0 5px rgba(18, 56, 69, 0.9);
+}
+
+
+#ctl-transfer-container, #test-button-container {
+            margin-top: 10px;  /* Or adjust as needed */
+        }
+
+        #ctl-transfer-container button, #test-button-container button {
+            color: #e2f7ff; /* Example, adjust as needed */
+            background-color: rgba(18, 56, 69, 0.7);
+            /* ... add other styles for buttons as necessary ... */
+        }
+
+.button-container {
+  position: relative;
+    right: 5%; /* Adjust as needed */
+    top: 50%;
+    transform: translateY(-50%);
+    /* gap: px; Add gap between buttons */
+
+    display: flex; /* Use flexbox for better button arrangement */
+}
 </style>
 
 </head>
@@ -2918,9 +3025,18 @@ body::-webkit-scrollbar-thumb {
         <div class="location">Location: {{ location }}</div>
         <div class="computername">Computer name: {{ computer_name }}</div>
 
+        <div class="scan-mode-buttons">
+          <button onclick="setScanMode('default')">Default</button>
+          <button onclick="setScanMode('CTL')">CTL</button>
+          <button onclick="setScanMode('dvrfy')">dvrfy</button>
+      </div>
+
         <div class="containersearch">
           <!-- <input class='searchbutton' type="submit" id="search" name="search" onclick="searchTools()" value="Search"> -->
           <input class='searchtools' type="text" id="searchinput" placeholder="Search tools" oninput="filterTools()">
+
+
+
           <ul class="listoftools" id="toolList">
             <!-- Add more list items as needed -->
             {% for tool in tool_list %}
@@ -2930,24 +3046,14 @@ body::-webkit-scrollbar-thumb {
         </div>
 
         <div class="containernetwork">
-            <div class="backgroundforscanbutton"></div>
-            <input class='scannetworkbutton' type="submit" id="scannetwork" name="scannetwork" onclick="scanNetwork()" value="Scan network">
-          
+          <div class="backgroundforscanbutton"></div>
+          <input class='scannetworkbutton' type="submit" id="scannetwork" name="scannetwork"
+                 onclick="scanNetwork()" value="Scan network">
+      
           <input class='ipv4type' type="text" id="ipv4input" placeholder="Insert substitute for IPv4">
-          <ul class="listofnetworks">
-            <!-- <li id="192.168.1.15:8009">
-              <span class="ipv4-text">192.168.1.15:8009</span>
-              <span class="ssh-button" onclick="sendSSHRequest('192.168.1.15', 8009)">SSH</span>
-              <span class="select-button" onclick="sendSelectRequest('192.168.1.15', 8009)">SELECT</span>
-            </li>
-            <li id="192.168.1.14:80">
-              <span class="ipv4-text">192.168.1.14:80</span>
-              <span class="ssh-button" onclick="sendSSHRequest('192.168.1.14', 80)">SSH</span>
-              <span class="select-button" onclick="sendSelectRequest('192.168.1.14', 80)">SELECT</span>
-            </li> -->
-            <!-- Add more list items as needed -->
+          <ul class="listofnetworks"></li>
           </ul>
-        </div>
+      </div>
 
 
         <div class="console"><span id="console"></span>{{ console|safe }}</div>
@@ -2995,17 +3101,46 @@ $('li[type="submit"]').click(function(event) {
  });
 });
 
-function sendSelectRequest(ipv4, port) {
-    // AJAX request for the SELECT button
-    $.ajax({
-      type: "POST",
-      url: "/selectnetwork",
-      data: { ipv4: ipv4, port: port },
-      complete: function() {
-        
-      }
+ 
+
+function updateButtonVisibility() {
+    $('.network-button').hide(); // Hide all network buttons initially
+
+    $('li.network-item').each(function() { // Iterate through network items
+        const ipPort = $(this).attr('id');
+        const buttons = $(this).find('.network-button');
+
+        if (scan_mode === 'default') {
+            buttons.filter('.test-button').show();
+        } else if (scan_mode === 'dvrfy') {
+            buttons.filter('.ssh-button, .select-button').show();
+        } else if (scan_mode === 'CTL') {
+            buttons.filter('.transfer-button').show();
+        }
     });
-  }
+}
+
+
+let network_selected = null;
+
+    function sendSelectRequest(ipv4, port) {
+        // AJAX request for the SELECT button
+        network_selected = ipv4 + ":" + port
+        $.ajax({
+        type: "POST",
+        url: "/selectnetwork",
+        data: { ipv4: ipv4, port: port },
+        complete: function() {
+            
+        }
+        });
+    }
+
+function update_console_local(text) {
+  $('#console').text(text);
+}
+
+
 
   function sendSSHRequest(ipv4, port) {
     // AJAX request for the SSH button
@@ -3018,23 +3153,16 @@ function sendSelectRequest(ipv4, port) {
       }
     });
   }
-
-socket.on('new_network', function(data) {
-    var ul = $('.listofnetworks');
-    var li = $('<li>').attr('id', data.id);
-
-    var ipv4Span = $('<span>').addClass('ipv4-text').text(data.network);
-    var sshButton = $('<span>').addClass('ssh-button').text('SSH').attr('onclick', "sendSSHRequest('" + data.network.split(':')[0] + "', " + data.network.split(':')[1] + ")");
-    var selectButton = $('<span>').addClass('select-button').text('SELECT').attr('onclick', "sendSelectRequest('" + data.network.split(':')[0] + "', " + data.network.split(':')[1] + ")");
-
-    li.append(ipv4Span).append(sshButton).append(selectButton);
-    ul.append(li);
-});
-
+ 
 socket.on('clearnetworklist', function() {
   var ul = $('.listofnetworks');
   ul.empty(); // Clear the list
 });
+
+function clearnetworklist_local() {
+  var ul = $('.listofnetworks');
+  ul.empty(); // Clear the list
+}
 
 socket.on('get_value', (data) => {
    const element = document.getElementById(data.element_id);
@@ -3044,7 +3172,36 @@ socket.on('get_value', (data) => {
    socket.emit('value_response', { element_id: data.element_id, value: value });
 });
 
+let scan_mode = "default"; // Initialize scan_mode
 
+function setScanMode(mode) {
+  clearnetworklist_local();
+    scan_mode = mode;
+    // Update the UI to reflect the chosen mode (optional)
+    console.log("Scan mode set to:", mode); // Log to console for debugging
+
+    // Optionally send the scan_mode to the Python server
+    socket.emit('scan_mode', {mode: mode});
+
+    showAlert('Selected scanning mode: ' + mode);
+}
+function scanNetwork() {
+  clearnetworklist_local();
+    update_console_local('Scanning network..');
+
+    $.ajax({
+        url: '/submit',
+        type: 'POST',
+        data: { button: 'scannetwork', mode: scan_mode }, 
+        success: function(response) {
+            console.log(response); // Handle the server's response (if any)
+        },
+        error: function(error) {
+            console.error('Error during network scan:', error);
+            update_console_local('Network scan failed.'); // Update console with error
+        }
+    });
+}
 
 function filterTools() {
       var input, filter, ul, li, a, i, txtValue;
@@ -3123,6 +3280,112 @@ function showAlert(message) {
     }, 4600); // it's in milliseconds, divide by 1000, so like 1000 = 1 second
 }
 
+// In your client-side JavaScript
+socket.on('show_ctl_transfer', function() {
+    document.getElementById('ctl-transfer-container').style.display = 'block';
+});
+
+socket.on('hide_ctl_transfer', function() {
+    document.getElementById('ctl-transfer-container').style.display = 'none';
+});
+
+socket.on('show_test_button', function() {
+    document.getElementById('test-button-container').style.display = 'block';
+});
+
+socket.on('hide_test_button', function() {
+    document.getElementById('test-button-container').style.display = 'none';
+});
+
+
+socket.on('receive_alert', function(data) {
+  var msg = data.msg;
+  showAlert(msg);
+
+})
+
+
+
+socket.on('new_network', function(data) {
+    var ul = $('.listofnetworks');
+    var li = $('<li>').addClass('network-item').attr('id', data.network).hide(); // Add network-item class
+    var ipv4Span = $('<span>').addClass('ipv4-text').text(data.network);
+    li.append(ipv4Span);
+
+    var buttonContainer = $('<div>').addClass('button-container');
+
+    // Create all buttons, but initially hide them
+    var testButton = $('<span>')
+        .addClass('test-button network-button')
+        .text('Test')
+        .attr('onclick', "testConnection('" + data.network + "')").hide();
+
+    var sshButton = $('<span>')
+        .addClass('ssh-button network-button')
+        .text('SSH')
+        .attr('onclick', "sendSSHRequest('" + data.network.split(':')[0] + "', " + data.network.split(':')[1] + ")").hide();
+
+    var selectButton = $('<span>')
+        .addClass('select-button network-button')
+        .text('SELECT')
+        .attr('onclick', "sendSelectRequest('" + data.network.split(':')[0] + "', " + data.network.split(':')[1] + ")").hide();
+
+    var transferButton = $('<span>')
+        .addClass('transfer-button network-button')
+        .text('Transfer')
+        .attr('onclick', "transferCTLData('" + data.network + "')").hide();
+
+    buttonContainer.append(testButton);
+    buttonContainer.append(sshButton);
+    buttonContainer.append(selectButton);
+    buttonContainer.append(transferButton);
+
+
+    li.append(buttonContainer);
+    ul.append(li);
+    li.fadeIn(500);
+
+    updateButtonVisibility(); // Update button visibility after adding new network
+
+        // Attach click handlers to newly created buttons (if needed)
+        li.find('.network-button').click(function () {
+            // Example: Send data to the server indicating button click
+            const ip_port = data.network; // Get the associated IP:port
+            const buttonType = $(this).attr('class').split(' ')[0]; // Get the button type (e.g., "test-button")
+
+            $.ajax({
+                url: '/network_button_clicked', // New route to handle button clicks
+                type: 'POST',
+                data: { ip_port: ip_port, button_type: buttonType, mode: data.mode },
+                success: function (response) {
+                    console.log(response); // Handle server response (if any)
+                    // showAlert(response.message);
+                },
+                error: function (error) {
+                    console.error('Error handling button click:', error);
+                }
+            });
+        });
+
+    });
+
+ 
+
+    function transferCTLData(ip_port) {
+        $.ajax({
+            url: '/transfer_ctl_data',
+            type: 'POST',
+            data: { ip_port: ip_port },
+            success: function(response) {
+                console.log(response);
+                update_console_local(response.message); // Display success/failure message
+            },
+            error: function(error) {
+                console.error('Error during CTL data transfer:', error);
+                showAlert('CTL data transfer failed!');
+            }
+        });
+    }
 
 </script>
 

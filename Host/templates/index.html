@@ -3,561 +3,1861 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>diversify</title>
+    <title>dvrfy</title>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+15&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 <style>
     * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box !important;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Quicksand', sans-serif;
+    }
+    
+    body {
+        position: relative;
+        min-height: 110vh;
+        background: #121212;
+        color: #ffffff;
+        overflow-x: hidden;
+    }
+
+
+/* =========================================
+   ADDED: GIANT VAry BACKGROUND
+   ========================================= */
+   .vary-scroller {
+    position: fixed;        
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;            
+    pointer-events: none;   
+    overflow: hidden;
 }
 
-html, body {
-  height: 240vw;
+/* The giant text itself */
+.vary-text {
+    position: absolute;
+    top: 50%;              
+    left: 0;
+    transform: translateY(-50%);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 200vh;       
+    color: transparent;     
+    line-height: 0.8;
+    white-space: nowrap;
+
+    /* 
+       Make it distinct but not too bright. 
+       The repeating-linear-gradient is our "striped lines".
+       Adjust alpha for partial transparency (e.g., 0.3).
+       Increase gap to reduce the line frequency.
+    */
+/* Example aqua/cyan color: (r=0, g=255, b=255) + alpha = 0.7 */
+    background-image: repeating-linear-gradient(
+    to bottom,
+    rgb(96, 116, 136),   /* 3px line thickness */
+    rgb(96, 116, 136) 3px,   /* 3px line thickness */
+    transparent 3px,
+    transparent 30px             /* 33px total cycle => 3px line + 30px gap */
+    );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /*
+       We'll animate background-position in opposite directions 
+       to your starfield swirl. The swirl moves top-left -> bottom-right;
+       so let's move lines bottom-right -> top-left (like a counter motion).
+    */
+    animation: linesShift 30s linear infinite; /* only the parallax lines by default */
+    opacity: 0; /* We'll rely on JS to fade in */
 }
-
-body {
- display: flex;
- flex-direction: column;
- justify-content: center;
- align-items: center;
- background-color: #171717;
- color: #000;
- line-height: 1.6;
- position: relative;
- font-family: 'Quicksand', sans-serif;
- font-weight: 500;
- overflow-x: hidden;
- display: flex;
- flex-direction: column;
- justify-content: center;
- align-items: center;
-
-}
-
-/* Custom scrollbar styles */
-body::-webkit-scrollbar {
- width: 4px;
- overflow: hidden;
-}
-
-body::-webkit-scrollbar-track {
- background: rgba(25, 48, 48, 0.2);
- border-radius: 4px;
- opacity: 0.3;
- overflow: hidden;
-}
-
-body::-webkit-scrollbar-thumb {
- background: rgba(65, 150, 130, 0.4);
- border-radius: 4px;
-}
-
-.lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  margin: auto;
-  width: 90vw;
-}
-
-.line {
-  position: absolute;
-  width: 1px;
-  height: 100%;
-  top: 0;
-  left: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-}
-.line::after {
-  content: "";
-  display: block;
-  position: absolute;
-  height: 15vh;
-  width: 100%;
-  top: -50%;
-  left: 0;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 75%, #ffffff 100%);
-  -webkit-animation: drop 7s 0s infinite;
-          animation: drop 7s 0s infinite;
-  -webkit-animation-fill-mode: forwards;
-          animation-fill-mode: forwards;
-  -webkit-animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
-          animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
-}
-.line:nth-child(1) {
-  margin-left: -25%;
-}
-.line:nth-child(1)::after {
-  -webkit-animation-delay: 2s;
-          animation-delay: 2s;
-}
-.line:nth-child(3) {
-  margin-left: 25%;
-}
-.line:nth-child(3)::after {
-  -webkit-animation-delay: 2.5s;
-          animation-delay: 2.5s;
-}
-
-@-webkit-keyframes drop {
-  0% {
-    top: -50%;
-  }
-  100% {
-    top: 110%;
-  }
-}
-
-@keyframes drop {
-  0% {
-    top: -50%;
-  }
-  100% {
-    top: 110%;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-/* Custom scrollbar styles */
-.chatbox .history::-webkit-scrollbar {
-  width: 8px;
-}
-
-.chatbox .history::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.chatbox .history::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 10px;
-}
-
-
-.dropdown-buttons button:nth-child(1) {
-  animation-delay: 0.3s; /* Adjust the delay time */
-}
-
-.dropdown-buttons button:nth-child(2) {
-  animation-delay: 0.5s; /* Adjust the delay time */
-}
-.dropdown-buttons button:nth-child(3) {
-  animation-delay: 0.7s; /* Adjust the delay time */
-}
-
-.dropdown-buttons button:nth-child(4) {
-  animation-delay: 0.9s; /* Adjust the delay time */
-}
-
-
-
-
 
 /* 
-.location::-webkit-scrollbar {
- height: 2px;
- overflow: hidden;
+   Keyframes for the text scrolling:
+   We'll define two sets: one for left→right, another for right→left.
+   We want the text to fade IN quickly at the start, then fade OUT earlier.
+*/
+
+/* Right-to-left scroll (appears off-screen right -> goes left) */
+@keyframes scrollRTL {
+  0% {
+    left: 50%;
+    opacity: 0;     /* fade in from 0 → 10% */
+  }
+  10% {
+    opacity: 1;     /* fully visible from 10% → 95% */
+  }
+  95% {
+    opacity: 1;
+  }
+  98% {
+    opacity: 0;     /* quick fade out at the very end */
+  }
+  100% {
+    left: -500%;
+    opacity: 0;
+  }
 }
 
-.location::-webkit-scrollbar-track {
- background: rgba(37, 75, 75, 0.2);
- border-radius: 4px;
- opacity: 0.3;
+
+/* Left-to-right scroll (appears off-screen left -> goes right) */
+@keyframes scrollLTR {
+  0% {
+    left: -500%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  98% {
+    opacity: 0;
+  }
+  100% {
+    left: 50%;
+    opacity: 0;
+  }
 }
 
-.location::-webkit-scrollbar-thumb {
- background: rgba(65, 150, 130, 0.4);
- border-radius: 4px;
-} */
+
+/* Slow movement of the stripes in the opposite direction
+   of your swirling background. We'll shift both horizontally + vertically
+   from bottom-right -> top-left, for that subtle parallax. */
+@keyframes linesShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -200px 200px; 
+  }
+}
 
 
-.welcometext {
-  cursor:default;
+.effects-button-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 20px;
+}
+
+
+
+    /* 
+       ========================================
+       BACKGROUND ANIMATION (Swirl + Starfield)
+       ========================================
+    */
+    .welcome-section {
   position: fixed;
-  /* top: 0; */
-  left: 0%;
-  top: 0%;
-  font-size: large;
-  color: #5bd9ff;
-  text-align: left;
-
-  margin-top: 10px;
-  /* text-decoration: underline; */
-}
-
-
-.alert-box {
-  display: none;
-  position: fixed;
-  top: 2%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #ff0000;
-  color: #ffffff;
-  padding: 15px;
-  border-radius: 8px;
-  z-index: 1000000000;
-  -webkit-animation: fadeOutandslideout 1s 3.5s forwards;
-    /* animation: fadeOutandslideout 1s 3.5s forwards; */
-  animation: slideIn 1s forwards, fadeOutandslideout 1s 3.5s forwards;
-}
-
-@keyframes slideIn {
-    0% { transform: translate(-50%, -120%); }
-    100% { transform: translate(-50%, 0%); }
-}
-
-@keyframes fadeOutandslideout {
-    0% { opacity: 0.8; }
-    100% { opacity: 0;  transform: translate(-50%, -100%); filter: blur(20px);}
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
-
-
-.containersearch {
- position: absolute;
- width: 100%;
- /* top: 50%; */
- /* max-width: 800px; */
- background-color: #F5F5F5;
- border-radius: 10px;
- box-shadow: 0px 0px 20px rgba(8, 45, 94, 0.5);
- padding: 30px;
- /* margin-bottom: 400px; Set bottom margin to 400px */
- overflow-y: auto;
- z-index: 100000000;
- /* margin-top: 800px; */
-}
-
-
-.category {
- display: flex;
- justify-content: space-between;
- align-items: center;
- padding: 15px; /* Increased padding for better spacing */
- cursor: pointer;
- background-color: #F5F5F5; /* Using RGBA for lower opacity */
- position: relative;
- border-radius: 8px; /* Slightly reduced border radius for a modern look */
- margin-bottom: 15px; /* Adjusted margin for better spacing */
- z-index: 100000000;
- transition: background-color 0.5s ease;
-}
-
-/* Styling for input fields */
-input[type="text"] {
- width: calc(70% - 40px); /* Adjusted width for better fit */
- padding: 12px; /* Increased padding for better spacing */
- border: none;
- /* max-width: 100%; */
- border-radius: 5px;
- background-color: #F5F5F5; /* Using RGBA for lower opacity */
- box-shadow: 0px 0px 10px rgba(8, 45, 94, 0.3); /* Adjusted opacity for 
-shadow */
- margin-bottom: 10px; /* Adjusted margin for better spacing */
- margin-right: 10px; /* Added margin for spacing between input and button */
- display: flex;
- width: 100%;
- flex-wrap: wrap;
-
-}
-
-/* Styling for submit buttons */
-input[type="submit"] {
- padding: 12px 20px; /* Increased padding for better visual appeal */
- border: none;
- height: 50px;
- /* max-width: 100%; */
- border-radius: 5px;
- width: 100%;
- display: flex;
- flex-wrap: wrap;
-
- background-color: #F5F5F5; /* Using RGBA for lower opacity */
- /* color: #fff; */
- cursor: pointer;
- color:#5bd9ff;
- transition: background-color 0.3s ease; /* Smooth transition for hover 
-effect */
-}
-
-/* Full width button if no input */
-input[type="submit"].full-width {
- width: 100%;
- /* max-width: 70%; */
-
- display: flex;
- flex-wrap: wrap;
-
-}
-
-/* Container for input and button on the same line */
-.button-container {
- display: flex;
- align-items: center;
-}
-
-/* Adjusted height for button container */
-.button-container input[type="text"],
-.button-container input[type="submit"] {
- height: 50px; /* Increased height for both input and button */
-}
-
-
-.category:hover {
- background-color: #F5F5F5; /* Darker color on hover for contrast */
-}
-
-.category-content {
- padding-left: 30px; /* Increased padding for better alignment */
- /* padding-left: 30px; */
- max-height: 600px;
- overflow: auto;
- padding-left: 30px;
- max-height: 600px;
- overflow: auto;
- text-align: center;
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: center;
- scroll-margin-top: 600px;
- left:-30px;
- /* position: absolute; */
-}
-
-li {
- list-style-type: none;
- margin-bottom: 35px;  
- text-align: center;
-
-}
-
-
-@media screen and (min-width: 600px) {
- .containersearch {
-  width: 80%;
-  margin: 0 auto;
- }
-}
-
-@keyframes anim1 {
- 0% {
-  filter: blur(15px);
-  transform: scale(0.96);
-  opacity: 0;
- }
- 40% {
-  filter: blur(0px);
-  transform: scale(1);
-  opacity: 0.8;
- }
- 100% {
-  filter: blur(0);
-  opacity: 1;
- }
-}
-
-@keyframes fadeIn {
- from {
-  opacity: 0;
-  filter: blur(12px);
-  transform: translateY(20px);
- }
- to {
-  opacity: 1;
-  filter: blur(0);
-  transform: translateY(0);
- }
-}
-
-.parent-div {
- position: relative;
- z-index: 99999999;
-}
-
-.containersearch {
- position: relative;
- z-index: 99999999;
-}
-
-li {
-      background-color: rgba(255, 255, 255, 0.1); /* Apply subtle background to elements */
-      border-radius: 5px;
-      margin: 10px; /* Reduce margin for cleaner spacing */
-      padding: 10px; /* Minimal padding for text */
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for definition */
-      transition: background-color 0.2s ease-in-out;
-    }
-
-    li:hover {
-      background-color: rgba(255, 255, 255, 0.2); /* Slightly higher opacity on hover */
-    }
-
-
-
-/* Styling for input fields */
-input[type="text"] {
-  width: calc(70% - 40px); /* Adjusted width for better fit */
-  padding: 12px; /* Increased padding for better spacing */
-  border: none;
-  /* max-width: 100%; */
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.8); /* Using RGBA for lower opacity */
-  box-shadow: 0px 0px 10px rgba(8, 45, 94, 0.3); /* Adjusted opacity for shadow */
-  margin-bottom: 10px; /* Adjusted margin for better spacing */
-  margin-right: 10px; /* Added margin for spacing between input and button */
-  display: flex;
+  top: 0;
+  left: 0;
   width: 100%;
- flex-wrap: wrap;
-
+  height: 100vh;
+  background: radial-gradient(circle at 50% 50%, #2c2f36, #29323c 40%, #485563 70%, #121212 90%) no-repeat;
+  background-size: 200% 200%;
+  animation: swirlBackground 40s ease-in-out infinite alternate;
+  z-index: -2; /* LOWER than -1 */
+  overflow: hidden;
 }
-
-/* Styling for submit buttons */
-input[type="submit"] {
-  padding: 12px 20px; /* Increased padding for better visual appeal */
-  border: none;
-  height: 50px;
-  /* max-width: 100%; */
-  border-radius: 5px;
-  width: 100%;
-  display: flex;
- flex-wrap: wrap;
-
-  background-color: rgba(18, 53, 85, 0.8); /* Using RGBA for lower opacity */
-  /* color: #fff; */
-  cursor: pointer;
-  color:#5bd9ff;
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-}
-
-/* Full width button if no input */
-input[type="submit"].full-width {
-  width: 100%;
-  /* max-width: 70%; */
-
-  display: flex;
- flex-wrap: wrap;
-
-}
-
-/* Container for input and button on the same line */
-.button-container {
-  display: flex;
-  align-items: center;
-}
-
-    input[type="text"]:hover,
-    input[type="submit"]:hover {
-      transform: scale(1.05); /* Subtle scale on hover */
-    }
-
 
     
-p {
- text-align: center;
-}
-.parent-div {
- position: relative;
- width: 100%;
- max-width: 800px;
- margin: 0 auto;
-}
-
-
-li {
-      background-color: rgba(255, 255, 255, 0.1); /* Apply subtle background to elements */
-      border-radius: 5px;
-      margin: 10px; /* Reduce margin for cleaner spacing */
-      padding: 10px; /* Minimal padding for text */
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for definition */
-      transition: background-color 0.2s ease-in-out;
+    /* Swirl gradient keyframes */
+    @keyframes swirlBackground {
+        0%   { background-position: 0% 0%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 80% 100%; }
     }
 
-    li:hover {
-      background-color: rgba(255, 255, 255, 0.2); /* Slightly higher opacity on hover */
+    
+
+    /* Star pseudo-elements for more visible stars */
+    .welcome-section::before,
+    .welcome-section::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 200%;
+        pointer-events: none;
+        background: radial-gradient(#ffffff 1px, transparent 1px) repeat;
+        background-size: 8px 8px; /* star density/size */
+        opacity: 0.12;
+        animation: moveStars 90s linear infinite;
+    }
+    .welcome-section::after {
+        background-size: 4px 4px; 
+        opacity: 0.08;
+        animation-duration: 150s; /* slower second layer */
+    }
+    
+    /* Drifting star keyframes */
+    @keyframes moveStars {
+        0%   { transform: translate(0, 0); }
+        100% { transform: translate(-20%, -20%); }
+    }
+    
+    /* 
+       ========================================
+       WELCOME TEXT (near top)
+       ========================================
+    */
+    .welcometext {
+        position: fixed;
+        top: 1%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        font-size: 2.2rem;
+        color: #ffffff;
+        text-align: center;
+        text-shadow: 0 0 8px rgba(255,255,255,0.3), 0 0 3px #29323c;
+        z-index: -1;
+        line-height: 1.4;
+    }
+    
+    /* 
+       ========================================
+       MAIN CONTAINER (Tabs + Content)
+       ========================================
+    */
+    .containersearch {
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        margin-top: 15vh; /* Leaves space for the welcome text */
+        width: 90%;
+        max-width: 800px;
+        max-height: 70vh;
+        z-index: 4;
+        padding: 20px;
+        text-align: center;
+        overflow-y: auto;
+        margin-left: auto;
+        margin-right: auto;
+        transition: all 0.3s ease-in-out;
+    }
+    
+    /* Scrollbar for containersearch - a dimmer glassy style */
+    .containersearch::-webkit-scrollbar {
+        width: 8px;
+    }
+    .containersearch::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.05);
+    }
+    .containersearch::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.07);
+    }
+    
+    /* 
+       ========================================
+       TABS 
+       ========================================
+    */
+    .tabs {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+        overflow-x: auto;  /* Let tabs scroll horizontally on mobile */
+        scrollbar-width: thin;
+        -ms-overflow-style: none;
+        white-space: nowrap;
+        overflow-y: hidden;
+    }
+    .tabs::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .tabs .tab {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95) blur(4px);
+        animation: tabEntrance 0.7s ease forwards;
+    }
+    .tabs .tab:nth-child(1) { animation-delay: 0.1s; }
+    .tabs .tab:nth-child(2) { animation-delay: 0.2s; }
+    .tabs .tab:nth-child(3) { animation-delay: 0.3s; }
+    .tabs .tab:nth-child(4) { animation-delay: 0.4s; }
+    .tabs .tab:nth-child(5) { animation-delay: 0.5s; }
+    .tabs .tab:nth-child(6) { animation-delay: 0.6s; }
+    
+    @keyframes tabEntrance {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.9) blur(6px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1) blur(0);
+        }
+    }
+    
+    /* Individual tab styling */
+    .tab {
+        background: rgba(41, 50, 60, 0.35);
+        color: #daf1f1;
+        padding: 10px 15px;
+        margin: 0 8px;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        flex-shrink: 0;
+        border-bottom: 3px solid transparent;
+        transition: background 0.3s, border-bottom 0.3s, transform 0.3s;
+    }
+    .tab:hover {
+        background: rgba(41, 50, 60, 0.55);
+        transform: scale(1.02);
+    }
+    .tab.active {
+        background: rgba(4, 14, 70, 0.151);
+        color: #68cfd3;
+        border-bottom: 3px solid #66ffff;
+        transform: scale(1.05);
+    }
+    
+    /* 
+       ========================================
+       TAB CONTENT 
+       ========================================
+    */
+    .tab-content {
+        display: none;
+        width: 100%;
+        padding: 20px 0;
+        animation: fadeIn 0.3s ease-in;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    @keyframes fadeIn {
+        0%   { opacity: 0; transform: translateY(-5px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* 
+       ========================================
+       STAGGERED ANIMATION FOR SUBCATEGORIES + LIST ITEMS
+       ========================================
+       We'll reuse the same "blur/fade from top" concept, but for 
+       each .subcategory & each li inside .tab-content.
+    */
+    @keyframes contentEntrance {
+        0% {
+            opacity: 0;
+            transform: translateY(-15px) scale(0.95) blur(4px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1) blur(0);
+        }
+    }
+    
+    /* Animate subcategories in a slight stagger */
+    .tab-content.active .subcategory {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95) blur(4px);
+        animation: contentEntrance 0.6s ease forwards;
+    }
+    /* Up to 10 subcategories if you like */
+    .tab-content.active .subcategory:nth-child(1) { animation-delay: 0.05s; }
+    .tab-content.active .subcategory:nth-child(2) { animation-delay: 0.1s; }
+    .tab-content.active .subcategory:nth-child(3) { animation-delay: 0.15s; }
+    .tab-content.active .subcategory:nth-child(4) { animation-delay: 0.2s; }
+    .tab-content.active .subcategory:nth-child(5) { animation-delay: 0.25s; }
+    .tab-content.active .subcategory:nth-child(6) { animation-delay: 0.3s; }
+    .tab-content.active .subcategory:nth-child(7) { animation-delay: 0.35s; }
+    .tab-content.active .subcategory:nth-child(8) { animation-delay: 0.4s; }
+    .tab-content.active .subcategory:nth-child(9) { animation-delay: 0.45s; }
+    .tab-content.active .subcategory:nth-child(10) { animation-delay: 0.5s; }
+    
+    /* Animate each LI item in a short stagger too */
+    .tab-content.active li {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95) blur(4px);
+        animation: contentEntrance 0.6s ease forwards;
+    }
+    /* Up to 10 LI per subcategory */
+    .tab-content.active li:nth-child(1)  { animation-delay: 0.05s; }
+    .tab-content.active li:nth-child(2)  { animation-delay: 0.07s; }
+    .tab-content.active li:nth-child(3)  { animation-delay: 0.09s; }
+    .tab-content.active li:nth-child(4)  { animation-delay: 0.11s; }
+    .tab-content.active li:nth-child(5)  { animation-delay: 0.13s; }
+    .tab-content.active li:nth-child(6)  { animation-delay: 0.15s; }
+    .tab-content.active li:nth-child(7)  { animation-delay: 0.17s; }
+    .tab-content.active li:nth-child(8)  { animation-delay: 0.19s; }
+    .tab-content.active li:nth-child(9)  { animation-delay: 0.21s; }
+    .tab-content.active li:nth-child(10) { animation-delay: 0.23s; }
+    
+    /* Subcategory titles */
+    .subcategory-title {
+        color: #aff;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        text-align: center;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        /* We can also animate titles, if desired: */
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95) blur(4px);
+        animation: contentEntrance 0.6s ease forwards;
+        animation-delay: 0.03s;
+    }
+    
+    /* 
+       ========================================
+       LIST + INPUTS + BUTTONS
+       ========================================
+    */
+    li {
+        list-style: none;
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    /* Text fields */
+    input[type="text"] {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid transparent;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        outline: none;
+        color: #ffffff;
+        transition: border 0.3s, background 0.3s, box-shadow 1s;
+    }
+    input[type="text"]:focus {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 10px rgb(125, 153, 153);
+    }
+    
+    
+    /* Action buttons */
+    input[type="submit"] {
+        background: rgba(102, 255, 255, 0.3);
+        border: 2px solid transparent;
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    }
+    input[type="submit"]:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0 10px rgba(72, 85, 99, 0.4);
+        background: rgba(102, 255, 255, 0.1);
+    }
+    input[type="submit"]:active {
+        transform: scale(0.98);
+        box-shadow: none;
+    }
+    /* Full-width variant */
+    input[type="submit"].full-width {
+        flex: 0 0 auto;
+        width: auto;
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+    
+    /* Button group container */
+    ul.button-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        padding: 5px 0;
+    }
+    
+    /* 
+       ========================================
+       ALERT BOX 
+       ========================================
+    */
+    .alert-box {
+        display: none;
+        position: fixed;
+        top: 2%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ff0000;
+        color: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+        z-index: 1000000000;
+        animation: slideIn 1s forwards, fadeOutandslideout 1s 3.5s forwards;
+    }
+    @keyframes slideIn {
+        0% { transform: translate(-50%, -120%); }
+        100% { transform: translate(-50%, 0%); }
+    }
+    @keyframes fadeOutandslideout {
+        0% { opacity: 0.8; }
+        100% { opacity: 0; transform: translate(-50%, -100%); filter: blur(20px);}
+    }
+    
+    /* 
+       ========================================
+       RECORDER CONTAINER 
+       ========================================
+    */
+    .recorder-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(12px);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        margin: 20px auto;
+        max-width: 600px;
+        padding: 20px;
+        width: 90%;
+    }
+    
+    /* Timer text for recording */
+    .timer {
+        font-family: 'Quicksand', sans-serif;
+        color: #ffffff;
+        margin: 10px 0;
+        font-size: 1.2em;
+    }
+    
+    /* Visualization canvas */
+    .visualizer {
+        width: 300px;
+        height: 60px;
+        margin: 20px 0;
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        background: rgba(20, 20, 20, 0.1);
+        transition: all 0.3s ease;
+    }
+    .visualizer.streaming {
+        background: rgba(255, 51, 51, 0.1);
+        box-shadow: 0 0 10px rgba(255, 51, 51, 0.2);
+    }
+    .visualizer::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(102, 255, 255, 0.1), transparent);
+        transform: translateX(-100%);
+    }
+    .visualizer.active::before {
+        animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer {
+        100% { transform: translateX(100%); }
+    }
+    
+    /* 
+       ========================================
+       RECORDING BUTTONS 
+       ========================================
+    */
+    .button-container {
+        display: flex;
+        gap: 20px;
+        margin-top: 10px;
+        position: relative;
+        width: 100%;
+        justify-content: center;
+        padding: 0 20px;
+        height: 60px;
+        margin-bottom: 20px;
+    }
+    
+    /* Common for mic/controls/stream */
+    .mic-button, 
+    .control-button, 
+    .stream-button {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: none;
+        position: absolute;
+        cursor: pointer;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    
+    /* Subtle hover glow inside circles */
+    .mic-button::after, 
+    .control-button::after, 
+    .stream-button::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, transparent 40%, rgba(255,255,255,0.1) 70%);
+        transform: scale(0);
+        transition: transform 0.5s ease;
+    }
+    .mic-button:hover::after,
+    .control-button:hover::after,
+    .stream-button:hover::after {
+        transform: scale(2);
+    }
+    
+    /* SVG icons inside the circle */
+    .mic-button svg, 
+    .control-button svg, 
+    .stream-button svg {
+        width: 30px;
+        height: 30px;
+        fill: #121212;
+        transition: transform 0.3s ease;
+    }
+    .mic-button:hover svg,
+    .control-button:hover svg,
+    .stream-button:hover svg {
+        transform: scale(1.1);
+    }
+    
+    /* Mic button (center) */
+    .mic-button {
+        background: #11507a;
+        left: 50%; 
+        transform: translateX(-50%);
+        z-index: 2;
+    }
+    .mic-button.recording {
+        animation: pulse 1.5s infinite, morphToSquare 2s infinite;
+        background: #ff4488;
+        transform: translateX(-50%);
+    }
+    @keyframes pulse {
+        0%   { transform: translateX(-50%) scale(1); }
+        50%  { transform: translateX(-50%) scale(1.05); }
+        100% { transform: translateX(-50%) scale(1); }
+    }
+    @keyframes morphToSquare {
+        0%, 100% { transform: translateX(-50%); border-radius: 50%; }
+        50%      { transform: translateX(-50%); border-radius: 10px; }
+    }
+    
+    /* Cancel & send buttons with a glassy look */
+    .control-button {
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0);
+    }
+    .control-button.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+    }
+    /* Cancel => light red glass */
+    .cancel-button {
+        background: rgba(255, 128, 128, 0.4);
+        left: calc(50% - 130px);
+    }
+    /* Send => tealish glass */
+    .send-button {
+        background: rgba(66, 255, 190, 0.5);
+        left: calc(50% + 40px); /* moved to fix overlap */
+    }
+    
+    /* Stream button (top-right of container) */
+    .stream-button {
+        background: rgba(255, 119, 204, 0.4);
+        right: 10px; 
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .stream-button.streaming {
+        animation: pulseStream 1.5s infinite;
+        background: #ff66cc;
+    }
+    @keyframes pulseStream {
+        0%   { box-shadow: 0 0 0 0 rgba(255, 51, 204, 0.7); }
+        70%  { box-shadow: 0 0 0 15px rgba(255, 51, 204, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 51, 204, 0); }
+    }
+    
+    /* Recording status messages */
+    .status-message {
+        position: relative;
+        margin-top: 10px;
+        border-radius: 5px;
+        min-height: 20px;
+        text-align: center;
+        color: #ffffff;
+        font-family: 'Quicksand', sans-serif;
+        transition: all 0.3s ease;
+    }
+    .status-message.show {
+        animation: fadeInStatus 0.3s forwards;
+    }
+    @keyframes fadeInStatus {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+    
+
+    
+    /* 
+       ========================================
+       SOUNDBOARD 
+       ========================================
+    */
+    .soundboard-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(12px);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        margin: 20px auto;
+        max-width: 700px;
+        width: 95%;
+        padding: 20px;
+    }
+    
+    /* Grid for the sound buttons */
+    .sound-button-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
+        width: 100%;
+        max-width: 650px;
+    }
+    @media (max-width: 768px) {
+        .sound-button-grid {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+    }
+    
+    /* Individual sound button style - more glassy pink/purple */
+    .sound-button {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 10px;
+        background: linear-gradient(135deg, rgba(120, 0, 120, 0.3), rgba(160, 0, 160, 0.4));
+        color: #e0ffff;
+        border: none;
+        aspect-ratio: 1 / 1;
+        border-radius: 10px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s ease-out, box-shadow 0.3s ease-out;
+        box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+    }
+    .sound-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.5);
+    }
+    .sound-button::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.1);
+        z-index: 0;
+        transition: opacity 0.3s ease;
+    }
+    .sound-button:hover::before {
+        opacity: 0.3;
+    }
+    .sound-button.active {
+        transform: translateY(2px);
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4);
+    }
+    .sound-button.active::after {
+        content: '';
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 100%; height: 100%;
+        border-radius: 0%;
+        background: radial-gradient(circle, rgba(255,0,255,0.7) 0%, rgba(255,0,255,0) 75%);
+        transform: translate(-50%, -50%) scale(0);
+        z-index: 1;
+        pointer-events: none;
+        transition: transform 0.7s ease-in-out;
+    }
+    .sound-button.active::after {
+        transform: translate(-50%, -50%) scale(3);
+    }
+    
+    /* Inner text container */
+    .sound-button-container {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+    }
+    
+    /* Sound name styling */
+    .sound-name {
+        font-family: 'Jersey 15', monospace;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.2em;
+    }
+    @media (max-width: 768px) {
+        .sound-name {
+            font-size: 1.4rem;
+        }
+    }
+    
+    /* Duration display */
+    .sound-duration {
+        font-size: 1rem;
+        position: absolute;
+        bottom: 5px; 
+        right: 5px;
+        font-family: 'DSEG14Classic', monospace;
+        z-index: 2;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    @media (max-width: 768px) {
+        .sound-duration {
+            font-size: 1.1rem;
+        }
+    }
+    
+    /* Stop button spans full grid width */
+    .stop-button {
+        grid-column: 1 / -1; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px 10px;
+        background: linear-gradient(135deg, #ff5555, #ff3333);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s ease-out, box-shadow 0.3s ease-out;
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
+    }
+    .stop-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 8px 8px 10px rgba(0, 0, 0, 0.5);
+    }
+    .stop-button.active {
+        transform: translateY(2px);
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.6);
+    }
+    .stop-button.active::after {
+        content: '';
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 100%; height: 100%;
+        border-radius: 0%;
+        background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 75%);
+        transform: translate(-50%, -50%) scale(0);
+        z-index: 1;
+        pointer-events: none;
+        transition: transform 0.7s ease-in-out;
+    }
+    .stop-button.active::after {
+        transform: translate(-50%, -50%) scale(3);
     }
 
+    .audio-controls-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.external-audio-container {
+    display: flex;
+    gap: 10px;
+}
+
+.audio-input {
+    flex: 1;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.audio-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    opacity: 1;
+}
+
+.play-external-btn {
+    background: rgba(66, 255, 190, 0.3);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.play-external-btn:hover {
+    background: rgba(66, 255, 190, 0.4);
+}
+
+.search-sound-container {
+    display: flex;
+}
 
 
+.upload-local-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.upload-local-container input[type="file"] {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-local-container input[type="file"]::file-selector-button {
+    /* width: %; */
+    background: rgba(66, 255, 190, 0.2);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    padding: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+@media (min-width: 768px) {
+    .upload-local-container {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .upload-local-container input[type="file"]::file-selector-button {
+        width: auto;
+        margin-bottom: 0;
+        margin-right: 12px;
+    }
+}
+
+.animations-toggle-container {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px auto;
+    width: fit-content;
+    min-width: 200px;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.animations-toggle-container label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: color 0.2s ease;
+}
+
+.animations-toggle-container label:hover {
+    color: rgba(66, 255, 190, 0.9);
+}
+
+.animations-toggle-container input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(66, 255, 190, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.animations-toggle-container input[type="checkbox"]:checked {
+    background: rgba(66, 255, 190, 0.2);
+    border-color: rgba(66, 255, 190, 0.5);
+}
+
+.animations-toggle-container input[type="checkbox"]:checked::before {
+    content: '☑';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+}
+
+.animations-toggle-container input[type="checkbox"]:hover {
+    background: rgba(66, 255, 190, 0.15);
+    transform: scale(1.05);
+}
+
+.disable-animations .welcome-section {
+  animation: none !important; /* kills swirlBackground keyframes */
+}
+
+.disable-animations .welcome-section::before,
+.disable-animations .welcome-section::after {
+  animation: none !important; /* kills star movement */
+}
+
+.disable-animations .vary-text {
+  animation: none !important; /* kills linesShift + scrollRTL/scrollLTR */
+}
+
+
+/* ADD TO: <style> section in your HTML */
+/* LOCATION:  Near the `.upload-progress` style or anywhere in your <style> block */
+/* DESCRIPTION: CSS for the file upload progress bar */
+.upload-progress-bar {
+    width: 100%;
+    height: 8px;                      /* Height of progress bar */
+    background-color: rgba(255, 255, 255, 0.1); /* Background track */
+    border-radius: 4px;               /* Rounded corners */
+    overflow: hidden;                 /* Clip the progress fill */
+    margin-top: 8px;                  /* Spacing above the progress bar */
+    display: none;                    /* Hidden by default */
+}
+
+.upload-progress-bar-fill {
+    height: 100%;
+    width: 0%;                      /* Initial width is 0 */
+    background-color: #66ffff;        /* Progress fill color (teal) */
+    border-radius: 4px;               /* Rounded corners to match track */
+    transition: width 0.2s ease-out; /* Smooth width animation */
+}
+
+
+/* --- Base glow-on-hover button styles --- */
+.glow-on-hover {
+  padding: 10px 20px;
+  width: auto; /* Changed from fixed width */
+  height: auto; /* Changed from fixed height */
+  border: none;
+  outline: none;
+  color: #fff;
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 12px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+}
+
+/* --- Glow effect (using :before pseudo-element) --- */
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #00fff2, #00d9ff, #00a6ff, #0066ff, #00fff2, #00ffb3, #ff69b4, #ff1493, #00fff2);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+/* --- Hover effect (show glow) --- */
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+/* --- Active (click/press) effect --- */
+.glow-on-hover:active {
+    color: #000;
+    transform: scale(0.98);
+}
+
+.glow-on-hover:active:after {
+    background: transparent; /* For active state, keep after transparent */
+}
+
+/* --- Solid background for :after pseudo-element --- */
+.glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgb(74, 126, 132); /* Solid background color of the button */
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+/* --- Glowing animation for :before pseudo-element --- */
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
+
+/* --- Loading state styles --- */
+.glow-on-hover.loading-button {
+    color: transparent !important; /* Hide text during loading */
+    cursor: wait;               /* Change cursor to 'wait' */
+    pointer-events: none;       /* Disable interactions */
+}
+
+.glow-on-hover.loading-button::after {
+    opacity: 0.8;              
+    background: rgb(0, 0, 0); 
+}
+
+
+
+ 
+.glow-on-hover.active-button:before {
+    opacity: 1;  
+    background: linear-gradient(45deg, #00fff2, #00d9ff, #00a6ff, #0066ff, #00fff2, #00ffb3, #ff69b4, #ff1493, #00fff2);  
+    background-size: 400%;
+    filter: blur(5px);    
+    animation: glowing 20s linear infinite; 
+}
+
+.glow-on-hover.active-button:active {
+    color: #000;
+    transform: scale(0.98);
+}
+
+.glow-on-hover.active-button:active:after {
+    background: transparent;
+}
+@keyframes redErrorBlinkAnimation {
+    0%   { background-color: transparent; }
+    50%  { background-color: red; }       
+    100% { background-color: transparent; }
+}
+
+ 
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+/* ... your existing CSS (keep all other glow-on-hover styles as they are) ... */
+
+/* --- Hover effect (show glow) - Keep this rule as is */
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+/* --- Red Error Blink style - FORCE VISIBILITY & INCREASE SPECIFICITY EVEN MORE --- */
+.glow-on-hover.error-blink:before,
+.glow-on-hover.error-blink:hover:before,
+.glow-on-hover.error-blink.active-button:before, /* Added "active-button" to specificity */
+.glow-on-hover.error-blink.loading-button:before, /* Added "loading-button" to specificity */
+.glow-on-hover.error-blink.error-blink:before, /* Redundant specificity */
+body .containersearch .glow-on-hover.error-blink:before, /* EVEN MORE SPECIFIC - Target within container */
+body.disable-animations .containersearch .glow-on-hover.error-blink:before { /* Even more specific with body classes */
+    animation-name: redErrorBlinkAnimation;
+    animation-duration: 5;
+    animation-iteration-count: 2;
+    background-image: none;
+    opacity: 1 !important; /* **FORCE VISIBILITY - MOST IMPORTANT!** */
+    animation-duration: 0.5s;               /* Duration per cycle */
+    animation-iteration-count: 2;        /* Explicitly set to 2 iterations (blink twice) */
+    background-color: transparent;         /* Ensure base color is transparent */
+    background-image: none;               /* Remove gradient image for error blink */
+}
+
+
+/* --- Red Error Blink Animation - Keep as is */
+@keyframes redErrorBlinkAnimation {
+    0%   { background-color: transparent; }
+    20%  { background-color: red; }
+    80%  { background-color: red; }
+    100% { background-color: transparent; }
+}
+
+/* ... (Keep all other glow-on-hover CSS rules like active, base styles, etc. as they are from the complete CSS) ... */
+/* normal state: button looks like your original glow button example (black background, white text, ready to glow on hover).
+
+on click (loading state):
+
+button text should disappear.
+
+rainbow glow animation should start.
+
+cursor should change to "wait" (a spinner or hourglass).
+
+button should become un-clickable.
+
+after 3 seconds (loading finished): button should return to its normal state (text visible, glow stops, clickable again).
+
+This is amazing, but change it in the implementation so that instead of 3 seconds, it'll wait for the confirmation of the submit
+
+and if it errored, the button will blink a red hue and then go back to normal
+Add to the current submit buttons this hover effect */
 </style>
-
 </head>
 <body>
-    <div class="lines">
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-    </div>
-    <!-- <div class="parent-div"> -->
-
-    <p class="welcometext">{{ welcome|safe }}</p>
-
-    <div class="containersearch">
-        {% for category in categories %}
-        <div class="category" onclick="toggleCategoryVisibility(this)" data-index="{{ loop.index }}">
-            <span class="category-title">{{ category.name }}</span>
-            <span class="expand-icon">+</span>
+    <div class="vary-scroller">
+        <div class="vary-text">VAry</div>
+      </div>
+    
+      <div class="welcometext">
+        {{ welcome|safe }}
         </div>
-        <ul class="category-content" style="display: none;">
-            {% for button in category.buttons %}
-            <li>
-                {% if button.placeholder %}
-                <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
-                <input class='searchtools' type="submit" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}" value="{{ button.name }}">
-                {% else %}
-                <input class='searchtools full-width' type="submit" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}" value="{{ button.name }}">
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-        {% endfor %}
+            <div class="welcome-section">
+    
+            </div>
+    
+    
+        <div class="containersearch">
+            <div class="tabs">
+                <div class="tab active" data-target="tab1">System</div>
+                <!-- <div class="tab" data-target="tab2">Network</div> -->
+                <div class="tab" data-target="tab3">Processes</div>
+                <div class="tab" data-target="tab4">Fun</div>
+                <div class="tab" data-target="tab5">Soundboard</div>
+                <div class="tab" data-target="tab6">Effects</div>
+    
+            </div>
+    
+            <div class="tab-content active" id="tab1">
+                <div class="subcategory">
+                    <h3 class="subcategory-title">General</h3>
+                    <ul>
+                        {% for category in categories %}
+                            {% if category.name == 'Stuff..' %}
+                                {% for button in category.buttons %}
+                                    <li>
+    <!--
+                                        {% if button.placeholder %}
+                                            <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                                            <input class='searchtools fx-button glow-on-hover' type="submit" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}" value="{{ button.name }}">
+                                        {% else %}
+                                            <input class='searchtools fx-button glow-on-hover full-width' type="submit" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}" value="{{ button.name }}">
+                                        {% endif %}
+                                         -->
+    
+                                        {% if button.placeholder %}
+                                        <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                                        <button
+                                            class='searchtools fx-button glow-on-hover'
+                                            type="button"
+                                            id="{{ button.name }}_{{ request.remote_addr }}_button"
+                                            name="{{ button.name }}_{{ request.remote_addr }}"
+                                            data-button-name="{{ button.name }}">
+                                            {{ button.name }}
+                                        </button>
+                                    {% else %}
+                                        <button
+                                            class='searchtools fx-button glow-on-hover full-width'
+                                            type="button"
+                                            id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield"
+                                            name="{{ button.name }}_{{ request.remote_addr }}"
+                                            data-button-name="{{ button.name }}">
+                                            {{ button.name }}
+                                        </button>
+                                    {% endif %}
+    
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="subcategory">
+                    <h3 class="subcategory-title">System Control</h3>
+                    <ul>
+                        {% for category in categories %}
+                            {% if category.name == 'System Control' %}
+                                {% for button in category.buttons %}
+                                    <li>
+                                        {% if button.placeholder %}
+                                            <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                                            <button class='searchtools fx-button glow-on-hover' type="button" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% else %}
+                                            <button class='searchtools fx-button glow-on-hover full-width' type="button" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+    
+            <div class="tab-content" id="tab2">
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Network Management</h3>
+                    <ul>
+                        {% for category in categories %}
+                            {% if category.name == 'Network Management' %}
+                                {% for button in category.buttons %}
+                                    <li>
+                                        {% if button.placeholder %}
+                                            <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                                            <button class='searchtools fx-button glow-on-hover' type="button" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% else %}
+                                            <button class='searchtools fx-button glow-on-hover full-width' type="button" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Application Control</h3>
+                    <ul>
+                        <li>
+                            <input type="text" id="Block Application by Name_{{ request.remote_addr }}_textfield" placeholder="Enter application name">
+                            <button class='searchtools fx-button glow-on-hover' type="button" id="Block Application by Name_{{ request.remote_addr }}_button" name="Block_Application_by_Name_{{ request.remote_addr }}"  data-button-name="Block Application by Name">Block Application by Name</button>
+                        </li>
+                        <li>
+                            <input type="text" id="Unblock Application by Name_{{ request.remote_addr }}_textfield" placeholder="Enter application name">
+                            <button class='searchtools fx-button glow-on-hover' type="button" id="Unblock Application by Name_{{ request.remote_addr }}_button" name="Unblock_Application_by_Name_{{ request.remote_addr }}"  data-button-name="Unblock Application by Name">Unblock Application by Name</button>
+                        </li>
+                        <li>
+                            <input type="text" id="Block Ports for Application_{{ request.remote_addr }}_textfield" placeholder="Enter application name">
+                            <button class='searchtools fx-button glow-on-hover' type="button" id="Block Ports for Application_{{ request.remote_addr }}_button" name="Block_Ports_for_Application_{{ request.remote_addr }}"  data-button-name="Block Ports for Application">Block Ports for Application</button>
+                        </li>
+                        <li>
+                            <input type="text" id="Unblock Ports for Application_{{ request.remote_addr }}_textfield" placeholder="Enter application name">
+                            <button class='searchtools fx-button glow-on-hover' type="button" id="Unblock Ports for Application_{{ request.remote_addr }}_button" name="Unblock_Ports_for_Application_{{ request.remote_addr }}"  data-button-name="Unblock Ports for Application">Unblock Ports for Application</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    
+            <div class="tab-content" id="tab3">
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Process Control</h3>
+                    <ul>
+                        {% for category in categories %}
+                            {% if category.name == 'Process Management' %}
+                                {% for button in category.buttons %}
+                                    <li>
+                                        {% if button.placeholder %}
+                                            <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                                            <button class='searchtools fx-button glow-on-hover' type="button" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% else %}
+                                            <button class='searchtools fx-button glow-on-hover full-width' type="button" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+    
+            <div class="tab-content" id="tab4">
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Visual & Audio</h3>
+                    <ul>
+                        {% for category in categories %}
+                            {% if category.name == 'Display Manipulation' %}
+                                {% for button in category.buttons %}
+                                    {% if button.name != 'Send to background highlight' and button.name != 'Turn the Screen black' and button.name != 'Make the screen rotate' %}
+                                        <li>
+                                            {% if button.placeholder %}
+                                                <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                                                <button class='searchtools fx-button glow-on-hover' type="button" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                            {% else %}
+                                                <button class='searchtools fx-button glow-on-hover full-width' type="button" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                            {% endif %}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+    
+            <div class="subcategory">
+                <h3 class="subcategory-title">Subtle Actions</h3>
+                <ul>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="disable subtly mess with windows_{{ request.remote_addr }}_buttonnotextfield" name="disable_subtly_mess_with_windows_{{ request.remote_addr }}"  data-button-name="Disable Subtle Windows Actions">Disable Subtle Windows Actions</button>
+                    </li>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="enable subtly mess with windows_{{ request.remote_addr }}_buttonnotextfield" name="enable_subtly_mess_with_windows_{{ request.remote_addr }}"  data-button-name="Enable Subtle Windows Actions">Enable Subtle Windows Actions</button>
+                    </li>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="create phantom notification_{{ request.remote_addr }}_buttonnotextfield" name="create_phantom_notification_{{ request.remote_addr }}"  data-button-name="Create Phantom Notification">Create Phantom Notification</button>
+                    </li>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="disable subtle mouse actions_{{ request.remote_addr }}_buttonnotextfield" name="disable_subtly_mess_with_mouse_{{ request.remote_addr }}"  data-button-name="Disable Subtle Mouse Actions">Disable Subtle Mouse Actions</button>
+                    </li>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="enable subtle mouse actions_{{ request.remote_addr }}_buttonnotextfield" name="enable_subtly_mess_with_mouse_{{ request.remote_addr }}"  data-button-name="Enable Subtle Mouse Actions">Enable Subtle Mouse Actions</button>
+                    </li>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="disable subtly mess with text_{{ request.remote_addr }}_buttonnotextfield" name="disable_subtly_mess_with_text_{{ request.remote_addr }}"  data-button-name="Disable Subtle Text Actions">Disable Subtle Text Actions</button>
+                    </li>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="enable subtly mess with text_{{ request.remote_addr }}_buttonnotextfield" name="enable_subtly_mess_with_text_{{ request.remote_addr }}"  data-button-name="Enable Subtle Text Actions">Enable Subtle Text Actions</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="subcategory">
+                <h3 class="subcategory-title">Other Actions</h3>
+                <ul>
+                    <li>
+                        <input type="text" id="hiccups_{{ request.remote_addr }}_textfield" placeholder="Duration (seconds)">
+                        <button class='searchtools fx-button glow-on-hover' type="button" id="hiccups_{{ request.remote_addr }}_button" name="hiccups_{{ request.remote_addr }}"  data-button-name="Hiccups">Hiccups</button>
+                    </li>
+                    <li>
+                        <input type="text" id="set screen brightness_{{ request.remote_addr }}_textfield" placeholder="Brightness (1-100)">
+                         <button class='searchtools fx-button glow-on-hover' type="button" id="set screen brightness_{{ request.remote_addr }}_button" name="set_screen_brightness_{{ request.remote_addr }}"  data-button-name="Set Brightness">Set Brightness</button>
+                     </li>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="enable internet fl_{{ request.remote_addr }}_buttonnotextfield" name="enable_internet_fl_{{ request.remote_addr }}"  data-button-name="Enable Internet">Enable Internet</button>
+                    </li>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="disable internet fl_{{ request.remote_addr }}_buttonnotextfield" name="disable_internet_fl_{{ request.remote_addr }}"  data-button-name="Disable Internet">Disable Internet</button>
+                    </li>
+                     <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="panic subtle functions disable_{{ request.remote_addr }}_buttonnotextfield" name="panic_subtle_functions_disable_{{ request.remote_addr }}"  data-button-name="Panic: Disable Subtle Functions">Panic: Disable Subtle Functions</button>
+                     </li>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="enable subtle functions_{{ request.remote_addr }}_buttonnotextfield" name="enable_subtle_functions_{{ request.remote_addr }}"  data-button-name="Enable Subtle Functions">Enable Subtle Functions</button>
+                    </li>
+                    <li>
+                        <button class='searchtools fx-button glow-on-hover full-width' type="button" id="check vary running_{{ request.remote_addr }}_buttonnotextfield" name="check_vary_running_{{ request.remote_addr }}"  data-button-name="Check VAry Running">Check VAry Running</button>
+                    </li>
+                 </ul>
+            </div>
+            <div class="subcategory">
+                <h3 class="subcategory-title">Display</h3>
+                                <ul>
+                    <!-- Buttons for Send to background highlight, Turn the Screen black,
+                            Make the screen rotate -->
+                    {% for category in categories %}
+                        {% if category.name == 'Display Manipulation' %}
+                            {% for button in category.buttons %}
+                                {% if button.name == 'Send to background highlight' or button.name == 'Turn the Screen black' or button.name == 'Make the screen rotate' %}
+                                    <li>
+                                        {% if button.placeholder %}
+                                            <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                                            <button class='searchtools fx-button glow-on-hover' type="button" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% else %}
+                                            <button class='searchtools fx-button glow-on-hover full-width' type="button" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                </div>
+    
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Miscellaneous</h3>
+                    <ul>
+                        {% for category in categories %}
+                            {% if category.name == 'Miscellaneous/Fun' %}
+                                {% for button in category.buttons %}
+                                    <li>
+                                        {% if button.placeholder %}
+                                            <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                                            <button class='searchtools fx-button glow-on-hover' type="button" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% else %}
+                                            <button class='searchtools fx-button glow-on-hover full-width' type="button" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+    
+                <div class="subcategory">
+                    <h3 class="subcategory-title">YouTube</h3>
+                    <ul>
+                        {% for category in categories %}
+                            {% if category.name == 'YouTube Control' %}
+                                {% for button in category.buttons %}
+                                    <li>
+                                        {% if button.placeholder %}
+                                            <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                                            <button class='searchtools fx-button glow-on-hover' type="button" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% else %}
+                                            <button class='searchtools fx-button glow-on-hover full-width' type="button" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+    
+                <div class="subcategory">
+                    <h3 class="subcategory-title">Script</h3>
+                    <ul>
+                        {% for category in categories %}
+                            {% if category.name == 'Script Management' %}
+                                {% for button in category.buttons %}
+                                    <li>
+                                        {% if button.placeholder %}
+                                            <input type="text" id="{{ button.name }}_{{ request.remote_addr }}_textfield" placeholder="{{ button.placeholder }}">
+                                            <button class='searchtools fx-button glow-on-hover' type="button" id="{{ button.name }}_{{ request.remote_addr }}_button" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% else %}
+                                            <button class='searchtools fx-button glow-on-hover full-width' type="button" id="{{ button.name }}_{{ request.remote_addr }}_buttonnotextfield" name="{{ button.name }}_{{ request.remote_addr }}"  data-button-name="{{ button.name }}">{{ button.name }}</button>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-content" id="tab5">
+                <div class="soundboard-container" style="display: flex; flex-direction: column; gap: 15px;">
+    
+                  <!-- STOP ALL BUTTON (in JS we generate a second one,
+                       but let's do an explicit top-level "Stop All" here if you prefer) -->
+                  <!--
+                    Or we can rely on the dynamically created Stop button in JS.
+                    We'll skip a static one if you'd rather do it purely with JS.
+                  -->
+    
+                  <!-- External Sound + Search row(s) near top -->
+                  <div class="audio-controls-container">
+                    <div class="external-audio-container">
+                        <input type="text"
+                               id="external-audio-url"
+                               placeholder="Enter external audio file URL..."
+                               class="audio-input">
+    
+                        <button id="btn-play-external"
+                                class="play-external-btn">
+                            Play External
+                        </button>
+                    </div>
+    
+                    <!-- NEW: Upload local file UI -->
+                    <div class="upload-local-container">
+                        <input type="file" id="local-sound-file" accept="audio/*,video/*">
+                        <input type="text" id="new-filename" placeholder="Name the sound" class="audio-input" required style="margin-bottom: 8px;">
+                        <button id="btn-upload-local" class="play-external-btn">
+                            Upload Local
+                        </button>
+                        <div id="upload-progress" style="display: none; color: white; margin-top: 8px;"></div>
+                        <div class="upload-progress-bar" style="display: none;"> <div class="upload-progress-bar-fill"></div> </div>
+    
+                    </div>
+    
+                    <div class="search-sound-container">
+                        <input type="text"
+                               id="sound-search"
+                               placeholder="Search soundboard sounds..."
+                               class="audio-input">
+                    </div>
+                </div>
+    
+    
+                  <!-- The grid container for actual sounds -->
+                  <div class="sound-button-grid" id="soundboard-grid" style="display: grid; gap: 12px;">
+                    <!-- We'll inject dynamic buttons via JS -->
+                  </div>
+    
+                </div>
+              </div>
+    
+    <!-- (5th tab-content ends here) -->
+    <div class="tab-content" id="tab6">
+        <div class="subcategory">
+            <h3 class="subcategory-title">Visual Distortion Effects</h3>
+            <ul class="effects-button-list">
+                <!-- CLEAR EFFECT at top -->
+                <li>
+                    <button class="fx-button glow-on-hover"
+                           type="button"
+                           id="cleareffect_{{ request.remote_addr }}_buttonnotextfield"
+                           name="cleareffect_{{ request.remote_addr }}"
+                           data-button-name="CLEAR Effect">CLEAR Effect</button>
+                </li>
+    
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="rain_{{ request.remote_addr }}_buttonnotextfield"
+                           name="rain_{{ request.remote_addr }}"
+                           data-button-name="RAIN">RAIN</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="lightning_{{ request.remote_addr }}_buttonnotextfield"
+                           name="lightning_{{ request.remote_addr }}"
+                           data-button-name="LIGHTNING">LIGHTNING</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="matrix_{{ request.remote_addr }}_buttonnotextfield"
+                           name="matrix_{{ request.remote_addr }}"
+                           data-button-name="MATRIX">MATRIX</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="particles_{{ request.remote_addr }}_buttonnotextfield"
+                           name="particles_{{ request.remote_addr }}"
+                           data-button-name="PARTICLES">PARTICLES</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="binary_{{ request.remote_addr }}_buttonnotextfield"
+                           name="binary_{{ request.remote_addr }}"
+                           data-button-name="BINARY">BINARY</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="vortex_{{ request.remote_addr }}_buttonnotextfield"
+                           name="vortex_{{ request.remote_addr }}"
+                           data-button-name="VORTEX">VORTEX</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="cosmic_{{ request.remote_addr }}_buttonnotextfield"
+                           name="cosmic_{{ request.remote_addr }}"
+                           data-button-name="COSMIC">COSMIC</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="psychedelic_{{ request.remote_addr }}_buttonnotextfield"
+                           name="psychedelic_{{ request.remote_addr }}"
+                           data-button-name="PSYCHEDELIC">PSYCHEDELIC</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="quantumparticles_{{ request.remote_addr }}_buttonnotextfield"
+                           name="quantumparticles_{{ request.remote_addr }}"
+                           data-button-name="QUANTUM PARTICLES">QUANTUM PARTICLES</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="voidportals_{{ request.remote_addr }}_buttonnotextfield"
+                           name="voidportals_{{ request.remote_addr }}"
+                           data-button-name="VOID PORTALS">VOID PORTALS</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="realityfractures_{{ request.remote_addr }}_buttonnotextfield"
+                           name="realityfractures_{{ request.remote_addr }}"
+                           data-button-name="REALITY FRACTURES">REALITY FRACTURES</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="timeripples_{{ request.remote_addr }}_buttonnotextfield"
+                           name="timeripples_{{ request.remote_addr }}"
+                           data-button-name="TIME RIPPLES">TIME RIPPLES</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="dnahelix_{{ request.remote_addr }}_buttonnotextfield"
+                           name="dnahelix_{{ request.remote_addr }}"
+                           data-button-name="DNA HELIX">DNA HELIX</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="dimensionaltears_{{ request.remote_addr }}_buttonnotextfield"
+                           name="dimensionaltears_{{ request.remote_addr }}"
+                           data-button-name="DIMENSIONAL TEARS">DIMENSIONAL TEARS</button></li>
+                <li><button class="fx-button glow-on-hover"
+                           type="button"
+                           id="energy_{{ request.remote_addr }}_buttonnotextfield"
+                           name="energy_{{ request.remote_addr }}"
+                           data-button-name="ENERGY FIELD">ENERGY FIELD</button></li>
+            </ul>
+        </div>
     </div>
-    <!-- </div> -->
+    <!-- Make sure to close .containersearch if needed, or place it properly with your existing layout -->
     
+        </div>
     
+        <div class="recorder-container">
+            <div class="visualizer">
+                <canvas id="visualizer"></canvas>
+            </div>
+            <div class="timer">00:00</div>
+            <div class="button-container">
+                <button class="mic-button">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                    </svg>
+                </button>
+                <button class="control-button cancel-button">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+                <button class="control-button send-button">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+                <button class="stream-button">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="status-message"></div>
+            <!-- <div class="audio-player"> -->
+                <!-- <audio controls></audio> -->
+            </div>
+        </div>
     
+    <!-- PLACE THE DISABLE-ANIMATIONS UI HERE -->
+    <div id="animationsToggleContainer" class="animations-toggle-container">
+        <label for="cbDisableAnims">Disable animations?</label>
+        <input type="checkbox" id="cbDisableAnims" />
+      </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-<script>
-var socket = io.connect('http://' + document.domain + ':' + location.port);
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
 
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    const btnUploadLocal = document.getElementById('btn-upload-local');
+    const localFileInput = document.getElementById('local-sound-file');
+    const uploadProgressText = document.getElementById('upload-progress'); 
+    const uploadProgressBar = document.querySelector('.upload-progress-bar'); 
+    const progressBarFill = document.querySelector('.upload-progress-bar-fill');
+    const newFilenameInput = document.getElementById('new-filename');
+
+    if (btnUploadLocal && localFileInput && newFilenameInput) {
+        btnUploadLocal.addEventListener('click', async () => {
+            if (!localFileInput.files || localFileInput.files.length === 0) {
+                showAlert('No file selected for upload.');
+                return;
+            }
+            if (!newFilenameInput.value.trim()) {
+                showAlert("Please enter a name for the file.");
+                return;
+            }
+            try {
+                const file = localFileInput.files[0];
+                const newFilename = newFilenameInput.value.trim();
+                const fileExtension = file.name.split('.').pop();
+                const newFileNameWithExtension = `${newFilename}.${fileExtension}`;
+
+                const renamedFile = new File([file], newFileNameWithExtension, { type: file.type });
+
+                const formData = new FormData();
+                formData.append('local_sound', renamedFile, newFileNameWithExtension);
+
+                uploadProgressText.style.display = 'block'; // Show "uploading..." text
+                uploadProgressBar.style.display = 'block'; 
+                btnUploadLocal.disabled = true;
+                btnUploadLocal.textContent = 'Uploading...'; 
+                newFilenameInput.disabled = true;
+
+                const xhr = new XMLHttpRequest();
+                xhr.upload.addEventListener('progress', (event) => {
+                    if (event.lengthComputable) {
+                        const percentComplete = Math.round((event.loaded / event.total) * 100);
+                        // Update progress bar width dynamically
+                        progressBarFill.style.width = percentComplete + '%';
+                        uploadProgressText.textContent = `Uploading: ${percentComplete}%`; 
+                        if (percentComplete === 100) {
+                            btnUploadLocal.textContent = 'Converting...'; 
+                            uploadProgressText.textContent = 'Converting file...'; 
+                            progressBarFill.style.width = '100%'; 
+                        }
+                    }
+                });
+
+
+                xhr.open('POST', '/upload_soundboard_file', true);
+                const response = await new Promise((resolve, reject) => {
+                    xhr.onload = () => resolve({ ok: xhr.status >= 200 && xhr.status < 300, json: () => Promise.resolve(JSON.parse(xhr.response)) });
+                    xhr.onerror = () => reject(new Error('Upload failed'));
+                    xhr.send(formData);
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    showAlert(data.message || 'File uploaded successfully!', true);
+                    localFileInput.value = '';
+                    newFilenameInput.value = '';
+                    loadSoundboardFiles();
+                } else {
+                    showAlert(data.error || 'Error uploading local file');
+                }
+
+            } catch (err) {
+                console.error(err);
+                showAlert('Error uploading file');
+            } finally {
+                uploadProgressText.style.display = 'none'; 
+                uploadProgressBar.style.display = 'none'; 
+                btnUploadLocal.disabled = false;
+                btnUploadLocal.textContent = 'Upload Local';
+                newFilenameInput.disabled = false;
+                progressBarFill.style.width = '0%'; 
+                uploadProgressText.textContent = ''; 
+            }
+        });
+    }
+});
+
+        /* =============================
+           1) Generic UI & Socket Setup
+           ============================= */
 function toggleCategoryVisibility(element) {
     var content = element.nextElementSibling;
     if (content.style.display === "none") {
         content.style.display = "block";
         element.querySelector('.expand-icon').innerText = '-';
-        
-        // Get the index of the clicked category
         var index = element.getAttribute('data-index');
-        
-        // Calculate the delay for the animation
+
         var delay = parseFloat(index * 0.5);
-        
-        // Apply the delay to the animation
+
         content.style.animationDelay = delay + 's';
     } else {
         content.style.display = "none";
@@ -565,77 +1865,968 @@ function toggleCategoryVisibility(element) {
     }
 }
 
-$('input[type="submit"]').click(function(event) {
-   event.preventDefault();
-   var buttonId = this.id;
-   $.ajax({
-      type: 'POST',
-      url: '/submit',
-      data: { button: buttonId },
-   });
+
+$('input[type="submit"], button.fx-button.glow-on-hover, button.searchtools.fx-button.glow-on-hover').click(function(event) {
+    event.preventDefault();
+    var buttonId = this.id;
+    var button = $(this);
+
+    button.addClass('active-button');
+    button.addClass('loading-button');
+    button.prop('disabled', true);
+
+    $.ajax({
+        type: 'POST',
+        url: '/submit',
+        data: { button: buttonId },
+        complete: function() {
+            button.removeClass('active-button');
+            button.removeClass('loading-button');
+            button.prop('disabled', false);
+        },
+        error: function() {
+            button.addClass('error-blink');
+            button.removeClass('loading-button');
+            button.prop('disabled', false);
+            button.removeClass('active-button'); // <-- Move back outside setTimeout
+            setTimeout(function() {
+                button.removeClass('error-blink');  
+            }, 1000);
+        }
+    });
 });
 
+    const socket = io({
+        reconnection: true,
+        reconnectionAttempts: Infinity,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 20000,
+        autoConnect: true,
+        rejectUnauthorized: false,
+        transports: ['websocket']
+    });
 
-socket.on('get_value', (data) => {
-   const element = document.getElementById(data.element_id);
-   const value = element.value;
+let isConnected = false;
+let reconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 10;
+let sessionCheckInterval = null;
+let isRedirecting = false;
 
-   // Send the value back to the server
-   socket.emit('value_response', { element_id: data.element_id, value: value });
+// Periodically re-check session
+function startSessionCheck() {
+    if (sessionCheckInterval) {
+        clearInterval(sessionCheckInterval);
+    }
+    sessionCheckInterval = setInterval(() => {
+        if (!isRedirecting) {
+            fetch('/check_session')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.valid && !isRedirecting) {
+                        isRedirecting = true;
+                        window.location.href = '/';
+                    }
+                })
+                .catch(error => {
+                    console.error('Session check error:', error);
+                });
+        }
+    }, 30000);
+}
+
+// Socket event handlers
+socket.on('connect', () => {
+    console.log('Connected to server');
+    startSessionCheck();
+    isConnected = true;
+    reconnectAttempts = 0;
+    if (disconnectedAlertShown) {
+        // showAlert("Reconnected to remote.", true);
+        disconnectedAlertShown = false;
+    }
+    disconnectStartTime = null; 
 });
 
+socket.on('connection_established', (data) => {
+    console.log('Connection confirmed:', data);
+});
 
+socket.on('session_status', (data) => {
+    console.log('Session status:', data);
+    if (!data.valid && !isRedirecting) {
+        isRedirecting = true;
+        window.location.href = '/';
+    }
+});
 
-//   document.addEventListener('contextmenu', function(event) {
-//     console.log('Context menu access has been disabled to avoid unintentional activation, enhancing the overall minimalist and streamlined user experience.');
-//     event.preventDefault();
-// });
+socket.on('disconnect', () => {
+    // console.log('Disconnected from server');
+    isConnected = false;
+    disconnectStartTime = Date.now();
+
+    if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+        // showAlert('Connection lost. Attempting to reconnect...');
+    } else {
+        showAlert('Connection lost. Please refresh the page.');
+    }
+});
+
+socket.on('session_expired', () => {
+    if (!isRedirecting) {
+        isRedirecting = true;
+        alert('Your session has expired. Please log in again.');
+        window.location.href = '/';
+    }
+});
+
+window.addEventListener('beforeunload', () => {
+    if (sessionCheckInterval) {
+        clearInterval(sessionCheckInterval);
+    }
+});
+
+// Prevent form resubmission
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+}
+
+socket.on('get_value', async (data) => {
+    try {
+        const { element_id, request_id } = data;
+        const element = document.getElementById(element_id);
+
+        if (element) {
+            const value = element.value;
+            socket.emit('value_response', {
+                request_id: request_id,
+                value: value
+            });
+        } else {
+            console.error(`Element ${element_id} not found`);
+            socket.emit('value_response', {
+                request_id: request_id,
+                value: null,
+                error: `Element ${element_id} not found`
+            });
+        }
+    } catch (error) {
+        console.error('Error processing get_value request:', error);
+        socket.emit('value_response', {
+            request_id: data.request_id,
+            value: null,
+            error: error.message
+        });
+    }
+});
+
+// For sending any custom commands to server
+function sendCommand(command) {
+    socket.emit('client_command', { command: command }, (response) => {
+        if (response && response.error) {
+            alert(response.error);
+        }
+    });
+}
+
+var disconnectStartTime = null;
+var disconnectedAlertShown = false;
+
+setInterval(() => {
+    if (disconnectStartTime) {
+        const disconnectDuration = Date.now() - disconnectStartTime;
+        if (disconnectDuration > 6000 && !disconnectedAlertShown) {
+            // showAlert("Disconnected from remote, attempting reconnection.");
+            disconnectedAlertShown = true;
+        }
+    }
+}, 1000);
+
+document.addEventListener('contextmenu', function(event) {
+    console.log('Context menu is disabled in this UI for minimalism.');
+    event.preventDefault();
+});
+
 socket.on('show_alert', function(data) {
-    showAlert(data.message);
+    if (data.message.toLowerCase().includes("action") && data.message.toLowerCase().includes("executed successfully")) {
+        return showAlert(data.message, true);
+    } else {
+        showAlert(data.message);
+    }
 });
-function showAlert(message) {
+
+function showAlert(message, safe = false) {
     // Create a new alert box
     var alertBox = document.createElement('div');
     alertBox.className = 'alert-box';
     var alertMessage = document.createElement('span');
     alertMessage.textContent = message;
     alertBox.appendChild(alertMessage);
-
-    // Check for existing alert boxes
+    if (safe) {
+    alertBox.style.backgroundColor = 'rgba(0, 255, 0, 0.3)'; 
+    } else {
+            alertBox.style.backgroundColor = 'rgba(255, 0, 0, 1)';
+    }
     var existingAlertBoxes = document.querySelectorAll('.alert-box');
     existingAlertBoxes.forEach(function(alertBox) {
         alertBox.style.animation = 'fadeOutandslideout 1s forwards';
         setTimeout(function() {
-            document.body.removeChild(alertBox);
-        }, 3000); // wait until the animation finishes
+            if (alertBox.parentNode) {
+                alertBox.parentNode.removeChild(alertBox);
+            }
+        }, 3000);
     });
-
-    // Add the new alert box to the body
     document.body.appendChild(alertBox);
-
-    // Display the new alert box
     alertBox.style.display = 'block';
 
-    // Hide the alert box after 4.6 seconds
     setTimeout(function() {
         alertBox.style.display = 'none';
         setTimeout(function() {
-            document.body.removeChild(alertBox);
-        }, 1000); // wait until the animation finishes
-    }, 4600); // it's in milliseconds, divide by 1000, so like 1000 = 1 second
+            if (alertBox.parentNode) {
+                alertBox.parentNode.removeChild(alertBox);
+            }
+        }, 1000);
+    }, 4600);
 }
 
-$(document).ready(function(){
-    $('.category').click(function(){
-        var bodyHeight = $('body').height(); // Get current body height
-        var containerSearchHeight = $('.containersearch').outerHeight(); // Get containersearch height
-        
-        // Check if containersearch is larger than body
-        if(containerSearchHeight > bodyHeight){
-            $('body').height(containerSearchHeight + 400); // Add 400px to ensure margin
-        }
+socket.on('connect_error', (error) => {
+    console.error('Connection error:', error);
+    reconnectAttempts++;
+    if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+        showAlert('Unable to connect to server. Please refresh the page.');
+    }
+});
+
+socket.on('show_alert', (data) => {
+    showAlert(data.message);
+});
+
+const tabs = document.querySelectorAll('.tab');
+const tabContents = document.querySelectorAll('.tab-content');
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const target = tab.dataset.target;
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(tc => tc.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(target).classList.add('active');
     });
 });
 
+/* ============================
+    2) AudioRecorder (optional)
+    ============================ */
+class AudioRecorder {
+    constructor() {
+        this.isRecording = false;
+        this.isStreaming = false;
+        this.audioChunks = [];
+        this.mediaRecorder = null;
+        this.audioContext = null;
+        this.stream = null;
+        this.startTime = 0;
+        this.timerInterval = null;
+
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const host = window.location.hostname;
+        const port = window.location.protocol === 'https:' ? '10103' : '10102';
+        this.socketUrl = `${wsProtocol}//${host}:${port}`;
+
+        // UI elements for recording
+        this.micButton = document.querySelector('.mic-button');
+        this.cancelButton = document.querySelector('.cancel-button');
+        this.sendButton = document.querySelector('.send-button');
+        this.streamButton = document.querySelector('.stream-button');
+        this.timerDisplay = document.querySelector('.timer');
+        this.visualizer = document.querySelector('#visualizer');
+        this.statusMessage = document.querySelector('.status-message');
+
+        this.setupEventListeners();
+        this.setupVisualizer();
+    }
+
+    setupEventListeners() {
+        if (this.micButton) {
+            this.micButton.addEventListener('click', () => {
+                if (!this.isRecording) {
+                    this.startRecording();
+                } else {
+                    this.stopRecording();
+                }
+            });
+        }
+        if (this.cancelButton) {
+            this.cancelButton.addEventListener('click', () => {
+                this.cancelRecording();
+            });
+        }
+        if (this.sendButton) {
+            this.sendButton.addEventListener('click', () => {
+                this.sendRecording();
+            });
+        }
+        if (this.streamButton) {
+            this.streamButton.addEventListener('click', () => {
+                if (!this.isStreaming) {
+                    this.startStreaming();
+                } else {
+                    this.stopStreaming();
+                }
+            });
+        }
+    }
+        
+            async startStreaming() {
+                if (this.isRecording) {
+                    this.showStatus('Please stop recording first', true);
+                    return;
+                }
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    this.stream = stream;
+                    this.isStreaming = true;
+        
+                    this.streamButton.classList.add('streaming');
+                    this.visualizer.classList.add('streaming');
+                    this.showStatus('Streaming audio...');
+        
+                    this.audioContext = new AudioContext({ sampleRate: 48000 });
+                    const source = this.audioContext.createMediaStreamSource(stream);
+                    const processor = this.audioContext.createScriptProcessor(2048, 1, 1);
+        
+                    source.connect(processor);
+                    processor.connect(this.audioContext.destination);
+        
+                    processor.onaudioprocess = (e) => {
+                        const audioData = e.inputBuffer.getChannelData(0);
+                        if (socket && socket.connected) {
+                            socket.emit('audio_stream', {
+                                audio: Array.from(audioData),
+                                sampleRate: this.audioContext.sampleRate
+                            });
+                        }
+                    };
+        
+                    const analyzer = this.audioContext.createAnalyser();
+                    source.connect(analyzer);
+                    this.setupStreamVisualizer(analyzer);
+        
+                } catch (err) {
+                    console.error('Error starting stream:', err);
+                    this.showStatus('Error starting stream. Please check permissions.', true);
+                }
+            }
+        
+            stopStreaming() {
+                if (this.stream) {
+                    this.stream.getTracks().forEach(track => track.stop());
+                    this.stream = null;
+                }
+                this.isStreaming = false;
+                if (this.streamButton) this.streamButton.classList.remove('streaming');
+                if (this.visualizer) this.visualizer.classList.remove('streaming');
+                this.showStatus('Streaming stopped');
+                setTimeout(() => {
+                    this.showStatus('');
+                }, 2000);
+            }
+        
+            setupStreamVisualizer(analyzer) {
+                if (!this.visualizer) return;
+                analyzer.fftSize = 256;
+                const bufferLength = analyzer.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+        
+                const draw = () => {
+                    if (!this.isStreaming) return;
+                    requestAnimationFrame(draw);
+                    analyzer.getByteFrequencyData(dataArray);
+                    this.visualizerCtx.fillStyle = 'rgba(20, 20, 20, 0.5)';
+                    this.visualizerCtx.fillRect(0, 0, this.visualizer.width, this.visualizer.height);
+        
+                    const barWidth = this.visualizer.width / bufferLength * 2.5;
+                    let x = 0;
+                    for (let i = 0; i < bufferLength; i++) {
+                        const barHeight = dataArray[i] / 255 * this.visualizer.height;
+                        const hue = (i / bufferLength) * 60 + 300;
+                        this.visualizerCtx.fillStyle = `hsla(${hue}, 100%, 70%, 0.8)`;
+                        this.visualizerCtx.fillRect(x, this.visualizer.height - barHeight, barWidth, barHeight);
+                        x += barWidth + 1;
+                    }
+                };
+                draw();
+            }
+        
+            showStatus(message, isError = false) {
+                if (!this.statusMessage) return;
+                this.statusMessage.textContent = message;
+                this.statusMessage.style.color = isError ? '#ff4444' : '#ffffff';
+                this.statusMessage.classList.add('show');
+                setTimeout(() => {
+                    this.statusMessage.classList.remove('show');
+                }, 2000);
+            }
+        
+            async setupVisualizer() {
+                if (this.visualizer) {
+                    this.visualizerCtx = this.visualizer.getContext('2d');
+                    this.visualizer.width = this.visualizer.offsetWidth;
+                    this.visualizer.height = this.visualizer.offsetHeight;
+                }
+            }
+        
+            updateTimer() {
+                const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const seconds = (elapsed % 60).toString().padStart(2, '0');
+                if (this.timerDisplay) this.timerDisplay.textContent = `${minutes}:${seconds}`;
+            }
+        
+            async startRecording() {
+                if (this.isStreaming) {
+                    this.showStatus('Please stop streaming first', true);
+                    return;
+                }
+                try {
+                    this.audioContext = new AudioContext({ sampleRate: 48000 });
+                    this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    this.audioChunks = [];
+                    this.mediaRecorder = new MediaRecorder(this.stream);
+        
+                    this.mediaRecorder.addEventListener('dataavailable', (event) => {
+                        this.audioChunks.push(event.data);
+                    });
+                    this.mediaRecorder.start();
+                    this.isRecording = true;
+                    this.startTime = Date.now();
+                    this.timerInterval = setInterval(() => this.updateTimer(), 1000);
+        
+                    if (this.micButton) this.micButton.classList.add('recording');
+                    this.showStatus('Recording...');
+                    if (this.cancelButton) this.cancelButton.style.display = 'flex';
+                    if (this.sendButton) this.sendButton.style.display = 'none';
+        
+                    // Visualizer
+                    const source = this.audioContext.createMediaStreamSource(this.stream);
+                    const analyzer = this.audioContext.createAnalyser();
+                    analyzer.fftSize = 256;
+                    source.connect(analyzer);
+        
+                    const bufferLength = analyzer.frequencyBinCount;
+                    const dataArray = new Uint8Array(bufferLength);
+        
+                    const draw = () => {
+                        if (!this.isRecording) return;
+                        requestAnimationFrame(draw);
+                        analyzer.getByteFrequencyData(dataArray);
+                        this.visualizerCtx.fillStyle = 'rgba(20, 20, 20, 0.5)';
+                        this.visualizerCtx.fillRect(0, 0, this.visualizer.width, this.visualizer.height);
+        
+                        const barWidth = this.visualizer.width / bufferLength * 2.5;
+                        let x = 0;
+                        for (let i = 0; i < bufferLength; i++) {
+                            const barHeight = dataArray[i] / 255 * this.visualizer.height;
+                            const hue = (i / bufferLength) * 180 + 180;
+                            this.visualizerCtx.fillStyle = `hsla(${hue}, 100%, 70%, 0.8)`;
+                            this.visualizerCtx.fillRect(x, this.visualizer.height - barHeight, barWidth, barHeight);
+                            x += barWidth + 1;
+                        }
+                    };
+                    draw();
+        
+                } catch (err) {
+                    console.error('Error accessing microphone:', err);
+                    this.showStatus('Error accessing microphone. Please check permissions.', true);
+                }
+            }
+        
+            stopRecording() {
+                if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+                    this.mediaRecorder.stop();
+                }
+                this.isRecording = false;
+                clearInterval(this.timerInterval);
+        
+                if (this.micButton) {
+                    this.micButton.classList.remove('recording');
+                    this.micButton.style.display = 'none';
+                }
+                const cancelButton = document.querySelector('.cancel-button');
+                const sendButton = document.querySelector('.send-button');
+                if (cancelButton && sendButton) {
+                    cancelButton.style.display = 'flex';
+                    sendButton.style.display = 'flex';
+                    setTimeout(() => {
+                        cancelButton.classList.add('visible');
+                        sendButton.classList.add('visible');
+                    }, 10);
+                }
+                this.showStatus('Recording stopped. Send or cancel?');
+                if (this.stream) {
+                    this.stream.getTracks().forEach(track => track.stop());
+                }
+                if (this.visualizerCtx) {
+                    this.visualizerCtx.clearRect(0, 0, this.visualizer.width, this.visualizer.height);
+                }
+            }
+        
+            cancelRecording() {
+                if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+                    this.mediaRecorder.stop();
+                }
+                if (this.stream) {
+                    this.stream.getTracks().forEach(track => track.stop());
+                }
+                clearInterval(this.timerInterval);
+                this.isRecording = false;
+                this.audioChunks = [];
+                if (this.timerDisplay) this.timerDisplay.textContent = '00:00';
+        
+                if (this.micButton) {
+                    this.micButton.classList.remove('recording');
+                    this.micButton.style.display = 'flex';
+                }
+                if (this.cancelButton) this.cancelButton.classList.remove('visible');
+                if (this.sendButton) this.sendButton.classList.remove('visible');
+        
+                this.showStatus('Recording cancelled');
+                if (this.visualizerCtx) {
+                    this.visualizerCtx.clearRect(0, 0, this.visualizer.width, this.visualizer.height);
+                }
+                setTimeout(() => {
+                    this.showStatus('');
+                }, 2000);
+            }
+        
+            async sendRecording() {
+                try {
+                    this.showStatus('Processing recording...');
+                    const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+        
+                    const formData = new FormData();
+                    formData.append('audio', audioBlob, 'recording.webm');
+                    formData.append('sampleRate', this.audioContext.sampleRate);
+                    formData.append('channels', 1);
+        
+                    const response = await fetch('/upload_audio', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.showStatus(data.message || 'Recording sent successfully!');
+                        this.audioChunks = [];
+                        if (this.timerDisplay) this.timerDisplay.textContent = '00:00';
+                        if (this.micButton) this.micButton.style.display = 'flex';
+                        if (this.cancelButton) this.cancelButton.classList.remove('visible');
+                        if (this.sendButton) this.sendButton.classList.remove('visible');
+                        setTimeout(() => this.showStatus(''), 2000);
+                    } else {
+                        throw new Error('Failed to send recording');
+                    }
+                } catch (err) {
+                    console.error('Error sending recording:', err);
+                    this.showStatus('Error sending recording. Please try again.', true);
+                }
+            }
+        }
+        
+        // Initialize the AudioRecorder
+        document.addEventListener('DOMContentLoaded', () => {
+            const recorder = new AudioRecorder();
+        });
+        
+        /* =================================================
+           3) Soundboard: load, render, highlight, external
+           ================================================= */
+        const soundboardGrid = document.querySelector('#soundboard-grid');
+        let activeTimeout = null;
+        let soundQueue = [];
+        let cachedSoundFiles = null;
+        let allSoundboardItems = [];
+        
+        async function loadSoundboardFiles() {
+            try {
+                const response = await fetch('/list_soundboard_files');
+                const data = await response.json();
+                if (data.soundboard_files) {
+                    cachedSoundFiles = data.soundboard_files;
+                    allSoundboardItems = data.soundboard_files;
+                    renderSoundButtons(allSoundboardItems);
+                } else {
+                    console.log('No recordings available.');
+                    const noSoundsMessage = document.createElement('div');
+                    noSoundsMessage.textContent = "No sounds found in the soundboard folder.";
+                    if (soundboardGrid) soundboardGrid.appendChild(noSoundsMessage);
+                }
+            } catch (error) {
+                console.error('Error loading initial sound files:', error);
+                showAlert(`Error loading initial sounds: ${error.message}`);
+            }
+        }
+        
+        function renderSoundButtons(soundFiles) {
+  if (!soundboardGrid) return;
+  soundboardGrid.innerHTML = '';
+
+  const stopButton = document.createElement('button');
+  stopButton.className = 'stop-button';
+  stopButton.textContent = "Stop All";
+
+    stopButton.addEventListener('click', () => {
+        soundQueue = [];
+        if (activeTimeout) {
+            clearTimeout(activeTimeout);
+            activeTimeout = null;
+        }
+        const activeButton = document.querySelector('.sound-button.active');
+        if (activeButton) {
+            activeButton.classList.remove('active');
+        }
+        // Server kill
+
+    fetch('/stop_soundboard_sounds', { method: 'POST' })
+      .then(res => res.json())
+      .then(data => console.log("Stop all response:", data))
+      .catch(err => console.error("Stop all error:", err));
+  });
+  soundboardGrid.appendChild(stopButton);
+
+  // Now for each item => use createSoundButton
+  soundFiles.forEach(recording => {
+    const btn = createSoundButton(recording);
+    soundboardGrid.appendChild(btn);
+  });
+}
+
+        
+        // Actually fetch the sound files on startup
+        loadSoundboardFiles();
+        
+        function playNextSound() {
+            if (soundQueue.length === 0) return;
+            const { button, filename, duration } = soundQueue[0];
+            button.classList.add('active');
+            fetch('/play_soundboard_sound?filename=' + encodeURIComponent(filename) + '&isadded=' + isAdded, {
+            method: 'POST'
+            })
+         
+            .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'playing') {
+                        activeTimeout = setTimeout(() => {
+                            button.classList.remove('active');
+                            soundQueue.shift();
+                            playNextSound();
+                        }, duration * 1000 + 300);
+                    } else {
+                        soundQueue.shift();
+                        playNextSound();
+                        console.error("Failed to get playing status:", data);
+                        showAlert("Failed to get playing status");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error playing the sound:", error);
+                    soundQueue.shift();
+                    playNextSound();
+                    showAlert(`Error playing sound ${filename}: ${error.message}`);
+                });
+        }
+        
+        function formatTime(seconds) {
+            const time = Math.round(seconds);
+            const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+            const remainingSeconds = (time % 60).toString().padStart(2, '0');
+            return `${minutes}:${remainingSeconds}`;
+        }
+        
+        /* =============================
+           4) External Audio + Searching
+           ============================= */
+        document.addEventListener('DOMContentLoaded', () => {
+            // External link
+            const btnPlayExternal = document.getElementById('btn-play-external');
+            if (btnPlayExternal) {
+                btnPlayExternal.addEventListener('click', async () => {
+                    const urlField = document.getElementById('external-audio-url');
+                    if (!urlField.value) {
+                        showAlert('Please enter a valid URL.');
+                        return;
+                    }
+                    try {
+                        const formData = new FormData();
+                        formData.append('url', urlField.value.trim());
+                        const response = await fetch('/play_external_sound', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            showAlert('External sound queued.', true);
+                            urlField.value = '';
+                        } else {
+                            showAlert(data.error || 'Error occurred while playing external sound');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        showAlert('Error sending external audio request');
+                    }
+                });
+            }
+        
+            // Searching
+            const searchInput = document.getElementById('sound-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    filterSounds(query);
+                });
+            }
+        });
+        
+        // Filter + re-render
+        function filterSounds(query) {
+            if (!allSoundboardItems || allSoundboardItems.length === 0) return;
+            query = query.toLowerCase().trim();
+
+            let matched = [];
+            let notMatched = [];
+
+            if (!query) {
+                matched = allSoundboardItems;
+            } else {
+                allSoundboardItems.forEach(item => {
+                const filenameLower = item.filename.toLowerCase();
+                if (filenameLower.includes(query)) {
+                    matched.push(item);
+                } else {
+                    notMatched.push(item);
+                }
+                });
+            }
+
+            // Clear
+            soundboardGrid.innerHTML = '';
+
+            // Re-add "Stop All" top button
+            const stopButton = document.createElement('button');
+            stopButton.className = 'stop-button';
+            stopButton.textContent = "Stop All";
+            stopButton.addEventListener('click', () => {
+                fetch('/stop_soundboard_sounds', { method: 'POST' })
+                .catch(err => console.error(err));
+            });
+            soundboardGrid.appendChild(stopButton);
+
+            // 1) matched => normal
+            matched.forEach(rec => {
+                const btn = createSoundButton(rec);
+                soundboardGrid.appendChild(btn);
+            });
+
+            // 2) not matched => dim opacity
+            notMatched.forEach(rec => {
+                const btn = createSoundButton(rec);
+                btn.style.opacity = '0.3';
+                soundboardGrid.appendChild(btn);
+            });
+            }
+
+      
+        
+        function createSoundButton(recording) {
+  const isAdded = !!recording.info.added; // from the JSON
+  const filename = recording.filename;
+  const duration = recording.info.duration_seconds || 0;
+
+  const soundButton = document.createElement('button');
+  soundButton.className = 'sound-button';
+  soundButton.dataset.filename = filename;
+  soundButton.dataset.isadded = isAdded ? 'true' : 'false';
+
+  // Color if it's from the "added" folder
+  if (isAdded) {
+    // greenish
+    soundButton.style.background =
+      'linear-gradient(135deg, rgba(0,200,50,0.3), rgba(0,255,0,0.4))';
+  }
+
+  soundButton.innerHTML = `
+    <div class="sound-button-container">
+      <div class="sound-name">${filename.split(".")[0].toUpperCase()}</div>
+      <div class="sound-duration">${formatTime(duration)}</div>
+    </div>
+  `;
+
+  // On-click => call /play_soundboard_sound?filename=...
+  soundButton.addEventListener('click', () => {
+    const isAddedParam = soundButton.dataset.isadded === 'true';
+    fetch(`/play_soundboard_sound?filename=${encodeURIComponent(filename)}&isadded=${isAddedParam}`, {
+      method: 'POST',
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.status === 'playing') {
+        console.log("Successfully queued playback:", filename);
+      } else {
+        console.error("Error playing or missing status", data);
+        showAlert("Error playing sound: " + (data.error || "unknown"));
+      }
+    })
+    .catch(err => {
+      console.error("Error playing:", err);
+      showAlert("Error playing sound: " + err.message);
+    });
+  });
+
+  return soundButton;
+}
+
+        
+        /* ================================
+           5) Real-Time Highlighting Logic
+           ================================ */
+        socket.on('sound_play_started', data => {
+            console.log('Sound started:', data.filename);
+            highlightSoundButton(data.filename, true);
+        });
+        
+        // From the server when “Stop All” is triggered
+        socket.on('stop_all_sounds', () => {
+            // Clear local queue
+            soundQueue = [];
+            if (activeTimeout) {
+                clearTimeout(activeTimeout);
+                activeTimeout = null;
+            }
+            const activeButton = document.querySelector('.sound-button.active');
+            if (activeButton) {
+                activeButton.classList.remove('active');
+            }
+        });
+        
+        socket.on('sound_play_stopped', data => {
+            console.log('Sound stopped:', data.filename);
+            highlightSoundButton(data.filename, false);
+        });
+        
+        function highlightSoundButton(filename, isActive) {
+            if (!filename || typeof filename !== 'string') {
+                console.warn("highlightSoundButton: Received invalid filename:", filename);
+                return;
+            }
+            const targetBase = filename.toLowerCase().split('.')[0];
+        
+            const buttons = document.querySelectorAll('.sound-button');
+            buttons.forEach(btn => {
+                const storedFilename = btn.dataset.filename; // e.g. "a-rat.mp3"
+                if (!storedFilename) return;
+                const storedBase = storedFilename.toLowerCase().split('.')[0];
+                if (storedBase === targetBase) {
+                    if (isActive) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                }
+            });
+        }
+        
+        /* =============================================
+           6) “Giant VAry Text” swirl background logic
+           ============================================= */
+        const varyText = document.querySelector('.vary-text');
+        if (varyText) {
+            const scrollAnims = ['scrollRTL', 'scrollLTR'];
+            function startScroll() {
+                varyText.style.animation = 'none';
+                void varyText.offsetWidth; // force reflow
+                const pickedAnim = scrollAnims[Math.floor(Math.random() * scrollAnims.length)];
+                const randomTop = 20 + Math.random() * 60;
+                varyText.style.top = randomTop + '%';
+                const randomDur = (50 + Math.random() * 6).toFixed(1);
+                const combinedAnimations = `
+                    ${pickedAnim} ${randomDur}s linear forwards,
+                    linesShift 30s linear infinite
+                `;
+                varyText.style.animation = combinedAnimations;
+            }
+            varyText.addEventListener('animationend', (e) => {
+                if (e.animationName === 'scrollRTL' || e.animationName === 'scrollLTR') {
+                    setTimeout(startScroll, 300);
+                }
+            });
+            startScroll();
+        }
+
+        // somewhere near your existing socket initialization
+socket.on('soundboard_refresh', () => {
+  // Re-fetch the sound files
+  loadSoundboardFiles();
+});
+
+const welcomeText = document.querySelector('.welcometext'); 
+const animToggleContainer = document.getElementById('animationsToggleContainer'); 
+  // This <div> is hidden by default
+
+let lastClickTime = 0;
+let clickCount = 0;
+
+welcomeText.addEventListener('click', () => {
+  const now = Date.now();
+  if (now - lastClickTime < 3000) {
+    clickCount++;
+  } else {
+    clickCount = 1;
+  }
+  lastClickTime = now;
+
+  if (clickCount >= 2) {
+    // user double-tapped
+    // showAlert(animToggleContainer.style.display)// + animToggleContainer.style.display==none);
+    if (animToggleContainer && animToggleContainer.style.display == '') {
+        showAlert("Animation toggle revealed!", true); 
+      animToggleContainer.style.display = 'flex';
+    }
+    // Reset clickCount so a triple-click doesn't keep repeating
+    clickCount = 0;
+  }
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const cbDisableAnims = document.getElementById('cbDisableAnims');
+  const animToggleContainer = document.getElementById('animationsToggleContainer');
+
+  // If localStorage says "disableAnimations=1", do minimal approach:
+  if (localStorage.getItem('disableAnimations') === '1') {
+    document.body.classList.add('disable-animations');
+    animToggleContainer.style.display = 'flex';
+    cbDisableAnims.checked = true;
+  }
+
+  cbDisableAnims.addEventListener('change', () => {
+    if (cbDisableAnims.checked) {
+      localStorage.setItem('disableAnimations', '1');
+    } else {
+      localStorage.removeItem('disableAnimations');
+    }
+    location.reload();
+  });
+});
+
+socket.on('force_reload', (data) => {
+    console.log("Server says to force reload. Reason:", data.reason);
+    document.cookie.split(";").forEach(function(c) {
+      document.cookie = c
+        .replace(/^ +/, "")
+        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+    // Then reload:
+    window.location.href = '/';
+    location.reload();
+    window.location.href = '/';
+});
+
 </script>
+
 </html>

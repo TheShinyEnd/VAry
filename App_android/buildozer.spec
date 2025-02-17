@@ -7,7 +7,7 @@ title = dvrfy
 package.name = dvrfy
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = VAry.Alon.Developer.diversify.dvrfy
+package.domain = net.theshinyend.vary.diversify
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -37,7 +37,7 @@ version = 10.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3==3.10.12,kivy==2.3.0,hostpython3==3.10.12,pyjnius==1.5.0,pycryptodome,pillow,scapy,multiprocess,netifaces,kivymd,materialyoucolor,numpy,speechrecognition,gtts,plyer
+requirements = python3==3.10.12,kivy==2.3.0,hostpython3==3.10.12,pyjnius==1.5.0,pycryptodome,pillow,multiprocess,netifaces,kivymd,materialyoucolor,numpy,speechrecognition,gtts,plyer
 
 #kivy==master,https://github.com/kivymd/KivyMD/archive/master.zip 
 

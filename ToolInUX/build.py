@@ -2,7 +2,7 @@ import os
 import sys
 from Crypto.Cipher import AES
 import time
-import pyinstaller
+# import pyinstaller
 # run in the server directory. cd server.
 
 

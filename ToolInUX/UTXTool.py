@@ -26,11 +26,14 @@ else:
 #                 ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
 #                 sys.exit()
 # run_as_admin()
+
 import subprocess
 import pyautogui
 # import netifaces
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 import requests
+import netifaces
 import keyboard
 from mark1_translate import translate as translator
 
@@ -136,7 +139,8 @@ import traceback
 import subprocess  # For launching the client
 
 
-development_mode = os.getlogin() == 'thesh'
+ 
+development_mode = False
 print(f'Development mode: {development_mode}')
 
 def slp(seconds):
@@ -151,6 +155,9 @@ def slp(seconds):
 
 COMMAND_DELIMITER = ";;"  # Define a command delimiter
 
+
+scan_mode = "default"  # Global variable to store the scan mode
+network_selected = None  # To store the selected network
 
 
 
@@ -1145,8 +1152,8 @@ import struct
 from Crypto.Cipher import AES
 
 HEADER = 64
-VARY_PORT = 45433
-TUTKEYPHONE = b'\x12\x1f\xb7\x1b\x7f\xe8W0\xa7\xc7\x04\xad\xc5\x03Q\xa1\x93\xd7\xab3\xe9\xbfE\xcf)=w\xd1\x97N\x9e\xae'
+VARY_PORT = 45102 #45433
+TUTKEYPHONE = b'placeholder'
 
 def encrypt(key, plaintext):
     cipher = AES.new(key, AES.MODE_EAX)
@@ -1207,8 +1214,212 @@ def fakevary_send(msg, target_ip):
 
 # def fakevarysend_msg(msg)
 
+# 45433 VARY_PORT
+def scandvrfy():
+    
+    devices = []
+    def get_subnet_base():
+        interfaces = netifaces.interfaces()
+        for interface in interfaces:
+            addresses = netifaces.ifaddresses(interface)
+            if netifaces.AF_INET in addresses:
+                ip_address = addresses[netifaces.AF_INET][0]['addr']
+                if ip_address != '127.0.0.1':
+                    octets = ip_address.split('.')
+                    subnet_base = '.'.join(octets[:2])  # Get first two octets
+                    return subnet_base + '.' # include the first period for clarity
+
+        return None
+
+    def scan_port(ip, port):
+        # print(f"Scanning port {port} on {ip}...")
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(0.1)  # Adjust timeout as needed
+        result = sock.connect_ex((ip, port))
+        if result == 0:
+            print(f"Port {port} is open on {ip}")
+            devices.append(f'{ip}:{port}')
+            update_console('Discovered: ' + ip)
+            socketio.emit('new_network', {'network': f'{ip}:{port}', 'id': f'{ip}:{port}', 'mode': 'dvrfy'})
+        sock.close()
+        
+    def scan_subnet(subnet, port):
+        threads = []
+        for i in range(256):
+            for j in range(256):
+                ip = f"{subnet}{i}.{j}"
+                # print(ip)
+                # continue
+                thread = threading.Thread(target=scan_port, args=(ip, port))
+                threads.append(thread)
+                thread.start()
+
+        for thread in threads:
+            thread.join()
+
+    subnet = requestValue('ipv4input')
+    if subnet == '':
+        subnet = get_subnet_base()
+    subnet = '.'.join(subnet.split('.')[:2]) + '.'
+    scan_subnet(subnet, VARY_PORT)
+    update_console('dvrfy scan complete. found ' + str(len(devices)) + ' devices')
+    return devices
+
+
+
+def scanCTL():
+    HOST_PORT = 58963  # Same port as server
+    devices = []
+    def get_subnet_base():
+        interfaces = netifaces.interfaces()
+        for interface in interfaces:
+            addresses = netifaces.ifaddresses(interface)
+            if netifaces.AF_INET in addresses:
+                ip_address = addresses[netifaces.AF_INET][0]['addr']
+                if ip_address != '127.0.0.1':
+                    octets = ip_address.split('.')
+                    subnet_base = '.'.join(octets[:2])  # Get first two octets
+                    return subnet_base + '.' # include the first period for clarity
+
+        return None
+
+    def scan_port(ip, port):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(0.1)  # Adjust timeout as needed
+        result = sock.connect_ex((ip, port))
+        if result == 0:
+            print(f"Port {port} is open on {ip}")
+            devices.append(f'{ip}:{port}')
+            update_console('Discovered: ' + ip)
+            socketio.emit('new_network', {'network': f'{ip}:{port}', 'id': f'{ip}:{port}', 'mode': 'CTL'})
+        sock.close()
+        
+    def scan_subnet(subnet, port):
+        threads = []
+        for i in range(256):
+            for j in range(256):
+                ip = f"{subnet}{i}.{j}"
+                # print(ip)
+                # continue
+                thread = threading.Thread(target=scan_port, args=(ip, port))
+                threads.append(thread)
+                thread.start()
+
+        for thread in threads:
+            thread.join()
+
+    subnet = requestValue('ipv4input')
+    if subnet == '':
+        subnet = get_subnet_base()
+    subnet = '.'.join(subnet.split('.')[:2]) + '.'
+    scan_subnet(subnet, HOST_PORT)
+    update_console('CTL scan complete. found ' + str(len(devices)) + ' devices')
+    return devices
+
+all_scan_ports = list(set([
+    22,     # SSH
+    23,     # Telnet
+    25,     # SMTP
+    53,     # DNS
+    80,     # HTTP
+    81,     # HTTP Alternative
+    443,    # HTTPS
+    3389,   # RDP
+    3306,   # MySQL
+    5432,   # PostgreSQL
+    6379,   # Redis
+    8080,   # HTTP Alternate
+    9000,   # PHP-FPM, etc.
+    27017,  # MongoDB
+    5900,   # VNC
+]))
+
+def networkscan_full():
+    devices = []
+
+    def get_subnet_base():
+        interfaces = netifaces.interfaces()
+        for interface in interfaces:
+            addresses = netifaces.ifaddresses(interface)
+            if netifaces.AF_INET in addresses:
+                ip_address = addresses[netifaces.AF_INET][0]['addr']
+                if ip_address != '127.0.0.1':
+                    octets = ip_address.split('.')
+                    subnet_base = '.'.join(octets[:2])  # Get first two octets
+                    return subnet_base + '.'  # include the first period for clarity
+
+        return None
+
+    def scan_port(ip, port):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(0.1)  # Adjust timeout as needed
+        result = sock.connect_ex((ip, port))
+        if result == 0:
+            print(f"Port {port} is open on {ip}")
+            devices.append(f'{ip}:{port}')
+            update_console('Discovered: ' + ip)
+            socketio.emit('new_network', {'network': f'{ip}:{port}', 'id': f'{ip}:{port}', 'mode': 'default'})
+        sock.close()
+
+    def scan_ip_ports(ip):
+        for port in all_scan_ports:
+            scan_port(ip, port)
+            if len([dev for dev in devices if dev.startswith(ip)]) > 0:
+                break  # Skip the rest of the ports on this IP if an open port is found
+
+    subnet = requestValue('ipv4input')
+    if subnet == '':
+        subnet = get_subnet_base()
+    subnet = '.'.join(subnet.split('.')[:2]) + '.'
+
+    update_console('Take for granted this scan can get slow.. be patient.')
+    time.sleep(2)
+    # Using ThreadPoolExecutor for concurrent scanning
+    with ThreadPoolExecutor(max_workers=100) as executor:
+        futures = {}
+        for i in range(256):
+            for j in range(256):
+                current_ip = f"{subnet}{i}.{j}"
+                # Update console with the current octet being scanned
+                update_console(f"Scanning octet: {subnet}{i}..")
+                futures[executor.submit(scan_ip_ports, current_ip)] = (i, j)
+
+        for future in as_completed(futures):
+            # You can handle exceptions or results here if needed
+            pass
+        
+    time.sleep(2)
+    update_console('Default scan complete. Found ' + str(len(devices)) + ' devices')
+    return devices
+
+
 
 def scan_network():
+    clear_network_list
+    global scan_mode
+    print("Scanning network in mode:", scan_mode)
+
+    # Sample Data for Testing
+    if scan_mode == "default":
+        networkscan_full()
+    elif scan_mode == "CTL":
+        scanCTL()
+
+    elif scan_mode == "dvrfy":
+        scandvrfy()
+        # devices = ["10.0.0.5:22", "10.0.0.10:22"] # example ssh ports
+    else:
+        devices = []
+
+
+    # Emit results with scan mode
+    # for device in devices:
+        # socketio.emit('new_network', {'network': device, 'id': device, 'mode': scan_mode})
+        # time.sleep(0.25) # slow down emitting per address scanned, causing a visual effect of showing 1 by 1
+
+    return #devices # Still return devices in case you need it later
+
+def scan_network_temp():
     print('Scanning network...')
     clear_network_list()
     
@@ -1239,7 +1450,7 @@ def scan_network():
 
     def scan_ip(ip):
         # ports = [[443, 8009, 8008, 445], [5900, 80, 139, 9000, 8015, 23], [8080, 8443, 111, 21]]
-        ports = [[45433]]
+        ports = [[VARY_PORT]]
 
         global snetwork_listexeaura_list
 
@@ -1381,6 +1592,14 @@ def generate_weather_greeting(location):
 
 @app.route('/', methods=['GET'])
 def index():
+    try:
+        ip_of_client = request.remote_addr
+        if ip_of_client != socket.gethostbyname(socket.gethostname()):
+            print(f'IP address mismatch: {ip_of_client} != {socket.gethostbyname(socket.gethostname())}. Blocking access to the server')
+            return False
+    except Exception as e:
+        print(f'Error located: {e}')
+        return False
     location = geocoder.ip('me').latlng
     try:
         street_address = get_street_address(location[0], location[1])
@@ -1563,19 +1782,25 @@ functionstocheckname = [
 @app.route('/submit', methods=['POST'])
 def submit():
     button = request.form.get('button')
+    global scan_mode
     if button == 'scannetwork':
-        update_console('Scanning network..')
-        global thread_scan_network
-        if thread_scan_network is None:
-            pass
-        else:
-            try:
-                thread_scan_network.kill()
-            except:
+        received_mode = request.form.get('mode')# get the current mode from the POST
+        if received_mode:
+            scan_mode = received_mode
+            print(f"Scan mode for scan_network: {scan_mode}") # check which scan mode it got.
+            update_console('Scanning network..')
+    
+            global thread_scan_network
+            if thread_scan_network is None:
                 pass
-        thread_scan_network=KThread(target=scan_network)
-        thread_scan_network.start()
-        return ''
+            else:
+                try:
+                    thread_scan_network.kill()
+                except:
+                    pass
+            thread_scan_network=KThread(target=scan_network)
+            thread_scan_network.start()
+            return ''
     
     if button in functionstocheckname:
         tmp = KThread(target=runfunctionvianame, args=(button, ))
@@ -1617,14 +1842,14 @@ def sshnetwork():
     update_console(f'Screen Sharing initiated with: {ipv4}.\nPlease check in your running program list for the menu of the share screen client. Don\'t forget to press connect. This is very buggy due to the nature of threads and how sketchy this way of screensharing is done due to pythons limitations. And also, ping(ms) is currently disabled due to immense delays in the how this is screenshare handshake is handled, it\'ll be greatly improved in the future(not a priority).')
     return ''
 
-@app.route('/selectnetwork', methods=['POST'])
-def selectnetwork():
-    ipv4 = request.form.get('ipv4')
-    port = request.form.get('port')
-    global currentSelectedIPV4
-    currentSelectedIPV4 = ipv4 + ":" + port
-    update_console(f'Selecting: {ipv4}:{port}')
-    return ''
+# @app.route('/selectnetwork', methods=['POST'])
+# def selectnetwork():
+#     ipv4 = request.form.get('ipv4')
+#     port = request.form.get('port')
+#     global currentSelectedIPV4
+#     currentSelectedIPV4 = ipv4 + ":" + port
+#     update_console(f'Selecting: {ipv4}:{port}')
+#     return ''
    
 def addselftostartup_reg(): # requires admin rights
     programVL2(f'reg add HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v vtl /f /t REG_SZ /d \"{os.path.join(get_script_directory(), get_script_filename())}\"')
@@ -1646,7 +1871,7 @@ def addtostartup_based_off_adminrights():
 
 
 
-# print(os.getlogin() == 'thesh')
+# print(os.getlogin() == 'placeholder')
 # exit()
 print(get_script_directory())
 if get_script_directory().lower().startswith('c:') and development_mode == False:
@@ -1675,6 +1900,241 @@ def update_console(text):
   socketio.emit('update_console', {'text': text})
 
 
+
+@app.route('/transfer_ctl_data', methods=['POST'])
+def transfer_ctl_data():
+    # def run(): # cannot have this threaded unfortunately
+        global scan_mode  # Access the scan_mode
+        
+        try:
+            # extract these:
+            
+            if scan_mode == "CTL":  # Only in CTL mode
+                print('CTL data transfer start')
+                # Get the target IP and port from the POST request (if necessary)
+                ip_port = request.form.get('ip_port')
+                button_type = request.form.get('button_type')
+                # alert(f"Started CTL Data transfer with {ip_port}.")
+                msga1 = f"Started CTL Data transfer with {ip_port}. This may take some time, be patient. wait until you see the completition message."
+                alert(msg=msga1)
+                update_console(msga1) 
+                print(f'ip_port: {ip_port}, button_type: {button_type}')
+                HOST_IP, HOST_PORT = ip_port.split(':')
+                success_count, failure_count = request_files(HOST_IP, int(HOST_PORT)) 
+                if success_count == 0 and failure_count == 0:
+                    return jsonify(message=" ")
+                message = f"CTL data transfer complete. {success_count} files copied successfully, {failure_count} failed."
+                update_console(message) # direct update of console
+                print(message) # print to console
+                alert('CTL data transfer complete!');
+                return jsonify(message=message) # return to success
+            else:
+                return jsonify(message="CTL mode not selected.") # avoid crash, if not in CTL mode
+
+        except Exception as e:
+            message = f"Error during CTL data transfer: {e}"
+            print(message) # debug print
+            update_console(message)
+            return jsonify(error=message), 500
+    # threading.Thread(target=run).start()
+
+@app.route('/test_connection', methods=['POST'])
+def test_connection(): # implementation of the test connection functionality.
+    target = request.form.get('ip_port')
+
+    try:
+        ip, port = target.split(':')  # Extract IP and port
+        port = int(port)
+        latency = measure_latency(host=ip, port=port, runs=1, timeout=2.5) # measures latency
+        if latency:
+            avg_latency = sum(latency) / len(latency)
+            message = f"Connection to {target} successful. Average latency: {avg_latency:.2f}ms"
+        else:
+            message = f"Connection to {target} failed or timed out."  # Timeout or connection failed
+
+        print(message)
+        update_console(message)
+        return jsonify(message=message)
+
+    except (ValueError, socket.gaierror) as e:  # Handle invalid IP/port format
+        message = f"Invalid IP address or port: {e}"
+        print(message)
+        update_console(message)
+        return jsonify(message=message), 400  # Bad Request
+    except Exception as e:  # Handle other connection errors
+        message = f"Error during connection test: {e}"
+        print(message)
+        update_console(message)
+        return jsonify(message=message), 500  # Internal Server Error
+
+
+
+
+@app.route('/selectnetwork', methods=['POST'])
+def selectnetwork():
+
+    global network_selected, scan_mode
+    ipv4 = request.form.get('ipv4')
+    port = request.form.get('port')
+    network_selected = ipv4 + ":" + port
+    update_console(f'Selecting: {ipv4}:{port}')
+
+    # Show/hide CTL transfer button based on scan_mode
+    if scan_mode == "CTL":
+        socketio.emit('show_ctl_transfer', {}) # show the button
+    else:
+        socketio.emit('hide_ctl_transfer', {}) # hide the button
+
+    if scan_mode == "default":
+        socketio.emit('show_test_button', {})
+    else:
+        socketio.emit('hide_test_button', {})
+
+    return ''
+
+
+CLIENT_BACKUP_DIR = os.path.join(get_script_directory(), "RestoredFiles") 
+key_for_encryption_of_backup = b'placeholder'
+
+def decrypt_msg(msg_bytes, key=b'\x12\x1f...\xae'):  # Your actual key should be here
+    """Decrypts a message.  Handles decryption/authentication failures gracefully."""
+
+    def decrypt(key, ciphertext):
+        try:
+            (nonce, tag, ciphertext) = ciphertext
+            cipher = AES.new(key, AES.MODE_EAX, nonce)
+            plaintext = cipher.decrypt_and_verify(ciphertext, tag)  # Combined decrypt and verify
+            return plaintext
+        except (ValueError, Exception) as e:  # Catch both decryption and other errors
+            print(f"Decryption or verification failed: {e}")
+            return None  # Return None upon failure
+
+
+    try:
+        msg = ast.literal_eval(msg_bytes.decode('utf-8', errors='replace'))
+        plaintext = decrypt(key, msg)
+        return plaintext  # Return bytes or None (for failure)
+
+    except Exception as e:
+        print(f"Error during decryption process: {e}")
+        return None
+
+
+def receive_file(conn, filename):
+    """Receives a file, handles errors, and sends confirmation."""
+    try:
+        file_size_bytes = conn.recv(4)
+        if not file_size_bytes: # Handle potential disconnect
+            return False
+
+        file_size = int.from_bytes(file_size_bytes, 'big')
+        received_data = b""
+        while len(received_data) < file_size:
+            chunk = conn.recv(4096)
+            if not chunk:
+                return False # Socket closed prematurely
+            received_data += chunk
+    
+        with open(filename, "wb") as f:
+            f.write(received_data)
+
+        conn.sendall("OK".encode())  # Send confirmation to server
+        return True # file successfully received
+
+
+    except Exception as e:
+        print(f"Error receiving file {filename}: {e}")
+        return False
+
+def decrypt_file(src, dst):
+    """Decrypts a file, handling decryption errors."""
+    with open(src, 'rb') as f_in:
+        encrypted_data = f_in.read()
+
+    decrypted_data = decrypt_msg(encrypted_data, key_for_encryption_of_backup)
+    if decrypted_data is None:  # Check if decryption failed
+        print(f"Decryption of {src} failed. Deleting the encrypted file.")
+        os.remove(src) # deletes the encrypted file
+        return False  # Indicate failure
+
+    with open(dst, 'wb') as f_out:
+        f_out.write(decrypted_data)
+    print(f"Decrypted {src} to {dst}")
+    return True
+
+def request_file(host, port, filename):
+    """Requests and receives a single file."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((host, port))
+        s.sendall(filename.encode())
+        filepath = os.path.join(CLIENT_BACKUP_DIR, filename)
+        if receive_file(s, filepath):
+            if decrypt_file(filepath, filepath.replace(".encrypted", "")):
+                os.remove(filepath)
+                print(f"Received and decrypted: {filename}")
+                return True # signal success
+            else:
+                print(f"Error decrypting {filename}. File deleted.")
+        return False  # signal failure
+
+
+
+def get_backup_files(host, port):  # Takes host and port to make its own connection
+    """Retrieves the list of backup files."""
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((host, port))
+        s.sendall("LIST_FILES".encode())
+        files_bytes = s.recv(4096)  # Receive file list
+        files_str = files_bytes.decode()
+        if files_str:
+            if files_str == "NO_FILES": return [] # no files to backup
+            return files_str.split(',')
+        else:
+            return []
+
+def request_files(host, port):
+    """Requests and receives files, tracks success and failure counts."""
+
+    if not os.path.exists(CLIENT_BACKUP_DIR):
+        os.makedirs(CLIENT_BACKUP_DIR)
+
+    filenames = get_backup_files(host, port)
+    # print(repr(filenames)) # debug print
+    # print('files ^')
+    if filenames == []:
+        print("No files to restore.")
+        alert("No files to restore.")
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((host, port))
+            s.sendall("CLOSE".encode())
+        return 0, 0  # Return 0 for both success and failure counts
+
+    success_count = 0
+    failure_count = 0
+
+    if filenames:
+        for filename in filenames:
+            snf = f"Transfer: {((success_count+failure_count) / len(filenames) * 100):.2f}%"
+            print(repr(snf))
+            update_console(snf) # update the console with the percentage of files transferred
+            # print(f'Transfer: {((success_count+failure_count) / len(filenames) * 100):.2f}%')
+            try: 
+                if request_file(host, port, filename):  # Check return value
+                    success_count += 1
+                else:
+                    failure_count += 1
+                time.sleep(0.2) # sleep to avoid overloading the server with requests
+            except Exception as e:  # Catch and handle exceptions during file transfer
+                print(f'Error during file transfer: {e}')
+                failure_count +=1
+                
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((host, port))
+        s.sendall("CLOSE".encode())
+
+    return success_count, failure_count  # Return counts
+
 @socketio.on('value_response')
 def handle_value_response(data):
     element_id = data['element_id']
@@ -1689,7 +2149,8 @@ def requestValue(element_id):
     socketio.emit('get_value', {'element_id': element_id})
     global last_response_from_clientUI, newresponse
     update_console('Waiting for a response for: ' + element_id)
-    
+    last_response_from_clientUI = 'rnadomvaluernadomvlauenH)*$kljaksd' # added this cause, if there was a request, it got the value, but if there was another, and the value hasn't changed it won't return it as for it it hasn't changed
+    newresponse = 'rnadomvaluernadomvlauenH)*$kljaksd'# added this cause, if there was a request, it got the value, but if there was another, and the value hasn't changed it won't return it as for it it hasn't changed
     start_time = time.time()
     timeout_duration = 3  # 3 seconds timeout
     
@@ -1702,11 +2163,40 @@ def requestValue(element_id):
     return last_response_from_clientUI
 
 
+@socketio.on('scan_mode')
+def handle_scan_mode(data):
+    clear_network_list()
+    global scan_mode  # Use the global variable
+    scan_mode = data['mode']
+    print(f"Scan mode received from client: {scan_mode}") # confirm receiving
+
+
+@app.route('/network_button_clicked', methods=['POST'])
+def network_button_clicked():
+    ip_port = request.form.get('ip_port')
+    button_type = request.form.get('button_type')
+    mode = request.form.get('mode')
+
+    # Process the click (example)
+    message = f"In {mode} mode, button {button_type} was clicked for {ip_port}"
+    if mode == "default":
+        alert('This button does nothing')
+    print(message)  # Or perform other actions
+    try:
+        return jsonify(message=message)  # Return a response
+    except Exception as e:  # Handle exceptions and return an error response
+        print(f"Error: {e}")        
+        
+
+def alert(msg):
+    socketio.emit('receive_alert', {'msg': msg})
 
 
   
 def add_network(network, id_of_given_network):
     socketio.emit('new_network', {'network': network, 'id': id_of_given_network})
+
+
 
 
 def clear_network_list():
